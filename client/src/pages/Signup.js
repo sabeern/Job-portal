@@ -85,7 +85,7 @@ const handleSubmit = async (e) => {
   return (
     <MDBContainer fluid>
         <MDBRow>
-          <LoginSignupImage/>
+          <LoginSignupImage img="true"/>
           <SignupForm details={{data, handleChange:handleChange, handleSubmit:handleSubmit, err, otp, handleOtp, timer, loading}}/>
         </MDBRow>
     </MDBContainer>

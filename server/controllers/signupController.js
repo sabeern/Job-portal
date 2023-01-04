@@ -40,6 +40,7 @@ const signup = async (req,res) => {
           }
             transporter.sendMail(mailOptions, async function(error, info){
               if (error) {
+                console.log(error);
                 res.status(401).send({errMsg:'Otp sending failed'});
               } else {
                 const newOtp = new otpModel({

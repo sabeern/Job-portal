@@ -9,7 +9,7 @@ const login = async (req,res) => {
     const response = formValidator.validateUser(validateData);
     if(response.error)
         {
-            res.send({errMsg:'Entered data not valid'});
+            res.status(401).send({errMsg:'Entered data not valid'});
             return;
         }
     const user = await userModel.findOne({userName});
@@ -17,7 +17,7 @@ const login = async (req,res) => {
             const passwordCheck = await bcrypt.compare(password, user.password);
             if(passwordCheck) {
                 const payload = {
-                    user: {
+                    loginedUser: {
                       id: user._id,
                     },
                   };
@@ -27,12 +27,12 @@ const login = async (req,res) => {
                     { expiresIn: '7 days' }
                   );
                   user.password = '';
-                  res.send({ token, user });
+                  res.status(200).send({ token, user });
             }else {
-                res.send({errMsg:'Username or password invalid'});
+                res.status(401).send({errMsg:'Username or password invalid'});
             }
     }else {
-        res.send({errMsg:'User not exist'});
+        res.status(401).send({errMsg:'User not exist'});
     }
 }
 

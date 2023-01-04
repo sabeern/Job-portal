@@ -16,6 +16,6 @@ const signupRoute = require('./routes/signup');
 const loginRoute = require('./routes/login');
 
 app.use('/signup',signupRoute);
-app.use('/login',loginRoute);
+app.use('/signin',loginRoute);
 
 app.listen(process.env.PORT || 8000);
