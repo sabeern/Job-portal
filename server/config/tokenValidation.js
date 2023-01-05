@@ -8,10 +8,10 @@ const validateToken = (req,res,next) => {
             let userId = decode.loginedUser.id;
             next();
         }catch(err) {
-            return res.status(401).send({errMsg:'authentication failed'}); 
+            return res.status(401).send({errMsg:'Authentication failed'}); 
         }
     }else {
-    return res.status(401).send({errMsg:'authentication failed'});
+    return res.status(401).send({errMsg:'Authentication failed'});
     }
 }
 

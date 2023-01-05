@@ -27,8 +27,9 @@ function Header() {
 			headers: {'X-Custom-Header': `${token}`}
 		  });
       instance.get('/user').then(({data : res})=> {
-        console.log(res.user);
       dispatch(setUser(res.user));
+    }).catch((err) => {
+      navigate('/signin');
     });
   },[navigate, dispatch]);
   return (

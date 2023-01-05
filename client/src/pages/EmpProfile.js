@@ -13,6 +13,14 @@ function EmpProfile() {
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+  const [companyDetails,setCompanyDetails] = useState({
+        companyName : "",
+        companyLocation : "",
+        compnyLogo : ""
+  });
+  const handleEmployerChange = ({currentTarget : input}) => {
+      setCompanyDetails({...companyDetails, [input.name]:input.value})
+  }
   const users = useSelector((store) => store.allUsers);
   let employee = false;
   let employer = false;
@@ -38,9 +46,9 @@ function EmpProfile() {
             {
                 employer && 
                 <Row>
-                    <CompanyProfileForm />
+                    <CompanyProfileForm data={{ companyDetails, handleEmployerChange }}/>
                     <Col md={8} className="overflow-auto" style={{maxHeight:'80vh'}}>
-                    <Link to="" className='float-end mt-3'><Button style={{background:'#14AED0'}} onClick={handleShow}>Post New Job</Button></Link>
+                    <Link to="/postJob" className='float-end mt-3'><Button style={{background:'#14AED0'}}>Post New Job</Button></Link>
                     <CompanyDashboard />
                 </Col>
                 </Row>

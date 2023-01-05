@@ -5,7 +5,7 @@ function FormInputbox({data}) {
   return (
       <Form.Group className={data.class} controlId="formBasicElement">
           <Form.Label>{data.label}</Form.Label>
-          <Form.Control type={data.type} placeholder={data.placeholder} />
+          <Form.Control type={data.type} placeholder={data.placeholder} onChange={data.handleChange} value={data.value} name={data.name}/>
       </Form.Group>
   )
 }

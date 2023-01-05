@@ -20,6 +20,9 @@ const userShema = mongoose.Schema({
     experience : String,
     details : String,
     contactNumber : String,
+    companyName : String,
+    location : String,
+    profileImage : String,
     registeredDate : {
         type : Date,
         required : true,

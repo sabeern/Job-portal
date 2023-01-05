@@ -11,6 +11,7 @@ mongoose.connect(process.env.DBCONNECT);
 app.use(express.urlencoded({extended:true}));
 app.use(express.json());
 app.use(cors());
+app.use(express.static('public'));
 
 const signupRoute = require('./routes/signup');
 const loginRoute = require('./routes/login');

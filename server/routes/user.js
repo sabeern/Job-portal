@@ -3,6 +3,7 @@ const router = express.Router();
 const userController = require('../controllers/userController');
 const tokenValidation = require('../config/tokenValidation');
 
-router.get('/', tokenValidation.validateToken ,userController.getUserDetails);
+router.get('/', tokenValidation.validateToken, userController.getUserDetails);
+router.post('/postJob', tokenValidation.validateToken, userController.postJob);
 
 module.exports = router;
