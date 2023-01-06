@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import EmployeeMenu from '../components/EmployeeMenu';
 import EmployerMenu from '../components/EmployerMenu';
-import { setUser } from '../redux/actions/UserAction';
+import { setUser,removeUser } from '../redux/actions/UserAction';
 
 function Header() {
   const allUsers = useSelector((store) => store.allUsers);
@@ -15,9 +15,11 @@ function Header() {
   const dispatch = useDispatch();
   const handleLogout = () => {
 		localStorage.removeItem("empToken");
+    dispatch(removeUser());
 		navigate('/signin');
 	};
   useEffect(() => {
+    console.log('header');
     const token = localStorage.getItem("empToken");
     if(!token) {
       navigate('/signin');

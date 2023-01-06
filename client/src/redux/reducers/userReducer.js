@@ -8,6 +8,9 @@ export const userReducer = (state = initialState , {type,payload}) => {
         case actionTypes.SET_USER : {
             return {user:payload};
         }
+        case actionTypes.REMOVE_USER : {
+            return {};
+        }
         default : 
             return state;
     }

@@ -12,3 +12,16 @@ export const setAdmin = (admin) => {
         payload : admin
     })
 }
+
+export const removeUser = () => {
+    return({
+        type : actionTypes.REMOVE_USER
+    })
+}
+
+export const setJobs = (jobs) => {
+    return({
+        type : actionTypes.SET_JOBS,
+        payload : jobs
+    })
+}

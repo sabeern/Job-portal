@@ -1,32 +1,71 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Header from '../containers/Header';
 import { Button, Container, Row, Col } from 'react-bootstrap';
 import EachPost from '../containers/EachPost';
 import { Link } from 'react-router-dom';
 import AddPostModal from '../containers/AddPostModal';
 import EmpProfileForm from '../containers/EmpProfileForm';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import CompanyProfileForm from '../containers/CompanyProfileForm';
 import CompanyDashboard from '../containers/CompanyDashboard';
+import axios from 'axios';
+import { setUser } from '../redux/actions/UserAction';
 
 function EmpProfile() {
+    const dispatch = useDispatch();
+    const userDetails = useSelector((store)=> store.allUsers);
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-  const [companyDetails,setCompanyDetails] = useState({
+    const handleShow = () => setShow(true);
+    const [companyDetails,setCompanyDetails] = useState({
         companyName : "",
         companyLocation : "",
-        compnyLogo : ""
-  });
+        profileImage : ""
+      });
+    //const [jobs,setJobs] = useState([]);
+     
+    useEffect(() => {
+      const profileDetails = {companyName : userDetails.user.companyName,
+        companyLocation : userDetails.user.companyLocation,
+        profileImage : userDetails.user.profileImage}
+      setCompanyDetails(profileDetails);
+    },[]);
+  const [image, setImage] = useState();
   const handleEmployerChange = ({currentTarget : input}) => {
-      setCompanyDetails({...companyDetails, [input.name]:input.value})
+      setCompanyDetails({...companyDetails, [input.name]:input.value});
   }
-  const users = useSelector((store) => store.allUsers);
+  const handlePhoto = (e) => {
+    setImage(e.target.files[0]);
+  }
+  async function HandleSubmit(e) {
+      e.preventDefault();
+      const formData = new FormData();
+      formData.append('photo',image);
+      formData.append('companyDetails',JSON.stringify(companyDetails));
+      const token = localStorage.getItem("empToken");
+      const instance = axios.create({
+      baseURL: 'http://localhost:8000',
+      headers: {'X-Custom-Header': `${token}`}
+    }); 
+    try {
+      const data = await instance.post('/user/addCompanyDetails',formData); 
+      dispatch(setUser(data.data));
+      const profileDetails = {companyName : userDetails.user.companyName,
+        companyLocation : userDetails.user.companyLocation,
+        profileImage : userDetails.user.profileImage}
+        profileDetails.profileImage = '';
+      setCompanyDetails(profileDetails);
+      //console.log(test);
+    }catch(err) {
+      console.log(err);
+    }
+
+}
   let employee = false;
   let employer = false;
-  if(users.user.userType === 'Job Seeker') {
+  if(userDetails.user.userType === 'Job Seeker') {
     employee = true;
-  } else if (users.user.userType === 'Job Provider') {
+  } else if (userDetails.user.userType === 'Job Provider') {
     employer = true;
   }
   return (
@@ -46,7 +85,7 @@ function EmpProfile() {
             {
                 employer && 
                 <Row>
-                    <CompanyProfileForm data={{ companyDetails, handleEmployerChange }}/>
+                    <CompanyProfileForm data={{ companyDetails, handleEmployerChange, handlePhoto, HandleSubmit }}/>
                     <Col md={8} className="overflow-auto" style={{maxHeight:'80vh'}}>
                     <Link to="/postJob" className='float-end mt-3'><Button style={{background:'#14AED0'}}>Post New Job</Button></Link>
                     <CompanyDashboard />
