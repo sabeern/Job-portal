@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useState} from 'react';
 import Header from '../containers/Header';
 import { Button, Container, Row, Col } from 'react-bootstrap';
 import EachPost from '../containers/EachPost';
@@ -13,7 +13,10 @@ import { setUser } from '../redux/actions/UserAction';
 
 function EmpProfile() {
     const dispatch = useDispatch();
-    const userDetails = useSelector((store)=> store.allUsers);
+    let userDetails = useSelector((store)=> store.allUsers);
+    if(!userDetails.user) {
+      userDetails = {user:{userType:false}};
+    }
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -23,13 +26,6 @@ function EmpProfile() {
         profileImage : ""
       });
     //const [jobs,setJobs] = useState([]);
-     
-    useEffect(() => {
-      const profileDetails = {companyName : userDetails.user.companyName,
-        companyLocation : userDetails.user.companyLocation,
-        profileImage : userDetails.user.profileImage}
-      setCompanyDetails(profileDetails);
-    },[]);
   const [image, setImage] = useState();
   const handleEmployerChange = ({currentTarget : input}) => {
       setCompanyDetails({...companyDetails, [input.name]:input.value});

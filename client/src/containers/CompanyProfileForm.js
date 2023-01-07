@@ -1,8 +1,11 @@
 import React from 'react';
 import { Form, Button, Col } from 'react-bootstrap';
+import { useSelector } from 'react-redux';
 import FormInputbox from '../components/FormInputbox';
 
 function CompanyProfileForm({ data }) {
+    const userDetails = useSelector((store) => store.allUsers);
+    console.log(userDetails.user);
   return (
         <Col md={4} className="overflow-auto" style={{maxHeight:'80vh'}}>
                 <h1 className='mt-4'>Company Details</h1>

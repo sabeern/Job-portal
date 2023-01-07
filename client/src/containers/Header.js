@@ -1,4 +1,3 @@
-import axios from 'axios';
 import React, { useEffect } from 'react';
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
@@ -7,10 +6,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import EmployeeMenu from '../components/EmployeeMenu';
 import EmployerMenu from '../components/EmployerMenu';
-import { setUser,removeUser } from '../redux/actions/UserAction';
+import { removeUser } from '../redux/actions/UserAction';
 
 function Header() {
-  const allUsers = useSelector((store) => store.allUsers);
+  let allUsers = useSelector((store) => store.allUsers);
+  if(!allUsers.user) {
+    allUsers = {user:{userType:false}};
+  }
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const handleLogout = () => {
@@ -18,22 +20,12 @@ function Header() {
     dispatch(removeUser());
 		navigate('/signin');
 	};
-  useEffect(() => {
-    console.log('header');
+  useEffect(()=> {
     const token = localStorage.getItem("empToken");
     if(!token) {
       navigate('/signin');
     }
-    const instance = axios.create({
-			baseURL: 'http://localhost:8000',
-			headers: {'X-Custom-Header': `${token}`}
-		  });
-      instance.get('/user').then(({data : res})=> {
-      dispatch(setUser(res.user));
-    }).catch((err) => {
-      navigate('/signin');
-    });
-  },[navigate, dispatch]);
+  },[]);
   return (
     <Navbar bg="primary" variant="dark" expand="lg">
       <Container>
