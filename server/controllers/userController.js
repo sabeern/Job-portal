@@ -93,5 +93,50 @@ const updateCompanyDetails = (req,res) => {
         }
     })
 }
+const resumeStorageEngine = multer.diskStorage({
+    destination:(req,file,cb) => {
+        cb(null,'./public/resume');
+    },
+    filename:(req,file,cb) => {
+        let fileName = file.originalname;
+        fileName = fileName.replaceAll(' ','_');
+        cb(null,Date.now()+fileName);
+    }
+  });
+const resumeFilter = (req, file, cb) => {
+    if (file.mimetype == "application/pdf") {
+      cb(null, true);
+    } else {
+      return cb(new Error('Only .pdf format allowed!'));
+    }
+  }
+  const uploadResume = multer({storage:resumeStorageEngine,fileFilter:resumeFilter});  
+const uploadSingleResume = uploadResume.single('resume');
+const updateEmployeeDetails = (req,res) => {
+    uploadSingleResume(req,res,async err => {
+        if(err) {
+            res.status(401).send({errMsg:err.message});
+            return;
+        }
+        let userId=false;
+        let token = req.headers['x-custom-header'];
+        const decode = jwt.verify(token, process.env.JWT_SECRET);
+        userId = decode.loginedUser.id;
+        if(userId) {
+            const employeeDetails = JSON.parse(req.body.employeeDetails);
+            const { firstName, lastName, jobTitle, qualification, experience, moreDetails, contactNumber } = employeeDetails;
+            mongoose.Types.ObjectId(userId);
+            if(req.file) {
+                const employeeResume = req.file.filename;
+                await userModel.findByIdAndUpdate(userId, {firstName, lastName, jobTitle, qualification, experience, details:moreDetails, contactNumber});
+            }else {
+                await userModel.findByIdAndUpdate(userId, {firstName, lastName, jobTitle, qualification, experience, details:moreDetails, contactNumber});
+            }
+            res.status(200).send({msg:'Updated successfully'});
+        }else {
+            res.status(401).send({errMsg:'Authentication failed'});
+        }
+    })
+}
 
-module.exports = { getUserDetails, postJob, updateCompanyDetails };
+module.exports = { getUserDetails, postJob, updateCompanyDetails, updateEmployeeDetails };

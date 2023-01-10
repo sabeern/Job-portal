@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import Header from '../../containers/common/Header';
-import axios from 'axios';
+import { instance } from '../../apis/JobSolutionApi';
 import { setUser } from '../../redux/actions/UserAction';
 import CompanyProfileForm from '../../containers/employer/CompanyProfileForm';
 import { useNavigate } from 'react-router-dom';
@@ -30,16 +30,15 @@ function ProfileUpdate() {
     setImage(e.target.files[0]);
   }
   async function HandleSubmit(e) {
-    console.log(companyDetails);
       e.preventDefault();
       const formData = new FormData();
       formData.append('photo',image);
       formData.append('companyDetails',JSON.stringify(companyDetails));
-      const token = localStorage.getItem("empToken");
-      const instance = axios.create({
-      baseURL: 'http://localhost:8000',
-      headers: {'X-Custom-Header': `${token}`}
-    }); 
+    //   const token = localStorage.getItem("empToken");
+    //   const instance = axios.create({
+    //   baseURL: 'http://localhost:8000',
+    //   headers: {'X-Custom-Header': `${token}`}
+    // }); 
     try {
       const data = await instance.post('/user/addCompanyDetails',formData);
       dispatch(setUser(data.data));

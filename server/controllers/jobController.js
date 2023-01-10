@@ -9,7 +9,8 @@ const getEmployerJobs = async (req,res) => {
         userId = decode.loginedUser.id;
         if(userId) { 
                 userId = mongoose.Types.ObjectId(userId);
-                const employerJobs = await jobModel.find({postedUser:userId});
+                const employerJobs = await jobModel.aggregate([{$match:{postedUser:userId}},
+                                    {$lookup:{from:process.env.USER_COLLECTION,localField:'postedUser',foreignField:'_id',as:'user'}},{$project:{'user.password':0}},{$unwind:'$user'}]);
                 res.status(200).send({employerJobs});
         }else {
             res.status(401).send({errMsg:'Validation failed'});

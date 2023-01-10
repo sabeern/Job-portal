@@ -4,12 +4,11 @@ import { Button, Container, Row, Col } from 'react-bootstrap';
 import EachPost from '../../containers/employer/EachPost';
 import { Link, useNavigate } from 'react-router-dom';
 import AddPostModal from '../../containers/employee/AddPostModal';
-import EmpProfileForm from '../../containers/employee/EmpProfileForm';
+import EmpProfileForm from '../../containers/employee/EmpProfileDetails';
 import { useDispatch, useSelector } from 'react-redux';
 import CompanyProfileDetails from '../../containers/employer/CompanyProfileDetails';
 import CompanyDashboard from '../../containers/employer/CompanyDashboard';
-import { setUser, setJobs, fetchJobs } from '../../redux/actions/UserAction';
-import axios from 'axios';
+import { setUser, fetchJobs } from '../../redux/actions/UserAction';
 
 function EmpProfile() {
     let userDetails = useSelector((store)=> store.allUsers);
@@ -40,7 +39,7 @@ function EmpProfile() {
             <Row>
                 <EmpProfileForm />
                 <Col md={6} className="overflow-auto d-none d-md-block" style={{maxHeight:'80vh'}}>
-                    <Link to="" className='float-end mt-3'><Button style={{background:'#14AED0'}} onClick={handleShow}>Add New Post</Button></Link>
+                    <Row><Col md={12}><Link to="" className='float-end mt-3'><Button style={{background:'#14AED0'}} onClick={handleShow}>Add New Post</Button></Link></Col></Row>
                     <EachPost />
                     <EachPost />
                     <EachPost />
@@ -51,7 +50,7 @@ function EmpProfile() {
                 <Row>
                     <CompanyProfileDetails />
                     <Col md={8} className="overflow-auto" style={{maxHeight:'85vh'}}>
-                    <Link to="/postJob" className='float-end mt-3'><Button style={{background:'#14AED0'}}>Post New Job</Button></Link>
+                    <Row><Col md={12}><Link to="/postJob" className='float-end mt-3'><Button style={{background:'#14AED0'}}>Post New Job</Button></Link></Col></Row>
                     <CompanyDashboard />
                 </Col>
                 </Row>
