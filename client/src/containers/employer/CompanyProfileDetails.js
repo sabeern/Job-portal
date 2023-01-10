@@ -1,12 +1,13 @@
 import React from 'react';
 import { Form, Button, Col } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
-import FormInputbox from '../components/FormInputbox';
+import FormInputbox from '../../components/FormInputbox';
+import { Link } from 'react-router-dom';
 
 function CompanyProfileDetails() {
     const userDetails = useSelector((store) => store.allUsers.user);
   return (
-        <Col md={4} className="overflow-auto" style={{maxHeight:'80vh'}}>
+        <Col md={4} className="overflow-auto" style={{maxHeight:'85vh'}}>
                 <h1 className='mt-4'>Company Details</h1>
             <Form>
                 <FormInputbox data={{type:"text", label:"Company Name", class:"mb-3", placeholder:"Your company name", value:userDetails.companyName, disabled:true}}/>
@@ -14,9 +15,9 @@ function CompanyProfileDetails() {
                 <Col md={12} className="mb-3">
                 <img src={`http://localhost:8000/images/${userDetails.profileImage}`} alt="Logo not available" style={{maxWidth:'100%',height:'auto'}}></img>
                 </Col>
-                <Button variant="primary" type="submit">
+                <Link to="/emprProfile"><Button variant="primary" type="submit">
                     Update Details
-                </Button>
+                </Button></Link>
             </Form>
         </Col>
   )

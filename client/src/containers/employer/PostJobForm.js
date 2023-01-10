@@ -1,8 +1,10 @@
 import { Form, Button, Alert } from 'react-bootstrap';
-import FormInputbox from '../components/FormInputbox';
+import FormInputbox from '../../components/FormInputbox';
 import React from 'react'
+import { useSelector } from 'react-redux';
 
 function PostJobForm({data}) {
+    const jobs = useSelector((store) => store.allJobs);
   return (
     <>
         <h1 className='mb-3 mt-3'>Post New Job</h1>

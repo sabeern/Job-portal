@@ -1,8 +1,8 @@
 import React from 'react';
-import Header from '../containers/Header';
+import Header from '../../containers/common/Header';
 import {Row, Col, Container} from 'react-bootstrap';
-import JobCards from '../containers/JobCards';
-import EachPost from '../containers/EachPost';
+import JobCards from '../../containers/employee/JobCards';
+import EachPost from '../../containers/employer/EachPost';
 
 function Posts() {
   return (

@@ -5,7 +5,7 @@ import {
   }
   from 'mdb-react-ui-kit';
 import { Link } from 'react-router-dom';
-import MdbInputbox from '../components/MdbInputbox';
+import MdbInputbox from '../../components/MdbInputbox';
 import { Alert } from 'react-bootstrap';
 
 function LoginForm({data}) {

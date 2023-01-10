@@ -79,15 +79,13 @@ const updateCompanyDetails = (req,res) => {
             const companyDetails = JSON.parse(req.body.companyDetails);
             const { companyName, companyLocation } = companyDetails;
             mongoose.Types.ObjectId(userId);
-            let userData;
             if(req.file) {
-                console.log('yea');
                 const companyLogo = req.file.filename;
-                userData = await userModel.findByIdAndUpdate(userId, {companyName,companyLocation,profileImage:companyLogo});
+                await userModel.findByIdAndUpdate(userId, {companyName,companyLocation,profileImage:companyLogo});
             }else {
-                console.log('no');
-                userData = await userModel.findByIdAndUpdate(userId, {companyName,companyLocation});
+                await userModel.findByIdAndUpdate(userId, {companyName,companyLocation});
             }
+            const userData = await userModel.findById(userId);
             userData.password = '';
             res.status(200).send(userData);
         }else {

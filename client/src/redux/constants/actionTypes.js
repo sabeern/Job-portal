@@ -3,5 +3,7 @@ export const actionTypes = {
     SET_ADMIN : 'SET_ADMIN',
     REMOVE_USER : 'REMOVE_USER',
     REMOVE_ADMIN : 'REMOVE_ADMIN',
-    SET_JOBS : 'SET_JOBS'
+    SET_JOBS : 'SET_JOBS',
+    FETCH_JOBS : 'FETCH_JOBS',
+    REVOME_JOBS : 'REVOME_JOBS'
 };

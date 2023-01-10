@@ -5,8 +5,8 @@ import {
 } from 'mdb-react-ui-kit';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import LoginSignupImage from '../components/LoginSignupImage';
-import SignupForm from '../containers/SignupForm';
+import LoginSignupImage from '../../components/LoginSignupImage';
+import SignupForm from '../../containers/common/SignupForm';
 
 function Signup() {
   const navigate = useNavigate();

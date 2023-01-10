@@ -1,9 +1,9 @@
 import React from 'react';
-import Header from '../containers/Header';
-import JobCards from '../containers/JobCards';
-import EachJobDetails from '../containers/EachJobDetails';
+import Header from '../../containers/common/Header';
+import JobCards from '../../containers/employee/JobCards';
+import EachJobDetails from '../../containers/employee/EachJobDetails';
 import {Row, Container, Col} from 'react-bootstrap';
-import SearchBox from '../containers/SearchBox';
+import SearchBox from '../../containers/employee/SearchBox';
 
 function Home() {
   return (

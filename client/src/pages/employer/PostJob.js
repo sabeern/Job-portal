@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
-import Header from '../containers/Header';
-import PostJobForm from '../containers/PostJobForm';
+import Header from '../../containers/common/Header';
+import PostJobForm from '../../containers/employer/PostJobForm';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 

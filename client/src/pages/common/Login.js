@@ -4,12 +4,12 @@ import {
     MDBRow
   }
   from 'mdb-react-ui-kit';
-import LoginSignupImage from '../components/LoginSignupImage';
-import LoginForm from '../containers/LoginForm';
+import LoginSignupImage from '../../components/LoginSignupImage';
+import LoginForm from '../../containers/common/LoginForm';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { setUser } from '../redux/actions/UserAction';
+import { setUser } from '../../redux/actions/UserAction';
 
 function Login() {
   const dispatch = useDispatch();
@@ -28,7 +28,7 @@ function Login() {
 			const url = "http://localhost:8000/signin";
 			 const {data : res} = await axios.post(url, loginDetails);
        localStorage.setItem("empToken", res.token);
-       dispatch(setUser(res.user));
+       dispatch(setUser());
        navigate('/empProfile');
 		} catch (error) {
       console.log(error.response.data.errMsg);

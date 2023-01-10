@@ -1,4 +1,4 @@
-import AllRoutes from './containers/AllRoutes';
+import AllRoutes from './containers/common/AllRoutes';
 import './index.css';
 
 function App() {

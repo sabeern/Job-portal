@@ -1,9 +1,9 @@
 import React from 'react';
-import MdbInputbox from '../components/MdbInputbox';
+import MdbInputbox from '../../components/MdbInputbox';
 import { Form, Alert, Spinner } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { MDBBtn, MDBCol } from 'mdb-react-ui-kit';
-import OtpDetails from '../components/OtpDetails';
+import OtpDetails from '../../components/OtpDetails';
 
 function SignupForm({details}) {
   return (

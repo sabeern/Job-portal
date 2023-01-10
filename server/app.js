@@ -16,9 +16,11 @@ app.use(express.static('public'));
 const signupRoute = require('./routes/signup');
 const loginRoute = require('./routes/login');
 const userRoute = require('./routes/user');
+const jobRoute = require('./routes/jobs');
 
-app.use('/signup',signupRoute);
-app.use('/signin',loginRoute);
+app.use('/signup', signupRoute);
+app.use('/signin', loginRoute);
 app.use('/user', userRoute);
+app.use('/jobs', jobRoute);
 
 app.listen(process.env.PORT || 8000);

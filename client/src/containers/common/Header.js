@@ -4,9 +4,9 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
-import EmployeeMenu from '../components/EmployeeMenu';
-import EmployerMenu from '../components/EmployerMenu';
-import { removeUser } from '../redux/actions/UserAction';
+import EmployeeMenu from '../../components/EmployeeMenu';
+import EmployerMenu from '../../components/EmployerMenu';
+import { removeJobs, removeUser } from '../../redux/actions/UserAction';
 
 function Header() {
   let allUsers = useSelector((store) => store.allUsers);
@@ -18,6 +18,7 @@ function Header() {
   const handleLogout = () => {
 		localStorage.removeItem("empToken");
     dispatch(removeUser());
+    dispatch(removeJobs());
 		navigate('/signin');
 	};
   useEffect(()=> {

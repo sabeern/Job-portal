@@ -1,13 +1,15 @@
-import React, { useState} from 'react';
-import Header from '../containers/Header';
+import React, { useEffect, useState} from 'react';
+import Header from '../../containers/common/Header';
 import { Button, Container, Row, Col } from 'react-bootstrap';
-import EachPost from '../containers/EachPost';
-import { Link } from 'react-router-dom';
-import AddPostModal from '../containers/AddPostModal';
-import EmpProfileForm from '../containers/EmpProfileForm';
-import { useSelector } from 'react-redux';
-import CompanyProfileDetails from '../containers/CompanyProfileDetails';
-import CompanyDashboard from '../containers/CompanyDashboard';
+import EachPost from '../../containers/employer/EachPost';
+import { Link, useNavigate } from 'react-router-dom';
+import AddPostModal from '../../containers/employee/AddPostModal';
+import EmpProfileForm from '../../containers/employee/EmpProfileForm';
+import { useDispatch, useSelector } from 'react-redux';
+import CompanyProfileDetails from '../../containers/employer/CompanyProfileDetails';
+import CompanyDashboard from '../../containers/employer/CompanyDashboard';
+import { setUser, setJobs, fetchJobs } from '../../redux/actions/UserAction';
+import axios from 'axios';
 
 function EmpProfile() {
     let userDetails = useSelector((store)=> store.allUsers);
@@ -16,8 +18,13 @@ function EmpProfile() {
     }
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
     const handleShow = () => setShow(true);
-  
+    useEffect(() => {
+      dispatch(setUser());
+      dispatch(fetchJobs());
+    },[]);
   let employee = false;
   let employer = false;
   if(userDetails.user.userType === 'Job Seeker') {
@@ -43,7 +50,7 @@ function EmpProfile() {
                 employer && 
                 <Row>
                     <CompanyProfileDetails />
-                    <Col md={8} className="overflow-auto" style={{maxHeight:'80vh'}}>
+                    <Col md={8} className="overflow-auto" style={{maxHeight:'85vh'}}>
                     <Link to="/postJob" className='float-end mt-3'><Button style={{background:'#14AED0'}}>Post New Job</Button></Link>
                     <CompanyDashboard />
                 </Col>

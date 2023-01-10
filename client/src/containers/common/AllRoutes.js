@@ -1,11 +1,12 @@
 import React from 'react';
 import {Routes, Route} from 'react-router-dom';
-import EmpProfile from '../pages/EmpProfile';
-import Home from '../pages/Home';
-import Login from '../pages/Login';
-import PostJob from '../pages/PostJob';
-import Posts from '../pages/Posts';
-import Signup from '../pages/Signup';
+import EmpProfile from '../../pages/common/EmpProfile';
+import Home from '../../pages/employee/Home';
+import Login from '../../pages/common/Login';
+import PostJob from '../../pages/employer/PostJob';
+import Posts from '../../pages/employee/Posts';
+import Signup from '../../pages/common/Signup';
+import ProfileUpdate from '../../pages/employer/ProfileUpdate';
 
 function AllRoutes() {
   return (
@@ -16,6 +17,7 @@ function AllRoutes() {
       <Route path="/posts" element={<Posts />}></Route>
       <Route path="/empProfile" element={<EmpProfile />}></Route>
       <Route path="/postJob" element={<PostJob />}></Route>
+      <Route path="/emprProfile" element={<ProfileUpdate />}></Route>
     </Routes>
   )
 }

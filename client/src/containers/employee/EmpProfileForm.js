@@ -1,6 +1,6 @@
 import React from 'react';
 import { Form, Button, Row, Col } from 'react-bootstrap';
-import FormInputbox from '../components/FormInputbox';
+import FormInputbox from '../../components/FormInputbox';
 
 function EmpProfileForm() {
   return (
