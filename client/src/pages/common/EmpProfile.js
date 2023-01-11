@@ -23,6 +23,7 @@ function EmpProfile() {
     let employee = false;
   let employer = false;
     useEffect(() => {
+      console.log('called me');
       dispatch(setUser());
       if(userDetails.user.userType === 'Job Seeker') {
         employee = true;
@@ -31,7 +32,7 @@ function EmpProfile() {
         employer = true;
         dispatch(fetchJobs());
       }
-    },[]);
+    },[show]);
   if(userDetails.user.userType === 'Job Seeker') {
     employee = true;
     dispatch(fetchAllJobs);
