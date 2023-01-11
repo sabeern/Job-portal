@@ -5,7 +5,7 @@ const initialState = {
 }
 export const jobReducer = (state = initialState , {type,payload}) => {
     switch(type) {
-        case actionTypes.SET_JOBS : {
+        case actionTypes.FETSH_ALL_JOBS : {
             return {jobs:payload};
         }
         case actionTypes.FETCH_JOBS : {

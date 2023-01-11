@@ -3,7 +3,9 @@ import {instance} from '../../apis/JobSolutionApi';
 
 export const setUser = (user) => {
     return async function(dispatch, getState) {
-        const res = await instance.get('/user');
+        const token = localStorage.getItem('empToken');
+        const headers = {'X-Custom-Header': `${token}`}
+        const res = await instance.get('/user',{ headers: headers });
         dispatch({type:actionTypes.SET_USER, payload: res.data.user});
     }
 }
@@ -21,16 +23,22 @@ export const removeUser = () => {
     })
 }
 
-export const setJobs = (jobs) => {
-    return({
-        type : actionTypes.SET_JOBS,
-        payload : jobs
-    })
+export const fetchAllJobs = (jobs) => {
+    return async function(dispatch, getState) {
+        const token = localStorage.getItem('empToken');
+        const headers = {'X-Custom-Header': `${token}`}
+        const res = await instance.get('/jobs/allJobs', { headers: headers });
+        console.log(res.data.allJobs);
+        dispatch({type:actionTypes.FETSH_ALL_JOBS, payload: res.data.allJobs});
+    }
 }
 
 export const fetchJobs = () => {
     return async function(dispatch, getState) {
-        const res = await instance.get('/jobs/employerJobs');
+        console.log('called');
+        const token = localStorage.getItem('empToken');
+        const headers = {'X-Custom-Header': `${token}`}
+        const res = await instance.get('/jobs/employerJobs', { headers: headers });
         dispatch({type:actionTypes.FETCH_JOBS, payload: res.data.employerJobs});
     }
 }

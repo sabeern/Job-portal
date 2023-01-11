@@ -1,16 +1,16 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 import EmprJobCard from './EmprJobCard';
 
 function CompanyDashboard() {
   const jobs = useSelector((store) => store.allJobs.jobs);
-  let jobStatus;
-  if(jobs.length > 0) {
-    jobStatus = true;
-  }else {
-    jobStatus = false;
-  }
+  let jobStatus = false;
+      if(jobs) {
+        if(jobs.length > 0) {
+          jobStatus = true;
+        }
+      }
   return (
     <div className='mt-3'>
         {jobStatus ?  

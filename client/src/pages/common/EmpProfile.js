@@ -8,7 +8,7 @@ import EmpProfileForm from '../../containers/employee/EmpProfileDetails';
 import { useDispatch, useSelector } from 'react-redux';
 import CompanyProfileDetails from '../../containers/employer/CompanyProfileDetails';
 import CompanyDashboard from '../../containers/employer/CompanyDashboard';
-import { setUser, fetchJobs } from '../../redux/actions/UserAction';
+import { setUser, fetchJobs, fetchAllJobs } from '../../redux/actions/UserAction';
 
 function EmpProfile() {
     let userDetails = useSelector((store)=> store.allUsers);
@@ -20,16 +20,24 @@ function EmpProfile() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const handleShow = () => setShow(true);
+    let employee = false;
+  let employer = false;
     useEffect(() => {
       dispatch(setUser());
-      dispatch(fetchJobs());
+      if(userDetails.user.userType === 'Job Seeker') {
+        employee = true;
+        dispatch(fetchAllJobs());
+      } else if (userDetails.user.userType === 'Job Provider') {
+        employer = true;
+        dispatch(fetchJobs());
+      }
     },[]);
-  let employee = false;
-  let employer = false;
   if(userDetails.user.userType === 'Job Seeker') {
     employee = true;
+    dispatch(fetchAllJobs);
   } else if (userDetails.user.userType === 'Job Provider') {
     employer = true;
+    dispatch(fetchJobs)
   }
   return (
       <>

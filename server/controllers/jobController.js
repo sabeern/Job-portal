@@ -16,5 +16,10 @@ const getEmployerJobs = async (req,res) => {
             res.status(401).send({errMsg:'Validation failed'});
         }
 }
+const getAllJobs = async (req,res) => {
+        const allJobs = await jobModel.aggregate([{$match:{}},
+                                {$lookup:{from:process.env.USER_COLLECTION,localField:'postedUser',foreignField:'_id',as:'user'}},{$project:{'user.password':0}},{$unwind:'$user'}]);
+        res.status(200).send({allJobs});
+}
 
-module.exports = { getEmployerJobs };
+module.exports = { getEmployerJobs, getAllJobs };

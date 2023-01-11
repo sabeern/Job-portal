@@ -6,7 +6,6 @@ import FormInputbox from '../../components/FormInputbox';
 
 function EmpProfileDetails() {
     const userDetails = useSelector((store) => store.allUsers.user);
-    console.log(userDetails);
   return (
         <Col md={6} className="overflow-auto" style={{maxHeight:'80vh'}}>
                 <h1 className='mt-4'>Profile Information</h1>

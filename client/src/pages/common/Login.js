@@ -6,10 +6,10 @@ import {
   from 'mdb-react-ui-kit';
 import LoginSignupImage from '../../components/LoginSignupImage';
 import LoginForm from '../../containers/common/LoginForm';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { setUser } from '../../redux/actions/UserAction';
+import { fetchAllJobs, fetchJobs, setUser } from '../../redux/actions/UserAction';
+import { instance } from '../../apis/JobSolutionApi';
 
 function Login() {
   const dispatch = useDispatch();
@@ -26,9 +26,14 @@ function Login() {
 		e.preventDefault();
 		try {
 			const url = "http://localhost:8000/signin";
-			 const {data : res} = await axios.post(url, loginDetails);
+			 const {data : res} = await instance.post(url, loginDetails);
        localStorage.setItem("empToken", res.token);
        dispatch(setUser());
+       if(res.user.userType === 'Job Provider') {
+        dispatch(fetchJobs());
+       }else {
+        dispatch(fetchAllJobs());
+       }
        navigate('/empProfile');
 		} catch (error) {
       console.log(error.response.data.errMsg);

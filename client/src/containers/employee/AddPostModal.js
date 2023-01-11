@@ -10,7 +10,7 @@ function AddPostModal({data}) {
             <Modal.Body>
                 <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
                     <Form.Label>Comments</Form.Label>
-                    <Form.Control as="textarea" rows={3} />
+                    <Form.Control as="textarea" rows={2} />
                 </Form.Group>
                 <Form.Group controlId="formFile" className="mb-3">
                     <Form.Label>Select Image</Form.Label>
