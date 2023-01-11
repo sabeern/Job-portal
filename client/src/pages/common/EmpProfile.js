@@ -48,7 +48,7 @@ function EmpProfile() {
                     {employeePost &&
                       employeePost.map((post, index) => {
                         return(
-                          <EachPost data={{post}} key={index}/>
+                          <><EachPost data={{post}} key={index}/><hr/></>
                         );
                       })
                     }
