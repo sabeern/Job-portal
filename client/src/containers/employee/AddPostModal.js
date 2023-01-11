@@ -1,13 +1,14 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Form, Button, Modal } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import { instance } from '../../apis/JobSolutionApi';
+import { setEmployeePosts } from '../../redux/actions/UserAction';
 
 function AddPostModal({data}) {
     const [selectedImage, setSelectedImage] = useState();
     const [post,setPost] = useState();
-    const navigate = useNavigate();
+    const dispatch = useDispatch();
     const imageChange = (e) => {
         if (e.target.files && e.target.files.length > 0) {
           setSelectedImage(e.target.files[0]);
@@ -32,9 +33,11 @@ function AddPostModal({data}) {
                 const postImage = res.data.secure_url;
                 const postData = {postDescription : post,postImage}
                 try {
-                    await instance.post('/post/addPost', postData);
-                    //navigate('/empProfile');
+                    const token = localStorage.getItem('empToken');
+                    const headers = {'X-Custom-Header': `${token}`};
+                    await instance.post('/post/addPost', postData, {headers : headers});
                     setSelectedImage();
+                    dispatch(setEmployeePosts());
                     data.handleClose();
                 }catch(err) {
                     console.log(err);

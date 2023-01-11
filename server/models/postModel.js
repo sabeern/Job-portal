@@ -8,6 +8,15 @@ const postShema = mongoose.Schema({
     postImage: {
         type:String,
         required:true
+    },
+    addedUser: {
+        type : Object,
+        required : true
+    },
+    addedDate: {
+        type : Date,
+        required : true,
+        default : new Date()
     }
 });
 

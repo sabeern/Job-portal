@@ -8,7 +8,7 @@ import LoginSignupImage from '../../components/LoginSignupImage';
 import LoginForm from '../../containers/common/LoginForm';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { fetchAllJobs, fetchJobs, setUser } from '../../redux/actions/UserAction';
+import { fetchAllJobs, fetchJobs, setEmployeePosts, setUser } from '../../redux/actions/UserAction';
 import { instance } from '../../apis/JobSolutionApi';
 
 function Login() {
@@ -33,6 +33,7 @@ function Login() {
         dispatch(fetchJobs());
        }else {
         dispatch(fetchAllJobs());
+        dispatch(setEmployeePosts());
        }
        navigate('/empProfile');
 		} catch (error) {

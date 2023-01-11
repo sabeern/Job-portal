@@ -15,6 +15,7 @@ function EmpProfile() {
     if(!userDetails.user) {
       userDetails = {user:{userType:false}};
     }
+    const employeePost = useSelector((store) => store.allPosts.posts);
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const dispatch = useDispatch();
@@ -23,22 +24,17 @@ function EmpProfile() {
     let employee = false;
   let employer = false;
     useEffect(() => {
-      console.log('called me');
       dispatch(setUser());
       if(userDetails.user.userType === 'Job Seeker') {
-        employee = true;
         dispatch(fetchAllJobs());
       } else if (userDetails.user.userType === 'Job Provider') {
-        employer = true;
         dispatch(fetchJobs());
       }
     },[show]);
   if(userDetails.user.userType === 'Job Seeker') {
     employee = true;
-    dispatch(fetchAllJobs);
   } else if (userDetails.user.userType === 'Job Provider') {
     employer = true;
-    dispatch(fetchJobs)
   }
   return (
       <>
@@ -49,9 +45,13 @@ function EmpProfile() {
                 <EmpProfileForm />
                 <Col md={6} className="overflow-auto d-none d-md-block" style={{maxHeight:'80vh'}}>
                     <Row><Col md={12}><Link to="" className='float-end mt-3'><Button style={{background:'#14AED0'}} onClick={handleShow}>Add New Post</Button></Link></Col></Row>
-                    <EachPost />
-                    <EachPost />
-                    <EachPost />
+                    {employeePost &&
+                      employeePost.map((post, index) => {
+                        return(
+                          <EachPost data={{post}} key={index}/>
+                        );
+                      })
+                    }
                 </Col>
             </Row> }
             {

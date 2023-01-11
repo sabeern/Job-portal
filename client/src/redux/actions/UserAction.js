@@ -35,7 +35,6 @@ export const fetchAllJobs = (jobs) => {
 
 export const fetchJobs = () => {
     return async function(dispatch, getState) {
-        console.log('called');
         const token = localStorage.getItem('empToken');
         const headers = {'X-Custom-Header': `${token}`}
         const res = await instance.get('/jobs/employerJobs', { headers: headers });
@@ -43,8 +42,23 @@ export const fetchJobs = () => {
     }
 }
 
+export const setEmployeePosts = () => {
+    return async function(dispatch, getState) {
+        const token = localStorage.getItem('empToken');
+        const headers = {'X-Custom-Header': `${token}`};
+        const res = await instance.get('/post/employeePosts', { headers: headers });
+        dispatch({type:actionTypes.SET_EMPLOYEE_POST, payload: res.data.employeePosts});
+    }
+}
+
 export const removeJobs = () => {
     return({
         type : actionTypes.REVOME_JOBS,
+    })
+}
+
+export const removePosts = () => {
+    return({
+        type : actionTypes.REMOVE_POST,
     })
 }

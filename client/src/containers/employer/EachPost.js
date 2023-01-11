@@ -1,7 +1,7 @@
 import React from 'react';
 import { MDBContainer } from 'mdb-react-ui-kit';
 
-function EachPost() {
+function EachPost({data}) {
   return (
       <>
         <MDBContainer className="my-2 d-flex">
@@ -12,8 +12,8 @@ function EachPost() {
                 <span style={{paddingLeft:'30px'}}>28/12/2022</span>
             </p>
         </MDBContainer>
-            <p>Complete first project in flutter.</p>
-            <img src="https://static-cse.canva.com/blob/835508/create_instagram-post-creator_lead.jpg" alt="Posts" style={{maxHeight:'300px',maxWidth:'100%'}}></img>
+            <p>{data ? data.post.postDescription : ''}</p>
+            <img src={data ? data.post.postImage : ''} alt="Posts" style={{maxHeight:'500px',maxWidth:'100%'}}></img>
       </>
   )
 }
