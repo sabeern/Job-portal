@@ -51,6 +51,13 @@ export const setEmployeePosts = () => {
     }
 }
 
+export const setSelectedJob = (job) => {
+    return({
+        type : actionTypes.SET_SELECTED_JOB,
+        payload : job
+    })
+}
+
 export const removeJobs = () => {
     return({
         type : actionTypes.REVOME_JOBS,

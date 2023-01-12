@@ -1,41 +1,27 @@
 import React from 'react';
 import { Card, Button } from 'react-bootstrap';
 import { BsFillCreditCardFill } from "react-icons/bs";
+import { useSelector } from 'react-redux';
+import { returnNewDate } from '../../other/DateDisplay';
 
 function EachJobDetails() {
+  const job = useSelector((store) => store.selectedJob.job);
   return (
     <Card className="overflow-auto" style={{height:'70vh'}}>
-      <Card.Header as="h5" style={{fontWeight:'600'}}>Mern Stack Developer</Card.Header>
+      <Card.Header as="h5" style={{fontWeight:'600'}}>{job ? job.jobTitle : ''}</Card.Header>
       <Card.Body>
-        <Card.Title>Techno Technologis Ltd</Card.Title>
-        <Card.Subtitle className="mb-2 text-muted">Cochin, Kerala</Card.Subtitle>
-        <Card.Title style={{fontWeight:'600'}}><BsFillCreditCardFill/> ₹ 10000 - ₹ 20000 </Card.Title>
+        <Card.Title>{job ? job.user.companyName : ''}</Card.Title>
+        <Card.Subtitle className="mb-2 text-muted">{job ? job.user.companyLocation : ''}</Card.Subtitle>
+        <Card.Title style={{fontWeight:'600'}}><BsFillCreditCardFill/> ₹ {job ? job.salaryRange : ''} </Card.Title>
         <Card.Subtitle className="text-muted">Skills Required</Card.Subtitle>
         <Card.Text>
-        Javascript, Node Js, React, Bootstrap, Mongo DB
+        {job ? job.requiredSkills : ''}
         </Card.Text>
         <Card.Text>
-          With supporting text below as a natural lead-in to additional content.
+        {job ? job.moreDetails : ''}
         </Card.Text>
-        <Card.Text>
-          With supporting text below as a natural lead-in to additional content.
-        </Card.Text>
-        <Card.Text>
-          With supporting text below as a natural lead-in to additional content.
-        </Card.Text>
-        <Card.Text>
-          With supporting text below as a natural lead-in to additional content.
-        </Card.Text>
-        <Card.Text>
-          With supporting text below as a natural lead-in to additional content.
-        </Card.Text>
-        <Card.Text>
-          With supporting text below as a natural lead-in to additional content.
-        </Card.Text>
-        <Card.Text>
-          With supporting text below as a natural lead-in to additional content.
-        </Card.Text>
-        <Button variant="primary">Go somewhere</Button>
+        <Card.Link style={{textDecoration:'none'}}>Posted on {job ? returnNewDate(job.postedDate) : ''}</Card.Link><br/>
+        <Button variant="primary" className='mt-3'>Apply Now</Button>
       </Card.Body>
     </Card>
   )

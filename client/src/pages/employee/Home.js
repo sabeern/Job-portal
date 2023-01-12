@@ -4,11 +4,15 @@ import JobCards from '../../containers/employee/JobCards';
 import EachJobDetails from '../../containers/employee/EachJobDetails';
 import {Row, Container, Col} from 'react-bootstrap';
 import SearchBox from '../../containers/employee/SearchBox';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { setSelectedJob } from '../../redux/actions/UserAction';
 
 function Home() {
   const allJobs = useSelector((store) => store.allJobs.jobs);
-  console.log(allJobs);
+  const dispatch = useDispatch();
+  if(allJobs && allJobs.length > 0) {
+         dispatch(setSelectedJob(allJobs[0]));
+  }
   return (
       <>
         <Container fluid>

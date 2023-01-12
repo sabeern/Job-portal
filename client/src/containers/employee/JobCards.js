@@ -1,15 +1,14 @@
 import React from 'react';
 import { Card } from 'react-bootstrap';
 import { BsFillCreditCardFill } from "react-icons/bs";
+import { useDispatch } from 'react-redux';
+import { setSelectedJob } from '../../redux/actions/UserAction';
+import { returnNewDate } from '../../other/DateDisplay';
 
 function JobCards({data}) {
-  function returnNewDate(fullDate) {
-    const date = new Date(fullDate);
-      const newDate = date.getDate()+'/'+date.getMonth()+1+'/'+date.getFullYear();
-      return newDate;
-  }
+  const dispatch = useDispatch();
   return (
-    <Card className='mb-3'>
+    <Card className='mb-3' style={{cursor:'pointer'}} onClick={()=>dispatch(setSelectedJob(data))}>
       <Card.Body>
         <Card.Title style={{fontWeight:'600'}}>{data.jobTitle}</Card.Title>
         <Card.Title>{data.user.companyName}</Card.Title>
