@@ -1,11 +1,35 @@
-import React from 'react';
-import { Card, Button } from 'react-bootstrap';
+import React, { useEffect, useState } from 'react';
+import { Card, Button, CarouselItem } from 'react-bootstrap';
 import { BsFillCreditCardFill } from "react-icons/bs";
 import { useSelector } from 'react-redux';
 import { returnNewDate } from '../../other/DateDisplay';
+import { instance } from '../../apis/JobSolutionApi';
 
 function EachJobDetails() {
   const job = useSelector((store) => store.selectedJob.job);
+  const [applyStatus, setApplyStatus] = useState(false);
+  const applyJob = async (jobId) => {
+        const token = localStorage.getItem('empToken');
+        const headers = {'X-Custom-Header': `${token}`};
+        try {
+          await instance.post('/jobs/applyJob', {jobId} , {headers : headers});
+          setApplyStatus(true);
+        }catch(err) {
+          console.log(err);
+        }
+  }
+  useEffect(() => {
+        if(job) {
+          const token = localStorage.getItem('empToken');
+          const headers = {'X-Custom-Header': `${token}`};
+          instance.post('/jobs/applyStatus', {jobId:job._id}, {headers : headers})
+          .then((res) => {
+            setApplyStatus(true);
+          }).catch((err)=> {
+            setApplyStatus(false);
+          })
+        }
+  },[job]);
   return (
     <Card className="overflow-auto" style={{height:'70vh'}}>
       <Card.Header as="h5" style={{fontWeight:'600'}}>{job ? job.jobTitle : ''}</Card.Header>
@@ -21,7 +45,11 @@ function EachJobDetails() {
         {job ? job.moreDetails : ''}
         </Card.Text>
         <Card.Link style={{textDecoration:'none'}}>Posted on {job ? returnNewDate(job.postedDate) : ''}</Card.Link><br/>
-        <Button variant="primary" className='mt-3'>Apply Now</Button>
+        { applyStatus ?
+                <Card.Text className='mt-3' style={{color:'green'}}> &#10004; You Applied For This Job</Card.Text>
+                :
+        <Button variant="primary" className='mt-3' onClick={job ? ()=> applyJob(job._id) : ''}>Apply Now</Button>
+         }
       </Card.Body>
     </Card>
   )
