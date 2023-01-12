@@ -34,13 +34,10 @@ function ProfileUpdate() {
       const formData = new FormData();
       formData.append('photo',image);
       formData.append('companyDetails',JSON.stringify(companyDetails));
-    //   const token = localStorage.getItem("empToken");
-    //   const instance = axios.create({
-    //   baseURL: 'http://localhost:8000',
-    //   headers: {'X-Custom-Header': `${token}`}
-    // }); 
     try {
-      const data = await instance.post('/user/addCompanyDetails',formData);
+      const token = localStorage.getItem('empToken');
+      const headers= {'X-Custom-Header': `${token}`}
+      const data = await instance.post('/user/addCompanyDetails',formData, {headers:headers});
       dispatch(setUser(data.data));
       navigate('/empProfile');
     }catch(err) {

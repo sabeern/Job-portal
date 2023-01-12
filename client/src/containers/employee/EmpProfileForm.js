@@ -40,7 +40,9 @@ function EmpProfileForm() {
         formData.append('resume',resume);
         formData.append('employeeDetails',JSON.stringify(employeeDetails));
         try {
-            await instance.post('/user/addEmployeeDetails',formData);
+            const token = localStorage.getItem('empToken');
+            const headers = {'X-Custom-Header': `${token}`};
+            await instance.post('/user/addEmployeeDetails',formData,{headers:headers});
             dispatch(setUser());
             navigate('/empProfile');
         }catch(err) {

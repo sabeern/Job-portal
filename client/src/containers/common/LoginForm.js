@@ -22,7 +22,7 @@ function LoginForm({data}) {
                 <MdbInputbox data={{label:'Email address', id:'formControlLg', type:'email', name:'userName', value:data.loginDetails.userName, handleChange:data.handleChange}}/>
                 <MdbInputbox data={{label:'Password', id:'formControlLg', type:'password', name:'password', value:data.loginDetails.password, handleChange:data.handleChange}}/>
                 <MDBBtn className="mb-4 px-5 mx-5 w-100" color='primary' size='lg' onClick={data.handleLogin}>Login</MDBBtn>
-                <p className="small mb-5 pb-lg-3 ms-5"><a className="text-muted" href="#!">Forgot password?</a></p>
+                <p className="small mb-5 pb-lg-3 ms-5"><Link to="/forgotPassword" className="text-muted">Forgot password?</Link></p>
                 <p className='ms-5'>Don't have an account? <Link to="/signup">
                     Register here</Link>
                 </p>

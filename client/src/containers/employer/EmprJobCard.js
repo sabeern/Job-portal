@@ -1,13 +1,18 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card } from 'react-bootstrap';
 import { BsFillCreditCardFill } from "react-icons/bs";
+import { instance } from '../../apis/JobSolutionApi';
+import { returnNewDate } from '../../other/DateDisplay';
 
 function EmprJobCard({jobDetails}) {
-  function returnNewDate(fullDate) {
-    const date = new Date(fullDate);
-      const newDate = date.getDate()+'/'+date.getMonth()+1+'/'+date.getFullYear();
-      return newDate;
-  }
+const [appCount, setAppCount] = useState(0);
+  useEffect(() => {
+      if(jobDetails) {
+        const jobId = jobDetails._id;
+        instance.get(`/jobs/applicantCount/${jobId}`)
+          .then((res) =>setAppCount(res.data.appCount));
+      }
+  },[jobDetails]);
   return (
     <Card className='mb-3'>
       <Card.Body>
@@ -20,7 +25,7 @@ function EmprJobCard({jobDetails}) {
             {jobDetails.requiredSkills}
         </Card.Text>
         <Card.Link style={{textDecoration:'none'}}>Posted on {returnNewDate(jobDetails.postedDate)}</Card.Link>
-        <Card.Link style={{textDecoration:'none',paddingLeft:'60px'}}>Applied (10 Candidates) </Card.Link>
+        <Card.Link style={{textDecoration:'none',paddingLeft:'60px'}}>Applied ({appCount} Candidates) </Card.Link>
       </Card.Body>
     </Card>
   )

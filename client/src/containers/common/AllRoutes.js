@@ -8,6 +8,7 @@ import Posts from '../../pages/employee/Posts';
 import Signup from '../../pages/common/Signup';
 import ProfileUpdate from '../../pages/employer/ProfileUpdate';
 import EmpProfileUpdate from '../../pages/employee/EmpProfileUpdate';
+import ForgotPassword from '../../pages/common/ForgotPassword';
 
 function AllRoutes() {
   return (
@@ -20,6 +21,7 @@ function AllRoutes() {
       <Route path="/postJob" element={<PostJob />}></Route>
       <Route path="/emprProfile/updateProfile" element={<ProfileUpdate />}></Route>
       <Route path="/empProfile/updateProfile" element={<EmpProfileUpdate />}></Route>
+      <Route path="/forgotPassword" element={<ForgotPassword />}></Route>
     </Routes>
   )
 }

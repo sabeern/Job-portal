@@ -65,5 +65,11 @@ const checkJobStatus = async (req,res) => {
             res.status(401).send({errMsg:'Validation failed'});
         }
 }
+const findApplicantCount = async(req,res) => {
+        let jobId  = req.params.jobId;
+        jobId = mongoose.Types.ObjectId(jobId);
+        const appCount = await appliedJobModel.find({jobId}).count();
+        res.status(200).send({appCount});
+}
 
-module.exports = { getEmployerJobs, getAllJobs, applyJob, checkJobStatus };
+module.exports = { getEmployerJobs, getAllJobs, applyJob, checkJobStatus, findApplicantCount };
