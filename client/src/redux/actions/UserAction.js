@@ -24,12 +24,19 @@ export const removeUser = () => {
 }
 
 export const fetchAllJobs = (jobs) => {
-    return async function(dispatch, getState) {
-        const token = localStorage.getItem('empToken');
-        const headers = {'X-Custom-Header': `${token}`}
-        const res = await instance.get('/jobs/allJobs', { headers: headers });
-        console.log(res.data.allJobs);
-        dispatch({type:actionTypes.FETSH_ALL_JOBS, payload: res.data.allJobs});
+    if(!jobs) {
+        return async function(dispatch, getState) {
+            const token = localStorage.getItem('empToken');
+            const headers = {'X-Custom-Header': `${token}`}
+            const res = await instance.get('/jobs/allJobs', { headers: headers });
+            dispatch({type:actionTypes.FETSH_ALL_JOBS, payload: res.data.allJobs});
+        }
+    }else {
+        console.log('else')
+        return({
+            type : actionTypes.FETSH_ALL_JOBS,
+            payload : jobs
+        })
     }
 }
 

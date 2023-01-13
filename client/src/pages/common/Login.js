@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { fetchAllJobs, fetchJobs, setEmployeePosts, setUser } from '../../redux/actions/UserAction';
 import { instance } from '../../apis/JobSolutionApi';
+import Loader from '../../containers/common/Loader';
 
 function Login() {
   const dispatch = useDispatch();
@@ -17,6 +18,7 @@ function Login() {
     userName : '',
     password : ''
   });
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const handleChange = ({ currentTarget: input }) => {
 		setLoginDetails({ ...loginDetails, [input.name]: input.value });
@@ -24,6 +26,7 @@ function Login() {
   const [loginErorr,setLoginErorr] = useState();
   const handleLogin = async (e) => {
 		e.preventDefault();
+    setLoading(true);
 		try {
 			const url = "http://localhost:8000/signin";
 			 const {data : res} = await instance.post(url, loginDetails);
@@ -37,17 +40,21 @@ function Login() {
        }
        navigate('/empProfile');
 		} catch (error) {
+      setLoading(false);
       console.log(error.response.data.errMsg);
       setLoginErorr(error.response.data.errMsg);
 		}
 	}
   return (
-        <MDBContainer fluid>
+    <>
+        { loading && <Loader /> }
+        { (!loading) &&(<MDBContainer fluid>
            <MDBRow>
               <LoginForm data={{handleChange, loginDetails, handleLogin, loginErorr}}/>
               <LoginSignupImage img="true"/>
            </MDBRow>
-        </MDBContainer>
+        </MDBContainer>) }
+    </>
   )
 }
 

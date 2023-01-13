@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { Row, Col, Form, Button } from 'react-bootstrap';
+import { Row, Col, Form, Button, Alert } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import FormInputbox from '../../components/FormInputbox';
 import { instance } from '../../apis/JobSolutionApi';
 import { setUser } from '../../redux/actions/UserAction';
+import Loader from '../common/Loader';
 
 function EmpProfileForm() {
     const userDetails = useSelector((store) => store.allUsers.user);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const [err, setErr] = useState();
         const [employeeDetails, setEmployeeDetails] = useState({
                             firstName : "",
                             lastName : "",
@@ -34,8 +36,10 @@ function EmpProfileForm() {
     const handleChange = ({currentTarget : input}) => {
         setEmployeeDetails({...employeeDetails, [input.name]:input.value});
     }
+    const [loading, setLoading] = useState(false);
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);
         const formData = new FormData();
         formData.append('resume',resume);
         formData.append('employeeDetails',JSON.stringify(employeeDetails));
@@ -46,17 +50,23 @@ function EmpProfileForm() {
             dispatch(setUser());
             navigate('/empProfile');
         }catch(err) {
-            console.log(err);
+            setLoading(false);
+            setErr(err.response.data.errMsg);
         }
     }
     const handleFile = (e) => {
         setResume(e.target.files[0]);
       }
   return (
+    <>
+    {loading && <Loader />}
     <Col md={12} className="mb-5">
                 <h1 className='mt-4'>Profile Information</h1>
             <Form onSubmit={handleSubmit} encType='multipart/form-data'>
                 <Row>
+                {err && <Alert variant='danger' className='mb-4 w-100'>
+                    {err}
+                </Alert>}
                     <Col md={6}>
                         <FormInputbox data={{type:"text", placeholder:"First name", label:"First Name", value:employeeDetails.firstName, name:'firstName', handleChange:handleChange, disabled:false, class:"mb-3 mt-3"}}/>
                     </Col>
@@ -81,6 +91,7 @@ function EmpProfileForm() {
                 </Button>
             </Form>
         </Col>
+    </>
   )
 }
 

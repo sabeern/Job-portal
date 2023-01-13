@@ -1,14 +1,17 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Form, Button, Modal } from 'react-bootstrap';
+import { Form, Button, Modal, Alert } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
 import { instance } from '../../apis/JobSolutionApi';
 import { setEmployeePosts } from '../../redux/actions/UserAction';
+import Loader from '../common/Loader';
 
 function AddPostModal({data}) {
     const [selectedImage, setSelectedImage] = useState();
     const [post,setPost] = useState();
     const dispatch = useDispatch();
+    const [err,setErr] = useState('');
+    const [loading, setLoading] = useState(false);
     const imageChange = (e) => {
         if (e.target.files && e.target.files.length > 0) {
           setSelectedImage(e.target.files[0]);
@@ -24,6 +27,7 @@ function AddPostModal({data}) {
         setSelectedImage();
       },[data.show]);
       const handlePost = async () => {
+            setLoading(true);
             const formData = new FormData();
             formData.append("file",selectedImage);
             formData.append("upload_preset","Jobsolutions");
@@ -40,18 +44,24 @@ function AddPostModal({data}) {
                     dispatch(setEmployeePosts());
                     data.handleClose();
                 }catch(err) {
-                    console.log(err);
+                    setErr('Post adding failed');
                 }
             }catch(err) {
-                console.log('Upload failed');
+                setErr('Post adding failed');
             }
+            setLoading(false);
       }
   return (
+    <>
+    {loading && <Loader />}
         <Modal show={data.show} onHide={data.handleClose}>
             <Modal.Header closeButton>
                 <Modal.Title>Add New Post</Modal.Title>
             </Modal.Header>
             <Modal.Body>
+            {err && <Alert variant='danger' className='mb-4 w-100'>
+                    {err}
+                </Alert>}
                 <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
                     <Form.Label>Comments</Form.Label>
                     <Form.Control as="textarea" rows={2} onChange={setData}/>
@@ -80,6 +90,7 @@ function AddPostModal({data}) {
                 </Button>
             </Modal.Footer>
         </Modal>
+    </>
   )
 }
 

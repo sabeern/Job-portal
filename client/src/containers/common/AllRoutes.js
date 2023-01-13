@@ -10,6 +10,7 @@ import ProfileUpdate from '../../pages/employer/ProfileUpdate';
 import EmpProfileUpdate from '../../pages/employee/EmpProfileUpdate';
 import ForgotPassword from '../../pages/common/ForgotPassword';
 import EmployerChat from '../../pages/employer/EmployerChat';
+import Test from '../../pages/common/Test';
 
 function AllRoutes() {
   return (
@@ -22,8 +23,9 @@ function AllRoutes() {
       <Route path="/postJob" element={<PostJob />}></Route>
       <Route path="/emprProfile/updateProfile" element={<ProfileUpdate />}></Route>
       <Route path="/empProfile/updateProfile" element={<EmpProfileUpdate />}></Route>
-      <Route exact path="/chat" element={<EmployerChat />}></Route>
+      <Route path="/chat" element={<EmployerChat />}></Route>
       <Route path="/forgotPassword" element={<ForgotPassword />}></Route>
+      <Route path="/test" element={<Test />}></Route>
     </Routes>
   )
 }

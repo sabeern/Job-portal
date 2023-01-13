@@ -6,10 +6,13 @@ import { instance } from '../../apis/JobSolutionApi';
 import { setUser } from '../../redux/actions/UserAction';
 import CompanyProfileForm from '../../containers/employer/CompanyProfileForm';
 import { useNavigate } from 'react-router-dom';
+import Loader from '../../containers/common/Loader';
 
 function ProfileUpdate() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
+    const [err, setErr] = useState('');
     const userDetails = useSelector((store)=> store.allUsers);
     const [companyDetails,setCompanyDetails] = useState({
         companyName : "",
@@ -31,6 +34,7 @@ function ProfileUpdate() {
   }
   async function HandleSubmit(e) {
       e.preventDefault();
+      setLoading(true);
       const formData = new FormData();
       formData.append('photo',image);
       formData.append('companyDetails',JSON.stringify(companyDetails));
@@ -41,16 +45,18 @@ function ProfileUpdate() {
       dispatch(setUser(data.data));
       navigate('/empProfile');
     }catch(err) {
-      console.log(err);
+      setErr(err.response.data.errMsg);
     }
+    setLoading(false);
   }
   return (
     <>
+      {loading && <Loader />}
         <Header />
         <Container >
           <Row>
             <Col md={3}></Col>
-            <Col md={6}><CompanyProfileForm data={{ companyDetails, handleEmployerChange, handlePhoto, HandleSubmit }}/></Col>
+            <Col md={6}><CompanyProfileForm data={{ companyDetails, handleEmployerChange, handlePhoto, HandleSubmit, err }}/></Col>
             <Col md={3}></Col>
           </Row>
         </Container>

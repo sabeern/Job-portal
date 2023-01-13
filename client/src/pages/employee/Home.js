@@ -8,8 +8,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setSelectedJob } from '../../redux/actions/UserAction';
 
 function Home() {
-  const allJobs = useSelector((store) => store.allJobs.jobs);
   const dispatch = useDispatch();
+  const allJobs = useSelector((store) => store.allJobs.jobs);
   if(allJobs && allJobs.length > 0) {
          dispatch(setSelectedJob(allJobs[0]));
   }

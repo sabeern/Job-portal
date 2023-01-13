@@ -11,7 +11,7 @@ import {
     
   } from "mdb-react-ui-kit";
   import '../test.css';
-  import 'https://kit.fontawesome.com/a076d05399.js';
+  //import 'https://kit.fontawesome.com/a076d05399.js';
 import Header from '../../containers/common/Header';
 
 function EmployerChat() {
@@ -58,7 +58,7 @@ function EmployerChat() {
                                 <span className="badge bg-success badge-dot"></span>
                               </div>
                               <div className="pt-1">
-                                <p className="fw-bold mb-0">Marie Horwitz</p>
+                                <p className="fw-bold mb-0">Sabeer Neyyan</p>
                                 <p className="small text-muted">
                                   Hello, Are you there?
                                 </p>
@@ -87,7 +87,7 @@ function EmployerChat() {
                                 <span className="badge bg-warning badge-dot"></span>
                               </div>
                               <div className="pt-1">
-                                <p className="fw-bold mb-0">Alexa Chung</p>
+                                <p className="fw-bold mb-0">Arun Krishna</p>
                                 <p className="small text-muted">
                                   Lorem ipsum dolor sit.
                                 </p>
@@ -116,7 +116,7 @@ function EmployerChat() {
                                 <span className="badge bg-success badge-dot"></span>
                               </div>
                               <div className="pt-1">
-                                <p className="fw-bold mb-0">Danny McChain</p>
+                                <p className="fw-bold mb-0">Shareef</p>
                                 <p className="small text-muted">
                                   Lorem ipsum dolor sit.
                                 </p>
@@ -142,7 +142,7 @@ function EmployerChat() {
                                 <span className="badge bg-danger badge-dot"></span>
                               </div>
                               <div className="pt-1">
-                                <p className="fw-bold mb-0">Ashley Olsen</p>
+                                <p className="fw-bold mb-0">Adhith C</p>
                                 <p className="small text-muted">
                                   Lorem ipsum dolor sit.
                                 </p>
@@ -168,7 +168,7 @@ function EmployerChat() {
                                 <span className="badge bg-warning badge-dot"></span>
                               </div>
                               <div className="pt-1">
-                                <p className="fw-bold mb-0">Kate Moss</p>
+                                <p className="fw-bold mb-0">Basil</p>
                                 <p className="small text-muted">
                                   Lorem ipsum dolor sit.
                                 </p>
@@ -194,7 +194,7 @@ function EmployerChat() {
                                 <span className="badge bg-success badge-dot"></span>
                               </div>
                               <div className="pt-1">
-                                <p className="fw-bold mb-0">Ben Smith</p>
+                                <p className="fw-bold mb-0">Jasim Ismail</p>
                                 <p className="small text-muted">
                                   Lorem ipsum dolor sit.
                                 </p>

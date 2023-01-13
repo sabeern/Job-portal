@@ -18,6 +18,7 @@ const getEmployerJobs = async (req,res) => {
         }
 }
 const getAllJobs = async (req,res) => {
+        console.log('first22');
         const allJobs = await jobModel.aggregate([{$match:{}},
                                 {$lookup:{from:process.env.USER_COLLECTION,localField:'postedUser',foreignField:'_id',as:'user'}},{$project:{'user.password':0}},{$unwind:'$user'}]);
         res.status(200).send({allJobs});
@@ -72,4 +73,26 @@ const findApplicantCount = async(req,res) => {
         res.status(200).send({appCount});
 }
 
-module.exports = { getEmployerJobs, getAllJobs, applyJob, checkJobStatus, findApplicantCount };
+const searchJob = async (req,res) => {
+        const {jobTitle, jobLocation} = req.body;
+        let searchResult;
+        if(jobTitle && jobLocation) {
+                searchResult = await jobModel.aggregate([{$match:{jobTitle:{ $regex:new RegExp('.*'+jobTitle+'.*','i') }}},
+                {$lookup:{from:process.env.USER_COLLECTION,localField:'postedUser',foreignField:'_id',as:'user'}},
+                {$match:{'user.companyLocation':{ $regex:new RegExp('.*'+jobLocation+'.*','i') }}},{$project:{'user.password':0}},{$unwind:'$user'}]);
+        }else if(jobTitle) {
+                searchResult = await jobModel.aggregate([{$match:{jobTitle:{ $regex:new RegExp('.*'+jobTitle+'.*','i') }}},
+                {$lookup:{from:process.env.USER_COLLECTION,localField:'postedUser',foreignField:'_id',as:'user'}},
+                {$project:{'user.password':0}},{$unwind:'$user'}]);
+        }else if(jobLocation){
+                searchResult = await jobModel.aggregate([{$lookup:{from:process.env.USER_COLLECTION,localField:'postedUser',foreignField:'_id',as:'user'}},
+                {$match:{'user.companyLocation':{ $regex:new RegExp('.*'+jobLocation+'.*','i') }}},{$project:{'user.password':0}},{$unwind:'$user'}]);
+        }
+         if(searchResult) {
+                res.status(200).send({searchResult});
+         }else {
+                res.status(401).send({msg:'Already available'});
+         }
+}
+
+module.exports = { getEmployerJobs, getAllJobs, applyJob, checkJobStatus, findApplicantCount, searchJob };

@@ -68,7 +68,7 @@ const uploadSingleImage = upload.single('photo');
 const updateCompanyDetails = (req,res) => {
     uploadSingleImage(req,res,async err => {
         if(err) {
-            res.status(401).send({uploadErr:err.message});
+            res.status(401).send({errMsg:err.message});
             return;
         }
         let userId=false;

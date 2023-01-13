@@ -8,5 +8,6 @@ router.get('/allJobs', tokenValidation.validateToken, jobController.getAllJobs);
 router.post('/applyJob', tokenValidation.validateToken, jobController.applyJob);
 router.post('/applyStatus', tokenValidation.validateToken, jobController.checkJobStatus);
 router.get('/applicantCount/:jobId', jobController.findApplicantCount);
+router.post('/searchJob', jobController.searchJob);
 
 module.exports = router;

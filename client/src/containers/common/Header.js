@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import EmployeeMenu from '../../components/EmployeeMenu';
 import EmployerMenu from '../../components/EmployerMenu';
-import { removeJobs, removePosts, removeUser, setUser } from '../../redux/actions/UserAction';
+import { fetchAllJobs, removeJobs, removePosts, removeUser, setUser } from '../../redux/actions/UserAction';
 
 function Header() {
   let allUsers = useSelector((store) => store.allUsers);
@@ -23,10 +23,12 @@ function Header() {
 		  navigate('/signin');
 	};
   useEffect(()=> {
+    console.log('inside');
     const token = localStorage.getItem("empToken");
     if(!token) {
       navigate('/signin');
     }
+    dispatch(fetchAllJobs());
   },[]);
   return (
     <Navbar bg="primary" variant="dark" expand="lg">

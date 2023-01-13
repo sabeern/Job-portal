@@ -4,6 +4,7 @@ import Header from '../../containers/common/Header';
 import PostJobForm from '../../containers/employer/PostJobForm';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import Loader from '../../containers/common/Loader';
 
 function PostJob() {
     const [jobDetails, setJobDetails] = useState({
@@ -14,10 +15,12 @@ function PostJob() {
     });
     const navigate = useNavigate();
     const [jobErr, setJobErr] = useState('');
+    const [loading, setLoading] = useState(false);
 const handleChange = ({ currentTarget: input }) => {
   setJobDetails({...jobDetails, [input.name]: input.value});
 }    
 const submitJob = async (e) => {
+  setLoading(true);
   try {
     const token = localStorage.getItem('empToken');
     const instance = axios.create({
@@ -29,10 +32,12 @@ const submitJob = async (e) => {
   } catch (error) {
     setJobErr(error.response.data.errMsg);
   }
+  setLoading(false);
 } 
 
   return (
     <>
+      {loading && <Loader />}
         <Header />
         <Container>
             <Row>

@@ -3,6 +3,7 @@ import { MDBBtn, MDBCol, MDBInput } from 'mdb-react-ui-kit';
 import { Link, useNavigate } from 'react-router-dom';
 import { Alert } from 'react-bootstrap';
 import { instance } from '../../apis/JobSolutionApi';
+import Loader from './Loader';
 function ForgotPasswordForm() {
     const navigate = useNavigate();
     const [otp, setOtp] = useState(false);
@@ -13,7 +14,9 @@ function ForgotPasswordForm() {
     const [password, setPassword] = useState();
     const [email, setEmail] = useState();
     const [userId, setUserId] = useState();
+    const [loading, setLoading] = useState(false);
     const handleOtp = async () => {
+        setLoading(true);
         try {
             const res = await instance.post('/signup/restPassword',{userName:email});
             setErr(false);
@@ -24,8 +27,10 @@ function ForgotPasswordForm() {
                 setMsg(false);
                 setErr(err.response.data.errMsg);
                 }
+        setLoading(false);
     }
     const validateOtp = async () => {
+        setLoading(true);
         try {
             const res = await instance.post('/signup/validateResetOtp',{userName:email, userOtp:otp});
             setMsg(false);
@@ -35,17 +40,22 @@ function ForgotPasswordForm() {
                 setMsg(false);
                 setErr(err.response.data.errMsg);
                 }
+        setLoading(false);
     }
 const updatePassword = async () => {
+    setLoading(true);
     try {
         await instance.post('/signup/updatePassword', {userId,password});
         navigate('/signin');
         }catch(err) {
             setErr('Password updation failed');
             }
+        setLoading(false);
     }
 if(!verifiedStatus) {
     return (
+        <>
+        {loading && <Loader />}
         <MDBCol sm='6'>
               <div className='d-flex flex-row ps-5 pt-5'>
                 <span className="h1 fw-bold mb-0" style={{ color: '#0D6EFD' }}><Link to="/" style={{textDecoration:'none'}}>JOB SOLUTIONS</Link></span>
@@ -73,9 +83,12 @@ if(!verifiedStatus) {
                     </p>
               </div>
         </MDBCol>
+        </>
       )
     }else {
             return(
+                <>
+                {loading && <Loader />}
                 <MDBCol sm='6'>
                     <div className='d-flex flex-row ps-5 pt-5'>
                             <span className="h1 fw-bold mb-0" style={{ color: '#0D6EFD' }}><Link to="/" style={{textDecoration:'none'}}>JOB SOLUTIONS</Link></span>
@@ -92,6 +105,7 @@ if(!verifiedStatus) {
                         </p>
                     </div>
             </MDBCol>
+            </>
         )
     }
   }
