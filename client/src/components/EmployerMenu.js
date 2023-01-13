@@ -6,7 +6,7 @@ function EmployerMenu() {
     <>
         <Link to="/empProfile" className='nav-link'>Dashboard</Link>
         <Link to="/postJob" className='nav-link'>Post Job</Link>
-        <Link to="#action2" className='nav-link'>Chats</Link>
+        <Link to="/chat" className='nav-link'>Chats</Link>
     </>
   )
 }

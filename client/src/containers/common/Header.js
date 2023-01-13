@@ -16,11 +16,11 @@ function Header() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const handleLogout = () => {
-		localStorage.removeItem("empToken");
-    dispatch(removeUser());
-    dispatch(removeJobs());
-    dispatch(removePosts());
-		navigate('/signin');
+		  localStorage.removeItem("empToken");
+      dispatch(removeUser());
+      dispatch(removeJobs());
+      dispatch(removePosts());
+		  navigate('/signin');
 	};
   useEffect(()=> {
     const token = localStorage.getItem("empToken");

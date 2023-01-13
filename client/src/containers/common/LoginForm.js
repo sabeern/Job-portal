@@ -1,9 +1,5 @@
 import React from 'react';
-import {
-    MDBBtn,
-    MDBCol
-  }
-  from 'mdb-react-ui-kit';
+import { MDBBtn, MDBCol } from 'mdb-react-ui-kit';
 import { Link } from 'react-router-dom';
 import MdbInputbox from '../../components/MdbInputbox';
 import { Alert } from 'react-bootstrap';
