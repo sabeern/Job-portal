@@ -15,23 +15,21 @@ function ProfileUpdate() {
     const [err, setErr] = useState('');
     const userDetails = useSelector((store)=> store.allUsers);
     const [companyDetails,setCompanyDetails] = useState({
-        companyName : "",
-        companyLocation : "",
-        profileImage : ""
-      });
+                                                  companyName : "", companyLocation : "", profileImage : ""
+                                              });
     useEffect(() => {
-      const profileDetails = {companyName : userDetails.user.companyName,
-        companyLocation : userDetails.user.companyLocation,
-        profileImage : userDetails.user.profileImage}
-      setCompanyDetails(profileDetails);
+            const profileDetails = {companyName : userDetails.user.companyName,
+                                    companyLocation : userDetails.user.companyLocation,
+                                    profileImage : userDetails.user.profileImage}
+            setCompanyDetails(profileDetails);
     },[]);
   const [image, setImage] = useState();
   const handleEmployerChange = ({currentTarget : input}) => {
-      setCompanyDetails({...companyDetails, [input.name]:input.value});
-  }
+        setCompanyDetails({...companyDetails, [input.name]:input.value});
+      }
   const handlePhoto = (e) => {
-    setImage(e.target.files[0]);
-  }
+      setImage(e.target.files[0]);
+    }
   async function HandleSubmit(e) {
       e.preventDefault();
       setLoading(true);
@@ -44,9 +42,9 @@ function ProfileUpdate() {
       const data = await instance.post('/user/addCompanyDetails',formData, {headers:headers});
       dispatch(setUser(data.data));
       navigate('/empProfile');
-    }catch(err) {
-      setErr(err.response.data.errMsg);
-    }
+      }catch(err) {
+            setErr(err.response.data.errMsg);
+       }
     setLoading(false);
   }
   return (

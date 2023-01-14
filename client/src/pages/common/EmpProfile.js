@@ -22,19 +22,19 @@ function EmpProfile() {
     const navigate = useNavigate();
     const handleShow = () => setShow(true);
     let employee = false;
-  let employer = false;
+    let employer = false;
     useEffect(() => {
-      dispatch(setUser());
-      if(userDetails.user.userType === 'Job Seeker') {
-        dispatch(fetchAllJobs());
-      } else if (userDetails.user.userType === 'Job Provider') {
-        dispatch(fetchJobs());
-      }
-    },[show]);
+          dispatch(setUser());
+          if(userDetails.user.userType === 'Job Seeker') {
+                  dispatch(fetchAllJobs());
+              } else if (userDetails.user.userType === 'Job Provider') {
+                  dispatch(fetchJobs());
+            }
+      },[show]);
   if(userDetails.user.userType === 'Job Seeker') {
     employee = true;
-  } else if (userDetails.user.userType === 'Job Provider') {
-    employer = true;
+    } else if (userDetails.user.userType === 'Job Provider') {
+      employer = true;
   }
   return (
       <>

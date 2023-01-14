@@ -1,9 +1,5 @@
 import React, { useState } from 'react';
-import {
-    MDBContainer,
-    MDBRow
-  }
-  from 'mdb-react-ui-kit';
+import { MDBContainer, MDBRow } from 'mdb-react-ui-kit';
 import LoginSignupImage from '../../components/LoginSignupImage';
 import LoginForm from '../../containers/common/LoginForm';
 import { useNavigate } from 'react-router-dom';
@@ -15,36 +11,34 @@ import Loader from '../../containers/common/Loader';
 function Login() {
   const dispatch = useDispatch();
   const [loginDetails, setLoginDetails] = useState({
-    userName : '',
-    password : ''
-  });
+                          userName : '', password : ''
+                      });
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const handleChange = ({ currentTarget: input }) => {
-		setLoginDetails({ ...loginDetails, [input.name]: input.value });
-	}
+		                      setLoginDetails({ ...loginDetails, [input.name]: input.value });
+	                  }
   const [loginErorr,setLoginErorr] = useState();
   const handleLogin = async (e) => {
-		e.preventDefault();
-    setLoading(true);
-		try {
-			const url = "http://localhost:8000/signin";
-			 const {data : res} = await instance.post(url, loginDetails);
-       localStorage.setItem("empToken", res.token);
-       dispatch(setUser());
-       if(res.user.userType === 'Job Provider') {
-        dispatch(fetchJobs());
-       }else {
-        dispatch(fetchAllJobs());
-        dispatch(setEmployeePosts());
-       }
-       navigate('/empProfile');
-		} catch (error) {
-      setLoading(false);
-      console.log(error.response.data.errMsg);
-      setLoginErorr(error.response.data.errMsg);
-		}
-	}
+		  e.preventDefault();
+      setLoading(true);
+		  try {
+			    const url = "http://localhost:8000/signin";
+			    const {data : res} = await instance.post(url, loginDetails);
+            localStorage.setItem("empToken", res.token);
+            dispatch(setUser());
+          if(res.user.userType === 'Job Provider') {
+                  dispatch(fetchJobs());
+            }else {
+                dispatch(fetchAllJobs());
+                dispatch(setEmployeePosts());
+            }
+          navigate('/empProfile');
+		        } catch (error) {
+                setLoading(false);
+                setLoginErorr(error.response.data.errMsg);
+		      }
+	  }
   return (
     <>
         { loading && <Loader /> }

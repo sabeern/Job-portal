@@ -11,25 +11,22 @@ import SignupForm from '../../containers/common/SignupForm';
 function Signup() {
   const navigate = useNavigate();
   const [data, setData] = useState({
-		userName: "",
-		userType: "",
-		password: "",
-    userOtp: ""
-	});
+	                          userName: "", userType: "", password: "", userOtp: ""
+	                        });
   const [err,setErr] = useState('');
   const [otp,setOtp] = useState(false);
   const [loading,setLoading] = useState(false);
   const Ref = useRef(null);
-const [timer, setTimer] = useState('00:00:00');
-const getTimeRemaining = (e) => {
-    const total = Date.parse(e) - Date.parse(new Date());
-    const seconds = Math.floor((total / 1000) % 60);
-    const minutes = Math.floor((total / 1000 / 60) % 60);
-    const hours = Math.floor((total / 1000 / 60 / 60) % 24);
-    return {
-        total, hours, minutes, seconds
-      };
-  }
+  const [timer, setTimer] = useState('00:00:00');
+  const getTimeRemaining = (e) => {
+          const total = Date.parse(e) - Date.parse(new Date());
+          const seconds = Math.floor((total / 1000) % 60);
+          const minutes = Math.floor((total / 1000 / 60) % 60);
+          const hours = Math.floor((total / 1000 / 60 / 60) % 24);
+      return {
+          total, hours, minutes, seconds
+        };
+    }
 
 const startTimer = (e) => {
     let { total, hours, minutes, seconds }= getTimeRemaining(e);
@@ -58,29 +55,29 @@ const handleSubmit = async (e) => {
 		e.preventDefault();
     setLoading(true);
 		try {
-			const url = "http://localhost:8000/signup";
-			 await axios.post(url, data);
-       setErr('');
-      setOtp(true);
-      clearTimer(getDeadTime());
-      setLoading(false);
-		} catch (error) {
-      setLoading(false);
-      setErr(error.response.data.errMsg);
-		}
+			  const url = "http://localhost:8000/signup";
+			  await axios.post(url, data);
+            setErr('');
+            setOtp(true);
+            clearTimer(getDeadTime());
+            setLoading(false);
+		  } catch (error) {
+              setLoading(false);
+              setErr(error.response.data.errMsg);
+		  }
 	}
   const handleChange = ({ currentTarget: input }) => {
-		setData({ ...data, [input.name]: input.value });
-	}
+		                      setData({ ...data, [input.name]: input.value });
+	            }
   const handleOtp = async (e) => {
-		e.preventDefault();
-		try {
-			const url = "http://localhost:8000/signup/validateOtp";
-			 await axios.post(url, data);
-			navigate("/signin");
-		} catch (error) {
-      setErr(error.response.data.errMsg);
-		}
+		  e.preventDefault();
+		  try {
+			    const url = "http://localhost:8000/signup/validateOtp";
+			    await axios.post(url, data);
+			      navigate("/signin");
+		    } catch (error) {
+              setErr(error.response.data.errMsg);
+		  }
 	}
   return (
     <MDBContainer fluid>

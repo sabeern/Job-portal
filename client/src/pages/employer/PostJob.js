@@ -8,30 +8,27 @@ import Loader from '../../containers/common/Loader';
 
 function PostJob() {
     const [jobDetails, setJobDetails] = useState({
-           jobTitle : "",
-           salaryRange : "",
-           requiredSkills : "",
-           moreDetails : "" 
-    });
+                                          jobTitle : "", salaryRange : "", requiredSkills : "", moreDetails : "" 
+                                         });
     const navigate = useNavigate();
     const [jobErr, setJobErr] = useState('');
     const [loading, setLoading] = useState(false);
-const handleChange = ({ currentTarget: input }) => {
-  setJobDetails({...jobDetails, [input.name]: input.value});
-}    
+    const handleChange = ({ currentTarget: input }) => {
+                        setJobDetails({...jobDetails, [input.name]: input.value});
+                }    
 const submitJob = async (e) => {
   setLoading(true);
   try {
-    const token = localStorage.getItem('empToken');
-    const instance = axios.create({
-      baseURL: 'http://localhost:8000',
-      headers: {'X-Custom-Header': `${token}`}
-      });
-      await instance.post('/user/postJob', jobDetails);
-       navigate("/empProfile");
-  } catch (error) {
-    setJobErr(error.response.data.errMsg);
-  }
+        const token = localStorage.getItem('empToken');
+        const instance = axios.create({
+                            baseURL: 'http://localhost:8000',
+                            headers: {'X-Custom-Header': `${token}`}
+                        });
+        await instance.post('/user/postJob', jobDetails);
+        navigate("/empProfile");
+    } catch (error) {
+            setJobErr(error.response.data.errMsg);
+      }
   setLoading(false);
 } 
 

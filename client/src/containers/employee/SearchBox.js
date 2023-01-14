@@ -7,23 +7,20 @@ import Loader from '../common/Loader';
 
 function SearchBox() {
   const [searchData, setSearchData] = useState({
-           jobTitle : '', jobLocation : ''
-    });
-    const [loading, setLoading] = useState(false);
+                                        jobTitle : '', jobLocation : ''
+                              });
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
-const changeSearchDetails = ({currentTarget : input}) => {
-      setSearchData({...searchData, [input.name] : input.value});
-  }
+  const changeSearchDetails = ({currentTarget : input}) => {
+                                setSearchData({...searchData, [input.name] : input.value});
+                        }
   const searchJob = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    try {
-      const res = await instance.post('/jobs/searchJob', searchData);
-      console.log(res.data.searchResult);
-      dispatch(fetchAllJobs(res.data.searchResult));
-    }catch(err) {
-
-    }
+      e.preventDefault();
+      setLoading(true);
+      try {
+          const res = await instance.post('/jobs/searchJob', searchData);
+          dispatch(fetchAllJobs(res.data.searchResult));
+        }catch(err) { }
     setLoading(false);
   }
   return (
