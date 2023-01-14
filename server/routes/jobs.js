@@ -9,5 +9,6 @@ router.post('/applyJob', tokenValidation.validateToken, jobController.applyJob);
 router.post('/applyStatus', tokenValidation.validateToken, jobController.checkJobStatus);
 router.get('/applicantCount/:jobId', jobController.findApplicantCount);
 router.post('/searchJob', jobController.searchJob);
+router.get('/jobApplications/:jobId', jobController.getJobApplications);
 
 module.exports = router;

@@ -87,6 +87,9 @@ const searchJob = async (req,res) => {
         }else if(jobLocation){
                 searchResult = await jobModel.aggregate([{$lookup:{from:process.env.USER_COLLECTION,localField:'postedUser',foreignField:'_id',as:'user'}},
                 {$match:{'user.companyLocation':{ $regex:new RegExp('.*'+jobLocation+'.*','i') }}},{$project:{'user.password':0}},{$unwind:'$user'}]);
+        }else {
+                searchResult = await jobModel.aggregate([{$match:{}},
+                        {$lookup:{from:process.env.USER_COLLECTION,localField:'postedUser',foreignField:'_id',as:'user'}},{$project:{'user.password':0}},{$unwind:'$user'}]);
         }
          if(searchResult) {
                 res.status(200).send({searchResult});
@@ -95,4 +98,11 @@ const searchJob = async (req,res) => {
          }
 }
 
-module.exports = { getEmployerJobs, getAllJobs, applyJob, checkJobStatus, findApplicantCount, searchJob };
+const getJobApplications = async (req,res) => {
+        const jobId = req.params.jobId;
+        const applicant = await appliedJobModel.aggregate([{$match:{jobId}},{$lookup:{from:process.env.JOB_COLLECTION, localField:'jobId', foreignField:'_id', as:'job'}},
+                                {$unwind:'$job'}]);
+        console.log(applicant);
+}
+
+module.exports = { getEmployerJobs, getAllJobs, applyJob, checkJobStatus, findApplicantCount, searchJob, getJobApplications };

@@ -13,7 +13,7 @@ function JobCards({data}) {
         <Card.Title style={{fontWeight:'600'}}>{data.jobTitle}</Card.Title>
         <Card.Title>{data.user.companyName}</Card.Title>
         <Card.Subtitle className="mb-2 text-muted">{data.user.companyLocation}</Card.Subtitle>
-        <Card.Title style={{fontWeight:'600'}}><BsFillCreditCardFill/> ₹ {data.salaryRange} </Card.Title>
+        <Card.Title style={{fontWeight:'600'}}><BsFillCreditCardFill/> ₹ {data.salaryRange} <span style={{fontWeight:'300'}}>(Monthly)</span></Card.Title>
         <Card.Subtitle className="text-muted">Skills Required</Card.Subtitle>
         <Card.Text>
         {data.requiredSkills}

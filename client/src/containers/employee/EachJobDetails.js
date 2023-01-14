@@ -36,7 +36,7 @@ function EachJobDetails() {
       <Card.Body>
         <Card.Title>{job ? job.user.companyName : ''}</Card.Title>
         <Card.Subtitle className="mb-2 text-muted">{job ? job.user.companyLocation : ''}</Card.Subtitle>
-        <Card.Title style={{fontWeight:'600'}}><BsFillCreditCardFill/> ₹ {job ? job.salaryRange : ''} </Card.Title>
+        <Card.Title style={{fontWeight:'600'}}><BsFillCreditCardFill/> ₹ {job ? job.salaryRange : ''} <span style={{fontWeight:'300'}}>(Monthly)</span></Card.Title>
         <Card.Subtitle className="text-muted">Skills Required</Card.Subtitle>
         <Card.Text>
         {job ? job.requiredSkills : ''}

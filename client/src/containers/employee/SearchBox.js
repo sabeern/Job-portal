@@ -3,17 +3,20 @@ import {Form, Button,Col, Row} from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
 import { instance } from '../../apis/JobSolutionApi';
 import { fetchAllJobs } from '../../redux/actions/UserAction';
+import Loader from '../common/Loader';
 
 function SearchBox() {
   const [searchData, setSearchData] = useState({
            jobTitle : '', jobLocation : ''
     });
+    const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
 const changeSearchDetails = ({currentTarget : input}) => {
       setSearchData({...searchData, [input.name] : input.value});
   }
   const searchJob = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const res = await instance.post('/jobs/searchJob', searchData);
       console.log(res.data.searchResult);
@@ -21,8 +24,11 @@ const changeSearchDetails = ({currentTarget : input}) => {
     }catch(err) {
 
     }
+    setLoading(false);
   }
   return (
+    <>
+      {loading && <Loader />}
         <Form className='mb-2' onSubmit={searchJob}>
           <Row>
             <Col md={5}>
@@ -42,6 +48,7 @@ const changeSearchDetails = ({currentTarget : input}) => {
             </Col>
           </Row>
         </Form>
+      </>
   )
 }
 

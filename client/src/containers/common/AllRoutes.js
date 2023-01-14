@@ -11,6 +11,7 @@ import EmpProfileUpdate from '../../pages/employee/EmpProfileUpdate';
 import ForgotPassword from '../../pages/common/ForgotPassword';
 import EmployerChat from '../../pages/employer/EmployerChat';
 import Test from '../../pages/common/Test';
+import ApplicationDetails from '../../pages/employer/ApplicationDetails';
 
 function AllRoutes() {
   return (
@@ -26,6 +27,7 @@ function AllRoutes() {
       <Route path="/chat" element={<EmployerChat />}></Route>
       <Route path="/forgotPassword" element={<ForgotPassword />}></Route>
       <Route path="/test" element={<Test />}></Route>
+      <Route path="/jobApplications" element={<ApplicationDetails />}></Route>
     </Routes>
   )
 }

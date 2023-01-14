@@ -25,6 +25,16 @@ const jobSchema = mongoose.Schema({
         type : Date,
         required : true,
         default : Date.now()
+    },
+    listingStatus : {
+        type : Boolean,
+        require : true,
+        default : true
+    },
+    delFlag : {
+        type : Number,
+        required : true,
+        default : 0
     }
 });
 
