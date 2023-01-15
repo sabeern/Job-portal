@@ -27,7 +27,7 @@ function AllRoutes() {
       <Route path="/chat" element={<EmployerChat />}></Route>
       <Route path="/forgotPassword" element={<ForgotPassword />}></Route>
       <Route path="/test" element={<Test />}></Route>
-      <Route path="/jobApplications" element={<ApplicationDetails />}></Route>
+      <Route path="/jobApplications/:jobId" element={<ApplicationDetails />}></Route>
     </Routes>
   )
 }

@@ -23,7 +23,6 @@ function Header() {
 		  navigate('/signin');
 	};
   useEffect(()=> {
-    console.log('inside');
     const token = localStorage.getItem("empToken");
     if(!token) {
       navigate('/signin');

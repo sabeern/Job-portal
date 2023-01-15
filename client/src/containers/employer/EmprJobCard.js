@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Card } from 'react-bootstrap';
 import { BsFillCreditCardFill } from "react-icons/bs";
+import { Link } from 'react-router-dom';
 import { instance } from '../../apis/JobSolutionApi';
 import { returnNewDate } from '../../other/DateDisplay';
 
@@ -25,7 +26,9 @@ const [appCount, setAppCount] = useState(0);
             {jobDetails.requiredSkills}
         </Card.Text>
         <Card.Link style={{textDecoration:'none'}}>Posted on {returnNewDate(jobDetails.postedDate)}</Card.Link>
-        <Card.Link style={{textDecoration:'none',paddingLeft:'60px'}}>Applied ({appCount} Candidates) </Card.Link>
+        <Card.Link style={{textDecoration:'none',paddingLeft:'60px'}}>
+          <Link to={`/jobApplications/${jobDetails._id}`} target="_blank">Applied ({appCount} Candidates) </Link>
+        </Card.Link>
       </Card.Body>
     </Card>
   )

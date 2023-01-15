@@ -18,7 +18,6 @@ const getEmployerJobs = async (req,res) => {
         }
 }
 const getAllJobs = async (req,res) => {
-        console.log('first22');
         const allJobs = await jobModel.aggregate([{$match:{}},
                                 {$lookup:{from:process.env.USER_COLLECTION,localField:'postedUser',foreignField:'_id',as:'user'}},{$project:{'user.password':0}},{$unwind:'$user'}]);
         res.status(200).send({allJobs});
@@ -99,10 +98,21 @@ const searchJob = async (req,res) => {
 }
 
 const getJobApplications = async (req,res) => {
-        const jobId = req.params.jobId;
+        let jobId = req.params.jobId;
+        try {
+                jobId = mongoose.Types.ObjectId(jobId);
+        }catch(err) {
+                res.status(401).send({errMsg:'Job not found'});
+        }
         const applicant = await appliedJobModel.aggregate([{$match:{jobId}},{$lookup:{from:process.env.JOB_COLLECTION, localField:'jobId', foreignField:'_id', as:'job'}},
-                                {$unwind:'$job'}]);
-        console.log(applicant);
+                                {$unwind:'$job'}, {$lookup:{from:process.env.USER_COLLECTION, localField:'userId', foreignField:'_id', as:'user'}}, {$unwind:'$user'},
+                                        {$project:{'user.password':0}}]);
+        if(applicant) {
+                console.log(applicant.length)
+                res.status(200).send({applicant});
+        }else   {
+                res.status(401).send({errMsg:'Job not found'});
+        }                
 }
 
 module.exports = { getEmployerJobs, getAllJobs, applyJob, checkJobStatus, findApplicantCount, searchJob, getJobApplications };
