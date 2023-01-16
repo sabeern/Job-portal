@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import "../../stylesheet/tableStyle.css";
 import { Container, Row, Col } from 'react-bootstrap';
 import Header from '../../containers/common/Header';
 import ApplicationsList from '../../containers/employer/ApplicationsList';
@@ -7,12 +6,15 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { instance } from '../../apis/JobSolutionApi';
 import Loader from '../../containers/common/Loader';
 import { returnNewDate } from '../../other/DateDisplay';
+import { useDispatch } from 'react-redux';
+import { setSelectedJob } from '../../redux/actions/UserAction';
 
 
 function ApplicationDetails() {
   const {jobId}= useParams();
   const navigate = useNavigate();
-  const [applicant, setApplicant] = useState();
+  const dispatch = useDispatch();
+  //const [applicant, setApplicant] = useState();
   const [loading, setLoading] = useState(true);
   const [allData,setAllData] = useState();
   const getApplication = async () => {
@@ -20,10 +22,10 @@ function ApplicationDetails() {
       const headers = {'X-Custom-Header': `${token}`};
       try {
         let res = await instance.get(`/jobs/jobApplications/${jobId}`,{headers});
-        setApplicant(res.data.applicant);
+        //setApplicant(res.data.applicant);
         const applicatDetails = res.data.applicant;
           const resData = applicatDetails.map((val) => {
-            const viewDetialMenu = <Link to={`/test/${val.user._id}`}>View Details</Link>;
+            const viewDetialMenu = <Link to={`/appliedEmployeeProfile/${val.user._id}`} onClick={()=>setJobDetails(val.jobId)}>View Details</Link>;
            let userData = {
               name : val.user.firstName + ' ' + val.user.lastName,
               appliedData : returnNewDate(val.appliedDate),
@@ -35,12 +37,18 @@ function ApplicationDetails() {
           setAllData(resData);
         setLoading(false);
       }catch(err) {
-        //navigate('/empProfile');
+        navigate('/empProfile');
       }
   }
   useEffect(() => {
       getApplication();
   },[jobId]);
+  const setJobDetails = async (jobId) => {
+    const token = localStorage.getItem('empToken');
+        const headers = {'X-Custom-Header': `${token}`};
+    const res = await instance.get(`/jobs/getJobDetails/${jobId}`,{headers});
+    dispatch(setSelectedJob(res.data.jobDetails));
+  }
   return (
     <>
     {loading && <Loader />}

@@ -10,7 +10,7 @@ import {
     MDBInputGroup,
     
   } from "mdb-react-ui-kit";
-  import '../test.css';
+  import '../../stylesheet/chatStyle.css';
   //import 'https://kit.fontawesome.com/a076d05399.js';
 import Header from '../../containers/common/Header';
 

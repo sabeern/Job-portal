@@ -3,14 +3,16 @@ import { MDBContainer } from 'mdb-react-ui-kit';
 import { useSelector } from 'react-redux';
 import { returnNewDate } from '../../other/DateDisplay';
 
-function EachPost({data}) {
+function EachPost({data, empName}) {
     const user = useSelector((store) => store.allUsers.user);
   return (
       <>
         <MDBContainer className="my-2 d-flex">
             <img src="https://mdbcdn.b-cdn.net/img/new/avatars/8.webp"
                 className="rounded-circle" alt="Avatar" style={{width:'70px',height:'auto'}}/>
-            <p><span style={{paddingTop:'16px',paddingLeft:'30px',fontSize:'20px',fontWeight:700}}>{user ? user.firstName+' '+user.lastName : ''}</span>
+            <p>
+                {!empName && <span style={{paddingTop:'16px',paddingLeft:'30px',fontSize:'20px',fontWeight:700}}>{user ? user.firstName+' '+user.lastName : ''}</span>}
+                {empName && <span style={{paddingTop:'16px',paddingLeft:'30px',fontSize:'20px',fontWeight:700}}>{empName}</span>}
                 <br/>
                 <span style={{paddingLeft:'25px',color:'#757982'}}><i>{data ? returnNewDate(data.post.addedDate) : ''}</i></span>
             </p>

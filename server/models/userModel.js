@@ -28,6 +28,7 @@ const userShema = mongoose.Schema({
         required : true,
         default : Date.now()
     },
+    resume : String,
     delFlag : {
         type : Number,
         required : true,

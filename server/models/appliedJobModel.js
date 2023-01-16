@@ -13,7 +13,15 @@ const jobAppliedSchema = mongoose.Schema({
             type : Date,
             required : true,
             default : new Date()
-        }
+        },
+        applicationStatus : {
+            type : String,
+            required : true,
+            default : 'Not Processed'
+        },
+        selectedApplicant : [
+            {applicantId : String}
+        ]
 });
 
 module.exports = mongoose.model(process.env.JOB_APPLIED_COLLECTION, jobAppliedSchema);

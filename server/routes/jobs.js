@@ -10,5 +10,9 @@ router.post('/applyStatus', tokenValidation.validateToken, jobController.checkJo
 router.get('/applicantCount/:jobId', jobController.findApplicantCount);
 router.post('/searchJob', jobController.searchJob);
 router.get('/jobApplications/:jobId', jobController.getJobApplications);
+router.get('/empDetails/:empId', jobController.getEmpProfileAndPost);
+router.get('/getJobDetails/:jobId', tokenValidation.validateToken, jobController.getJobDetails);
+router.get('/getJobApplication/:jobData', tokenValidation.validateToken, jobController.getJobStatus);
+router.put('/updateStatus',tokenValidation.validateToken, jobController.updateJobAppStatus);
 
 module.exports = router;

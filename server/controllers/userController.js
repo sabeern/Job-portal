@@ -33,8 +33,9 @@ const postJob = async (req,res) => {
     if(userId) {
         userId = mongoose.Types.ObjectId(userId);
         const {jobTitle,salaryRange,requiredSkills,moreDetails} = req.body;
+        const jobId = Math.ceil(Math.random()*99999)+10000;
         const newJob = new jobModel({
-            jobTitle,salaryRange,requiredSkills,moreDetails,postedUser:userId
+            jobId,jobTitle,salaryRange,requiredSkills,moreDetails,postedUser:userId
         });
         try {
             await newJob.save();
@@ -128,7 +129,7 @@ const updateEmployeeDetails = (req,res) => {
             mongoose.Types.ObjectId(userId);
             if(req.file) {
                 const employeeResume = req.file.filename;
-                await userModel.findByIdAndUpdate(userId, {firstName, lastName, jobTitle, qualification, experience, details:moreDetails, contactNumber});
+                await userModel.findByIdAndUpdate(userId, {firstName, lastName, jobTitle, qualification, experience, details:moreDetails, contactNumber,resume:employeeResume});
             }else {
                 await userModel.findByIdAndUpdate(userId, {firstName, lastName, jobTitle, qualification, experience, details:moreDetails, contactNumber});
             }

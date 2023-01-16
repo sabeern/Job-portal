@@ -2,6 +2,9 @@ const jobModel = require('../models/jobModel');
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const appliedJobModel = require('../models/appliedJobModel');
+const userModel = require('../models/userModel');
+const postModel = require("../models/postModel");
+const nodemailer = require('nodemailer');
 
 const getEmployerJobs = async (req,res) => {
     let userId=false;
@@ -71,7 +74,13 @@ const findApplicantCount = async(req,res) => {
         const appCount = await appliedJobModel.find({jobId}).count();
         res.status(200).send({appCount});
 }
-
+const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: process.env.SENDER_MAIL,
+          pass: process.env.SENDER_PASSWORD
+        }
+      });
 const searchJob = async (req,res) => {
         const {jobTitle, jobLocation} = req.body;
         let searchResult;
@@ -108,11 +117,63 @@ const getJobApplications = async (req,res) => {
                                 {$unwind:'$job'}, {$lookup:{from:process.env.USER_COLLECTION, localField:'userId', foreignField:'_id', as:'user'}}, {$unwind:'$user'},
                                         {$project:{'user.password':0}}]);
         if(applicant) {
-                console.log(applicant.length)
                 res.status(200).send({applicant});
         }else   {
                 res.status(401).send({errMsg:'Job not found'});
         }                
 }
+const getEmpProfileAndPost = async (req,res) => {
+        let empId = req.params.empId;
+        try {
+                empId = mongoose.Types.ObjectId(empId);
+        }catch(err) {
+                res.status(401).send({errMsg:'Employee not found'});
+        }
+        const empProfile = await userModel.findById(empId);
+        const employeePosts = await postModel.find({addedUser:empId});
+        if(empProfile) {
+                empProfile.password = '';
+                res.status(200).send({empProfile, employeePosts});
+        }else {
+                res.status(401).send({errMsg:'Employee not found'});
+        }
+}
+const getJobDetails = async (req,res) => {
+        const jobId = req.params.jobId;
+        const jobDetails = await jobModel.findById(jobId);
+        res.status(200).send({jobDetails});
+}
 
-module.exports = { getEmployerJobs, getAllJobs, applyJob, checkJobStatus, findApplicantCount, searchJob, getJobApplications };
+const getJobStatus = async (req,res) => {
+        let data = req.params.jobData;
+        data = data.split('-');
+        let [jobId,empId] = data;
+        try {
+                jobId = mongoose.Types.ObjectId(jobId);
+                empId = mongoose.Types.ObjectId(empId);
+        }catch(err) {
+                console.log(err.message);
+        }
+        const jobStatus = await appliedJobModel.findOne({jobId,userId:empId},{applicationStatus:1});
+        res.status(200).send({jobStatus});
+}
+const updateJobAppStatus = async (req,res) => {
+        let {status,applicationId} = req.body;
+        applicationId = mongoose.Types.ObjectId(applicationId);
+        const userEmail = 'nsabeer007@gmail.com';
+        const mailOptions = {
+                from: process.env.SENDER_MAIL,
+                to: userEmail,
+                subject: 'Job solutions job applied',
+                html: `<p>you are selected</p>`
+              }
+                transporter.sendMail(mailOptions, async function(error, info){
+                  if (error) {
+                    res.status(401).send({errMsg:'Mail sending failed'});
+                  } else {
+                        await appliedJobModel.findByIdAndUpdate(applicationId, {applicationStatus:status});
+                        res.status(200).send({msg:'Mail send to employee'});
+                  } });
+}
+
+module.exports = { getEmployerJobs, getAllJobs, applyJob, checkJobStatus, findApplicantCount, searchJob, getJobApplications, getEmpProfileAndPost, getJobDetails, getJobStatus, updateJobAppStatus };

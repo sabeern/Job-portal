@@ -12,6 +12,7 @@ import ForgotPassword from '../../pages/common/ForgotPassword';
 import EmployerChat from '../../pages/employer/EmployerChat';
 import Test from '../../pages/common/Test';
 import ApplicationDetails from '../../pages/employer/ApplicationDetails';
+import AppEmployeeProfile from '../../pages/employer/AppEmployeeProfile';
 
 function AllRoutes() {
   return (
@@ -28,6 +29,7 @@ function AllRoutes() {
       <Route path="/forgotPassword" element={<ForgotPassword />}></Route>
       <Route path="/test" element={<Test />}></Route>
       <Route path="/jobApplications/:jobId" element={<ApplicationDetails />}></Route>
+      <Route path="/appliedEmployeeProfile/:empId" element={<AppEmployeeProfile />}></Route>
     </Routes>
   )
 }

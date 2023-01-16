@@ -3,7 +3,7 @@ import cloneDeep from "lodash/cloneDeep";
 import throttle from "lodash/throttle";
 import Pagination from "rc-pagination";
 import "rc-pagination/assets/index.css";
-import { returnNewDate } from '../../other/DateDisplay';
+import "../../stylesheet/tableStyle.css";
 
     
 function ApplicationsList({data}) {
