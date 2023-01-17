@@ -18,11 +18,15 @@ const loginRoute = require('./routes/login');
 const userRoute = require('./routes/user');
 const jobRoute = require('./routes/jobs');
 const postRoute = require('./routes/post');
+const ChatRoute = require('./routes/chat');
+const MessageRoute = require('./routes/message');
 
 app.use('/signup', signupRoute);
 app.use('/signin', loginRoute);
 app.use('/user', userRoute);
 app.use('/jobs', jobRoute);
 app.use('/post', postRoute);
+app.use('/chat', ChatRoute);
+app.use('/message', MessageRoute);
 
 app.listen(process.env.PORT || 8000);

@@ -5,7 +5,6 @@ import DropdownButton from 'react-bootstrap/DropdownButton';
 import { instance } from '../../apis/JobSolutionApi';
 
 function EmployeeProfileDetails({data,jobId,appStatus}) {
-    console.log(appStatus)
     const [jobStatus, setJobStatus] = useState();
     const [statusColor, setStatusColor] = useState();
     useEffect(() => {

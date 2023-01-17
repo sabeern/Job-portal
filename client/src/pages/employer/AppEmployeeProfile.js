@@ -31,7 +31,6 @@ function AppEmployeeProfile() {
       setAppStatus(res.data.jobStatus);
     }
   useEffect(() => {
-    console.log('in use');
     getEmployeeProfile()
     getJobStatus();
   },[empId]);

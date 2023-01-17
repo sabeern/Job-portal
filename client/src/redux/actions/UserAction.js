@@ -32,7 +32,6 @@ export const fetchAllJobs = (jobs) => {
             dispatch({type:actionTypes.FETSH_ALL_JOBS, payload: res.data.allJobs});
         }
     }else {
-        console.log('else')
         return({
             type : actionTypes.FETSH_ALL_JOBS,
             payload : jobs

@@ -23,7 +23,6 @@ function EmpProfileForm() {
         });
         const [resume,setResume] = useState();
     useEffect(()=> {
-        console.log('inside useEffect');
         setEmployeeDetails({firstName : userDetails.firstName,
                             lastName : userDetails.lastName,
                             jobTitle : userDetails.jobTitle,
