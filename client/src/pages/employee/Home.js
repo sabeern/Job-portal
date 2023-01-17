@@ -6,6 +6,7 @@ import {Row, Container, Col} from 'react-bootstrap';
 import SearchBox from '../../containers/employee/SearchBox';
 import { useDispatch, useSelector } from 'react-redux';
 import { setSelectedJob } from '../../redux/actions/UserAction';
+import ReportModal from '../../containers/common/ReportModal';
 
 function Home() {
   const dispatch = useDispatch();
@@ -39,6 +40,7 @@ function Home() {
                 <EachJobDetails/>
             </Col>
           </Row>
+          <ReportModal/>
         </Container>
       </>
   )

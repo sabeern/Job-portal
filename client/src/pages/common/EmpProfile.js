@@ -44,7 +44,7 @@ function EmpProfile() {
             <Row>
                 <EmpProfileForm />
                 <Col md={6} className="overflow-auto d-none d-md-block" style={{maxHeight:'80vh'}}>
-                    <Row><Col md={12}><Link to="" className='float-end mt-3'><Button style={{background:'#14AED0'}} onClick={handleShow}>Add New Post</Button></Link></Col></Row>
+                    <Row><Col md={12}><Link to="" className='float-end mt-3'><Button className='btn btn-primary' style={{borderRadius:'20px'}} onClick={handleShow}>Add New Post</Button></Link></Col></Row>
                     {employeePost &&
                       employeePost.map((post, index) => {
                         return(

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Button, CarouselItem } from 'react-bootstrap';
-import { BsFillCreditCardFill } from "react-icons/bs";
+import { BsFillCreditCardFill, BsFillFlagFill } from "react-icons/bs";
 import { useSelector } from 'react-redux';
 import { returnNewDate } from '../../other/DateDisplay';
 import { instance } from '../../apis/JobSolutionApi';
@@ -50,6 +50,8 @@ function EachJobDetails() {
                 :
         <Button variant="primary" className='mt-3' onClick={job ? ()=> applyJob(job._id) : ''}>Apply Now</Button>
          }
+         <hr/>
+         <Button className="btn btn-secondary" data-toggle="modal" data-target="#modalDiscount"><BsFillFlagFill/> Report Job</Button>
       </Card.Body>
     </Card>
   )
