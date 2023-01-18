@@ -67,6 +67,9 @@ function Chatbox({chat, currentUserId, setSendMessage, receivedMessage}) {
     },[messages])
   return (
     <>
+    {chat ? <h2 style={{background:"#0D6EFD",borderRadius:'20px',paddingLeft:'20px',paddingBottom:'5px', paddingTop:'5px', color:'white'}}>
+          {userData && ((userData.companyName) ? userData.companyName : userData.firstName+" "+userData.lastName)}
+    </h2> : ''}
     <div className="overflow-auto pt-3 pe-3" style={{height:'70vh'}}>
         {
             messages.map((message) => {

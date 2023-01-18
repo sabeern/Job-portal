@@ -13,6 +13,8 @@ import EmployerChat from '../../pages/employer/EmployerChat';
 import Test from '../../pages/common/Test';
 import ApplicationDetails from '../../pages/employer/ApplicationDetails';
 import AppEmployeeProfile from '../../pages/employer/AppEmployeeProfile';
+import AdminLogin from '../../pages/admin/AdminLogin';
+import AdminHome from '../../pages/admin/AdminHome';
 
 function AllRoutes() {
   return (
@@ -30,6 +32,9 @@ function AllRoutes() {
       <Route path="/test" element={<Test />}></Route>
       <Route path="/jobApplications/:jobId" element={<ApplicationDetails />}></Route>
       <Route path="/appliedEmployeeProfile/:empId" element={<AppEmployeeProfile />}></Route>
+
+      <Route path="/admin/signin" element={<AdminLogin />}></Route>
+      <Route path="/admin/dashboard" element={<AdminHome />}></Route>
     </Routes>
   )
 }

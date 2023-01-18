@@ -55,7 +55,6 @@ function EmployerChat() {
   return (
     <>
     <MDBContainer fluid style={{ backgroundColor: "#CDC4F9" }} >
-    <Header/>
       <MDBRow>
         <MDBCol md="12">
           <MDBCard id="chat3" style={{ borderRadius: "15px"}}>
