@@ -1,3 +1,4 @@
+const { boolean } = require('joi');
 const mongoose = require('mongoose');
 
 const jobAppliedSchema = mongoose.Schema({
@@ -19,9 +20,15 @@ const jobAppliedSchema = mongoose.Schema({
             required : true,
             default : 'Not Processed'
         },
-        selectedApplicant : [
-            {applicantId : String}
-        ]
+        selectedApplicant : {
+            type : Array,
+            unique : true
+        },
+        tagStatus : {
+            type : Boolean,
+            default : 0,
+            required : true
+        }
 });
 
 module.exports = mongoose.model(process.env.JOB_APPLIED_COLLECTION, jobAppliedSchema);

@@ -5,6 +5,7 @@ const appliedJobModel = require('../models/appliedJobModel');
 const userModel = require('../models/userModel');
 const postModel = require("../models/postModel");
 const nodemailer = require('nodemailer');
+const mailTemplate = require('../config/mailTemplate');
 
 const getEmployerJobs = async (req,res) => {
     let userId=false;
@@ -154,18 +155,20 @@ const getJobStatus = async (req,res) => {
         }catch(err) {
                 console.log(err.message);
         }
-        const jobStatus = await appliedJobModel.findOne({jobId,userId:empId},{applicationStatus:1});
-        res.status(200).send({jobStatus});
+        const jobDetails = await appliedJobModel.findOne({jobId,userId:empId},{applicationStatus:1, tagStatus:1});
+        res.status(200).send({jobDetails});
 }
 const updateJobAppStatus = async (req,res) => {
-        let {status,applicationId} = req.body;
+        let {status,applicationId, jobId, email, name} = req.body;
         applicationId = mongoose.Types.ObjectId(applicationId);
         const userEmail = 'nsabeer007@gmail.com';
+        const jobDetails = await jobModel.aggregate([{$match:{jobId}},{$lookup:{from:process.env.USER_COLLECTION, localField:'postedUser', foreignField:'_id', as:'user'}},{$unwind:'$user'}]);
+        const mailData = mailTemplate.statusMail(name, jobDetails[0],status);
         const mailOptions = {
                 from: process.env.SENDER_MAIL,
                 to: userEmail,
-                subject: 'Job solutions job applied',
-                html: `<p>you are selected</p>`
+                subject: 'Job solutions application response',
+                html: mailData
               }
                 transporter.sendMail(mailOptions, async function(error, info){
                   if (error) {
@@ -176,4 +179,16 @@ const updateJobAppStatus = async (req,res) => {
                   } });
 }
 
-module.exports = { getEmployerJobs, getAllJobs, applyJob, checkJobStatus, findApplicantCount, searchJob, getJobApplications, getEmpProfileAndPost, getJobDetails, getJobStatus, updateJobAppStatus };
+const tagJob = async (req,res) => {
+        let {jobId,empId} = req.body;
+        jobId = mongoose.Types.ObjectId(jobId);
+        newEmpId = mongoose.Types.ObjectId(empId);
+        try {
+                await appliedJobModel.findOneAndUpdate({jobId,userId:newEmpId},{$push:{selectedApplicant:empId},tagStatus:1});
+                res.status(200).send({msg:'Job tagged'});
+        }catch(err) {
+                console.log('Already taged');
+        }
+}
+
+module.exports = { getEmployerJobs, getAllJobs, applyJob, checkJobStatus, findApplicantCount, searchJob, getJobApplications, getEmpProfileAndPost, getJobDetails, getJobStatus, updateJobAppStatus, tagJob };

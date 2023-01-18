@@ -30,6 +30,7 @@ function ApplicationDetails() {
               name : val.user.firstName + ' ' + val.user.lastName,
               appliedData : returnNewDate(val.appliedDate),
               qualification : val.user.qualification,
+              status : val.applicationStatus,
               viewDetails : viewDetialMenu
             }
             return userData;

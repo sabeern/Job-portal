@@ -23,6 +23,7 @@ function ApplicationsList({data}) {
         name: "Applicant Name",
         appliedData: "Applied Date",
         qualification : "Qualification",
+        status : "Status",
         viewDetails : " "
       };
       const countPerPage = 10;
@@ -82,7 +83,7 @@ function ApplicationsList({data}) {
     <>
       <div class="search">
         <input
-          placeholder="Search Campaign"
+          placeholder="Search Applicant"
           value={value}
           onChange={e => setValue(e.target.value)}
         />

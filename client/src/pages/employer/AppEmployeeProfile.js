@@ -13,7 +13,8 @@ function AppEmployeeProfile() {
   const navigate = useNavigate();
   const [empProfile, setEmpProfile] = useState();
   const [empPost, setEmpPost] = useState();
-  const [appStatus, setAppStatus] = useState()
+  const [appStatus, setAppStatus] = useState();
+  const [tagStatus, setTagStatus] = useState();
   const getEmployeeProfile = async () => {
       try {
           const res = await instance.get(`/jobs/empDetails/${empId}`);
@@ -27,8 +28,9 @@ function AppEmployeeProfile() {
       const getJobStatus = async () => {
       const token = localStorage.getItem('empToken');
       const headers = {'X-Custom-Header': `${token}`};
-      const res = await instance.get(`/jobs/getJobApplication/${jobDetails._id}-${empId}`,{headers});
-      setAppStatus(res.data.jobStatus);
+      const {data} = await instance.get(`/jobs/getJobApplication/${jobDetails._id}-${empId}`,{headers});
+      setAppStatus(data.jobDetails);
+      setTagStatus(data.jobDetails.tagStatus);
     }
   useEffect(() => {
     getEmployeeProfile()
@@ -39,7 +41,7 @@ function AppEmployeeProfile() {
         <Header />
         <Container>
           <Row>
-                {empProfile && <EmployeeProfileDetails data={empProfile} jobId={jobDetails.jobId} appStatus={appStatus}/>}
+                {empProfile && <EmployeeProfileDetails data={empProfile} jobId={jobDetails.jobId} appStatus={appStatus} tagStatus={tagStatus} setTagStatus={setTagStatus}/>}
                   {empPost && <EmployeeProfilePost data={empPost} empName={empProfile.firstName+" "+empProfile.lastName}/>}
           </Row>
         </Container>
