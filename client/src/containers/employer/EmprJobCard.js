@@ -4,6 +4,7 @@ import { BsFillCreditCardFill } from "react-icons/bs";
 import { Link } from 'react-router-dom';
 import { instance } from '../../apis/JobSolutionApi';
 import { returnNewDate } from '../../other/DateDisplay';
+import DeleteConfirmationModal from '../common/DeleteConfirmationModal';
 
 function EmprJobCard({jobDetails}) {
 const [appCount, setAppCount] = useState(0);
@@ -18,9 +19,10 @@ const handleClose = () => setShow(false);
       }
   },[jobDetails]);
   return (
+    <>
     <Card className='mb-3'>
       <Card.Body>
-        <Card.Title style={{fontWeight:'600'}}>{jobDetails.jobTitle}</Card.Title>
+        <Card.Title style={{fontWeight:'600'}}>{jobDetails.jobTitle} <span style={{color:'#7F2D15'}}>(Job Id: #{jobDetails.jobId})</span></Card.Title>
         <Card.Title>{jobDetails.user.companyName}</Card.Title>
         <Card.Subtitle className="mb-2 text-muted">{jobDetails.user.companyLocation}</Card.Subtitle>
         <Card.Title style={{fontWeight:'600'}}><BsFillCreditCardFill/> ₹ {jobDetails.salaryRange} </Card.Title>
@@ -35,6 +37,8 @@ const handleClose = () => setShow(false);
         <p className='text-danger' style={{textDecoration:'underline',cursor:'pointer'}} onClick={handleShow}>remove</p>
       </Card.Body>
     </Card>
+    <DeleteConfirmationModal data={{show, handleClose, type:'job', id:jobDetails._id}}/>
+    </>
   )
 }
 

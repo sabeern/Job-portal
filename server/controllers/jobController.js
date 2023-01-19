@@ -207,4 +207,11 @@ const reportJob = async (req,res) => {
         }
 }
 
-module.exports = { getEmployerJobs, getAllJobs, applyJob, checkJobStatus, findApplicantCount, searchJob, getJobApplications, getEmpProfileAndPost, getJobDetails, getJobStatus, updateJobAppStatus, tagJob, reportJob };
+const deleteJob = async (req,res) => {
+        let jobId = req.params.jobId;
+        jobId = mongoose.Types.ObjectId(jobId);
+        await jobModel.findByIdAndUpdate(jobId,{delFlag:1});
+        res.status(200).send({msg:'Job deleted successfully'});
+}
+
+module.exports = { getEmployerJobs, getAllJobs, applyJob, checkJobStatus, findApplicantCount, searchJob, getJobApplications, getEmpProfileAndPost, getJobDetails, getJobStatus, updateJobAppStatus, tagJob, reportJob, deleteJob };

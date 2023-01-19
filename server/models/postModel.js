@@ -17,6 +17,11 @@ const postShema = mongoose.Schema({
         type : Date,
         required : true,
         default : new Date()
+    },
+    delFlag : {
+        type:Number,
+        required : true,
+        default : 0
     }
 });
 

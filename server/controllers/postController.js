@@ -37,4 +37,11 @@ const getEmployeePost = async (req,res) => {
         }
 }
 
-module.exports = { addPost, getEmployeePost };
+const deletePost = async (req,res) => {
+    let postId = req.params.postId;
+    postId = mongoose.Types.ObjectId(postId);
+    await postModel.findByIdAndUpdate(postId,{delFlag:1});
+    res.status(200).send({msg:'Post deleted successfully'});
+}
+
+module.exports = { addPost, getEmployeePost, deletePost };

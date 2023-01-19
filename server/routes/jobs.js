@@ -16,5 +16,6 @@ router.get('/getJobApplication/:jobData', tokenValidation.validateToken, jobCont
 router.put('/updateStatus',tokenValidation.validateToken, jobController.updateJobAppStatus);
 router.put('/tagJob', jobController.tagJob);
 router.post('/reportIssue', jobController.reportJob);
+router.delete('/deleteJob/:jobId', jobController.deleteJob);
 
 module.exports = router;
