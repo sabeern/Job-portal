@@ -21,6 +21,7 @@ const postRoute = require('./routes/post');
 const ChatRoute = require('./routes/chat');
 const MessageRoute = require('./routes/message');
 const adminLoginRoute = require('./routes/admin/adminLogin');
+const adminManagement = require('./routes/admin/adminManagement');
 
 app.use('/signup', signupRoute);
 app.use('/signin', loginRoute);
@@ -29,6 +30,7 @@ app.use('/jobs', jobRoute);
 app.use('/post', postRoute);
 app.use('/chat', ChatRoute);
 app.use('/message', MessageRoute);
-app.use('/admin/login', adminLoginRoute)
+app.use('/admin/login', adminLoginRoute);
+app.use('/admin/management', adminManagement);
 
 app.listen(process.env.PORT || 8000);
