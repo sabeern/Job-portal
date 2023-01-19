@@ -40,7 +40,6 @@ function Home() {
                 <EachJobDetails/>
             </Col>
           </Row>
-          <ReportModal/>
         </Container>
       </>
   )

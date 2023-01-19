@@ -6,6 +6,7 @@ const userModel = require('../models/userModel');
 const postModel = require("../models/postModel");
 const nodemailer = require('nodemailer');
 const mailTemplate = require('../config/mailTemplate');
+const reportJobModel = require('../models/reportJobModel');
 
 const getEmployerJobs = async (req,res) => {
     let userId=false;
@@ -40,7 +41,7 @@ const applyJob = async (req,res) => {
                         jobId, userId
                 });
                 try {
-                        jobApplication.save();
+                        await jobApplication.save();
                         res.status(200).send({msg:'Applied for job successfully'});
                 }catch(err) {
                         res.status(401).send({errMsg:'Failed operation, Try later'});
@@ -191,4 +192,19 @@ const tagJob = async (req,res) => {
         }
 }
 
-module.exports = { getEmployerJobs, getAllJobs, applyJob, checkJobStatus, findApplicantCount, searchJob, getJobApplications, getEmpProfileAndPost, getJobDetails, getJobStatus, updateJobAppStatus, tagJob };
+const reportJob = async (req,res) => {
+        let { jobIssue, jobId, userId } = req.body;
+        jobId = mongoose.Types.ObjectId(jobId);
+        userId = mongoose.Types.ObjectId(userId);
+        const jobReport = new reportJobModel({
+                issue:jobIssue, jobId, issuedUser:userId
+        });
+        try {
+                await jobReport.save();
+                res.status(200).send({msg:'Successfully posted'});
+        }catch(err) {
+                res.status(401).send({errMsg:'Failed posting issue'});
+        }
+}
+
+module.exports = { getEmployerJobs, getAllJobs, applyJob, checkJobStatus, findApplicantCount, searchJob, getJobApplications, getEmpProfileAndPost, getJobDetails, getJobStatus, updateJobAppStatus, tagJob, reportJob };
