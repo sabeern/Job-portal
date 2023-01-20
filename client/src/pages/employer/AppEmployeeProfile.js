@@ -42,7 +42,7 @@ function AppEmployeeProfile() {
         <Container>
           <Row>
                 {empProfile && <EmployeeProfileDetails data={empProfile} jobId={jobDetails.jobId} appStatus={appStatus} tagStatus={tagStatus} setTagStatus={setTagStatus}/>}
-                  {empPost && <EmployeeProfilePost data={empPost} empName={empProfile.firstName+" "+empProfile.lastName}/>}
+                  {empPost && <EmployeeProfilePost data={empPost} empName={empProfile.firstName+" "+empProfile.lastName} profileImage={empProfile.profileImage}/>}
           </Row>
         </Container>
     </>

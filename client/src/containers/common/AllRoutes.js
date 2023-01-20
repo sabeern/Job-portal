@@ -16,6 +16,7 @@ import AppEmployeeProfile from '../../pages/employer/AppEmployeeProfile';
 import AdminLogin from '../../pages/admin/AdminLogin';
 import AdminHome from '../../pages/admin/AdminHome';
 import JobManagement from '../../pages/admin/JobManagement';
+import ChangeProfileImage from '../../pages/employee/ChangeProfileImage';
 
 function AllRoutes() {
   return (
@@ -33,6 +34,7 @@ function AllRoutes() {
       <Route path="/test" element={<Test />}></Route>
       <Route path="/jobApplications/:jobId" element={<ApplicationDetails />}></Route>
       <Route path="/appliedEmployeeProfile/:empId" element={<AppEmployeeProfile />}></Route>
+      <Route path="/changeProfilImage/:id" element={<ChangeProfileImage/>}></Route>
 
       <Route path="/admin" element={<AdminLogin />}></Route>
       <Route path="/admin/dashboard" element={<AdminHome />}></Route>

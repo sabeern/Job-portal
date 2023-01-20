@@ -59,7 +59,7 @@ function EmpProfile() {
                 <Row>
                     <CompanyProfileDetails />
                     <Col md={8} className="overflow-auto" style={{maxHeight:'85vh'}}>
-                    <Row><Col md={12}><Link to="/postJob" className='float-end mt-3'><Button style={{background:'#14AED0'}}>Post New Job</Button></Link></Col></Row>
+                    <Row><Col md={12}><Link to="/postJob" className='float-end mt-3'><Button style={{background:'#14AED0',borderRadius:'20px'}}>Post New Job</Button></Link></Col></Row>
                     <CompanyDashboard />
                 </Col>
                 </Row>

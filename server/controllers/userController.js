@@ -140,4 +140,10 @@ const updateEmployeeDetails = (req,res) => {
     })
 }
 
-module.exports = { getUserDetails, postJob, updateCompanyDetails, updateEmployeeDetails };
+const employeeProfileImageUpdate = async (req,res) => {
+    const {empId,postImage} = req.body;
+    await userModel.findByIdAndUpdate(empId,{profileImage:postImage});
+    res.status(200).send({msg:'Profile image changed'});
+}
+
+module.exports = { getUserDetails, postJob, updateCompanyDetails, updateEmployeeDetails, employeeProfileImageUpdate };

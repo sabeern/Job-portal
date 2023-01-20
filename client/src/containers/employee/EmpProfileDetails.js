@@ -1,37 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Form, Button, Row, Col } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import FormInputbox from '../../components/FormInputbox';
+import ProfilePicModal from './ProfilePicModal';
 
 function EmpProfileDetails() {
     const userDetails = useSelector((store) => store.allUsers.user);
   return (
     <>
-        {/* <Col md={6} className="overflow-auto" style={{maxHeight:'80vh'}}>
-                <h1 className='mt-4'>Profile Information</h1>
-            <Form>
-                <Row>
-                    <Col md={6}>
-                        <FormInputbox data={{type:"text", placeholder:"First name", label:"First Name", value:userDetails.firstName, disabled:true, class:"mb-3 mt-3"}}/>
-                    </Col>
-                    <Col md={6}>
-                        <FormInputbox data={{type:"text", placeholder:"Last name", label:"Last Name", value:userDetails.lastName, disabled:true, class:"mb-3 mt-3"}}/>
-                    </Col>
-                </Row>
-                <FormInputbox data={{type:"text", placeholder:"Job title", label:"Job Title", value:userDetails.jobTitle, disabled:true, class:"mb-3"}}/>
-                <FormInputbox data={{type:"text", placeholder:"Qualifications", label:"Qualifications", value:userDetails.qualification, disabled:true, class:"mb-3"}}/>
-                <FormInputbox data={{type:"text", placeholder:"Experience", label:"Experience", value:userDetails.experience, disabled:true, class:"mb-3"}}/>
-                <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
-                    <Form.Label>More Details</Form.Label>
-                    <Form.Control as="textarea" rows={3} value={userDetails.jobTitle} disabled='true'/>
-                </Form.Group>
-                <FormInputbox data={{type:"number", placeholder:"Contact number", label:"Contact Number", value:userDetails.contactNumber, disabled:true, class:"mb-3"}}/>
-                <Link to="/empProfile/updateProfile"><Button variant="primary" type="submit">
-                    Update Details
-                </Button></Link>
-            </Form>
-        </Col> */}
         <Col md={6} className="overflow-auto mb-4 p-4" style={{maxHeight:'80vh'}}>
                 <h1 className='mt-4'>
                             Profile Information
@@ -40,7 +17,11 @@ function EmpProfileDetails() {
                    <Col md={12} className="p-4" style={{border:'1px solid black',borderRadius:'20px'}}>
                             <table style={{borderRadius:'20px'}}>
                             <tr>
-                                    <td><b>Full Name</b></td>
+                                    <td>
+                                    <img src={userDetails.profileImage ? userDetails.profileImage : 'http://localhost:8000/images/default.webp'}
+                className="rounded-circle" alt="Avatar" style={{width:'80px',height:'80px'}}/>
+                &nbsp;<Link to={`/changeProfilImage/${userDetails._id}`}><span style={{color:'blue',fontSize:'12px',cursor:'pointer',textDecoration:'underline'}}>Change</span></Link>
+                                    </td>
                                     <td>{userDetails.firstName+" "+userDetails.lastName}</td>
                                 </tr>
                                 <tr>
