@@ -17,6 +17,8 @@ import AdminLogin from '../../pages/admin/AdminLogin';
 import AdminHome from '../../pages/admin/AdminHome';
 import JobManagement from '../../pages/admin/JobManagement';
 import ChangeProfileImage from '../../pages/employee/ChangeProfileImage';
+import PostDelete from '../../pages/employee/PostDelete';
+import RemoveJob from '../../pages/employer/RemoveJob';
 
 function AllRoutes() {
   return (
@@ -35,6 +37,8 @@ function AllRoutes() {
       <Route path="/jobApplications/:jobId" element={<ApplicationDetails />}></Route>
       <Route path="/appliedEmployeeProfile/:empId" element={<AppEmployeeProfile />}></Route>
       <Route path="/changeProfilImage/:id" element={<ChangeProfileImage/>}></Route>
+      <Route path="/deletePost/:id" element={<PostDelete/>}></Route>
+      <Route path="/deleteJob/:id" element={<RemoveJob/>}></Route>
 
       <Route path="/admin" element={<AdminLogin />}></Route>
       <Route path="/admin/dashboard" element={<AdminHome />}></Route>

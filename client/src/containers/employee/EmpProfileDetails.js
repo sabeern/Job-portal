@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Form, Button, Row, Col } from 'react-bootstrap';
+import { BsPencilSquare } from 'react-icons/bs';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import FormInputbox from '../../components/FormInputbox';
@@ -20,7 +21,7 @@ function EmpProfileDetails() {
                                     <td>
                                     <img src={userDetails.profileImage ? userDetails.profileImage : 'http://localhost:8000/images/default.webp'}
                 className="rounded-circle" alt="Avatar" style={{width:'80px',height:'80px'}}/>
-                &nbsp;<Link to={`/changeProfilImage/${userDetails._id}`}><span style={{color:'blue',fontSize:'12px',cursor:'pointer',textDecoration:'underline'}}>Change</span></Link>
+                &nbsp;<Link to={`/changeProfilImage/${userDetails._id}`}><BsPencilSquare style={{width:'20px',height:'auto'}} title="Change Profile"/></Link>
                                     </td>
                                     <td>{userDetails.firstName+" "+userDetails.lastName}</td>
                                 </tr>

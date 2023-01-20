@@ -1,22 +1,26 @@
 import React from 'react';
 import { Form, Button, Modal, Alert } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 import { instance } from '../../apis/JobSolutionApi';
 
 function DeleteConfirmationModal({data}) {
+    const navigate = useNavigate();
     const deleteData = async () => {
         console.log(data.type);
         if(data.type === 'job') {
             await instance.delete(`/jobs/deleteJob/${data.id}`);
-            data.handleClose();
         }
         if(data.type === 'post') {
             console.log('here')
             await instance.delete(`/post/deletePost/${data.id}`);
-            data.handleClose();
         }
+        navigate('/empProfile');
+    }
+    const closeFunction = () => {
+            navigate('/empProfile')
     }
   return (
-    <Modal show={data.show} onHide={data.handleClose}>
+    <Modal show={data.show} onHide={closeFunction}>
             <Modal.Header closeButton>
                 <Modal.Title>Please Select</Modal.Title>
             </Modal.Header>
@@ -24,7 +28,7 @@ function DeleteConfirmationModal({data}) {
                 <p>Are you sure want to delete</p>
             </Modal.Body>
             <Modal.Footer>
-                <Button variant="secondary" onClick={data.handleClose}>
+                <Button variant="secondary" onClick={closeFunction}>
                         No
                 </Button>
                 <Button variant="danger" onClick={deleteData}>

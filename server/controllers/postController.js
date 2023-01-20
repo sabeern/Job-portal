@@ -30,7 +30,7 @@ const getEmployeePost = async (req,res) => {
         userId = decode.loginedUser.id;
         if(userId) { 
                 userId = mongoose.Types.ObjectId(userId);
-                const employeePosts = await postModel.find({addedUser:userId});
+                const employeePosts = await postModel.find({addedUser:userId,delFlag:0}).sort({addedDate:-1});
                 res.status(200).send({employeePosts});
         }else {
             res.status(401).send({errMsg:'Validation failed'});

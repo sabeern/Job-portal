@@ -3,12 +3,11 @@ import { MDBContainer } from 'mdb-react-ui-kit';
 import { useSelector } from 'react-redux';
 import { returnNewDate } from '../../other/DateDisplay';
 import DeleteConfirmationModal from '../common/DeleteConfirmationModal';
+import { Link } from 'react-router-dom';
+import { BsFillTrashFill } from 'react-icons/bs';
 
 function EachPost({data, empName, profileImage}) {
     const user = useSelector((store) => store.allUsers.user);
-    const [show, setShow] = useState(false);
-  const handleShow = () => setShow(true);
-const handleClose = () => setShow(false);
   return (
       <>
         <MDBContainer className="my-2 d-flex">
@@ -21,12 +20,15 @@ const handleClose = () => setShow(false);
                 {empName && <span style={{paddingTop:'16px',paddingLeft:'30px',fontSize:'20px',fontWeight:700}}>{empName}</span>}
                 <br/>
                 <span style={{paddingLeft:'25px',color:'#757982'}}><i>{data ? returnNewDate(data.post.addedDate) : ''}</i></span>
-                {!empName && <span className="text-danger" style={{marginLeft:'10px',textDecoration:'underline',cursor:'pointer'}} onClick={handleShow}>delete</span>}
+                {!empName && 
+                <Link to={`/deletePost/${data.post._id}`}>
+                    <span className="text-danger" style={{marginLeft:'10px',textDecoration:'underline',cursor:'pointer'}}><BsFillTrashFill title="Delete post" style={{width:'20px',height:'auto'}}/></span>
+                </Link>
+                }
             </p>
         </MDBContainer>
             <p>{data ? data.post.postDescription : ''}</p>
             <img src={data ? data.post.postImage : ''} alt="Posts" style={{maxHeight:'500px',maxWidth:'100%'}}></img>
-            <DeleteConfirmationModal data={{show, handleClose, type:'post', id:data.post._id}} />
       </>
   )
 }

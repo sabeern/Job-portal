@@ -15,16 +15,18 @@ const getEmployerJobs = async (req,res) => {
         userId = decode.loginedUser.id;
         if(userId) { 
                 userId = mongoose.Types.ObjectId(userId);
-                const employerJobs = await jobModel.aggregate([{$match:{postedUser:userId}},
-                                    {$lookup:{from:process.env.USER_COLLECTION,localField:'postedUser',foreignField:'_id',as:'user'}},{$project:{'user.password':0}},{$unwind:'$user'}]);
+                const employerJobs = await jobModel.aggregate([{$match:{postedUser:userId,delFlag:0}},
+                                    {$lookup:{from:process.env.USER_COLLECTION,localField:'postedUser',foreignField:'_id',as:'user'}},{$project:{'user.password':0}},{$unwind:'$user'},
+                                    {$sort:{postedDate:-1}}]);
                 res.status(200).send({employerJobs});
         }else {
             res.status(401).send({errMsg:'Validation failed'});
         }
 }
 const getAllJobs = async (req,res) => {
-        const allJobs = await jobModel.aggregate([{$match:{}},
-                                {$lookup:{from:process.env.USER_COLLECTION,localField:'postedUser',foreignField:'_id',as:'user'}},{$project:{'user.password':0}},{$unwind:'$user'}]);
+        const allJobs = await jobModel.aggregate([{$match:{delFlag:0}},
+                                {$lookup:{from:process.env.USER_COLLECTION,localField:'postedUser',foreignField:'_id',as:'user'}},{$project:{'user.password':0}},{$unwind:'$user'}
+                        , {$sort:{postedDate:-1}}]);
         res.status(200).send({allJobs});
 }
 
@@ -87,19 +89,22 @@ const searchJob = async (req,res) => {
         const {jobTitle, jobLocation} = req.body;
         let searchResult;
         if(jobTitle && jobLocation) {
-                searchResult = await jobModel.aggregate([{$match:{jobTitle:{ $regex:new RegExp('.*'+jobTitle+'.*','i') }}},
+                searchResult = await jobModel.aggregate([{$match:{jobTitle:{ $regex:new RegExp('.*'+jobTitle+'.*','i') }, delFlag:0}},
                 {$lookup:{from:process.env.USER_COLLECTION,localField:'postedUser',foreignField:'_id',as:'user'}},
-                {$match:{'user.companyLocation':{ $regex:new RegExp('.*'+jobLocation+'.*','i') }}},{$project:{'user.password':0}},{$unwind:'$user'}]);
+                {$match:{'user.companyLocation':{ $regex:new RegExp('.*'+jobLocation+'.*','i') }}},{$project:{'user.password':0}},{$unwind:'$user'}
+                        ,{$sort:{postedDate:-1}}]);
         }else if(jobTitle) {
-                searchResult = await jobModel.aggregate([{$match:{jobTitle:{ $regex:new RegExp('.*'+jobTitle+'.*','i') }}},
+                searchResult = await jobModel.aggregate([{$match:{jobTitle:{ $regex:new RegExp('.*'+jobTitle+'.*','i') },delFlag:0}},
                 {$lookup:{from:process.env.USER_COLLECTION,localField:'postedUser',foreignField:'_id',as:'user'}},
-                {$project:{'user.password':0}},{$unwind:'$user'}]);
+                {$project:{'user.password':0}},{$unwind:'$user'},{$sort:{postedDate:-1}}]);
         }else if(jobLocation){
-                searchResult = await jobModel.aggregate([{$lookup:{from:process.env.USER_COLLECTION,localField:'postedUser',foreignField:'_id',as:'user'}},
-                {$match:{'user.companyLocation':{ $regex:new RegExp('.*'+jobLocation+'.*','i') }}},{$project:{'user.password':0}},{$unwind:'$user'}]);
+                searchResult = await jobModel.aggregate([{$match:{delFlag:0}},{$lookup:{from:process.env.USER_COLLECTION,localField:'postedUser',foreignField:'_id',as:'user'}},
+                {$match:{'user.companyLocation':{ $regex:new RegExp('.*'+jobLocation+'.*','i') }}},{$project:{'user.password':0}},{$unwind:'$user'},
+                {$sort:{postedDate:-1}}]);
         }else {
-                searchResult = await jobModel.aggregate([{$match:{}},
-                        {$lookup:{from:process.env.USER_COLLECTION,localField:'postedUser',foreignField:'_id',as:'user'}},{$project:{'user.password':0}},{$unwind:'$user'}]);
+                searchResult = await jobModel.aggregate([{$match:{delFlag:0}},
+                        {$lookup:{from:process.env.USER_COLLECTION,localField:'postedUser',foreignField:'_id',as:'user'}},{$project:{'user.password':0}},{$unwind:'$user'},
+                        {$sort:{postedDate:-1}}]);
         }
          if(searchResult) {
                 res.status(200).send({searchResult});
@@ -132,7 +137,7 @@ const getEmpProfileAndPost = async (req,res) => {
                 res.status(401).send({errMsg:'Employee not found'});
         }
         const empProfile = await userModel.findById(empId);
-        const employeePosts = await postModel.find({addedUser:empId});
+        const employeePosts = await postModel.find({addedUser:empId,delFlag:0}).sort({addedDate:-1});
         if(empProfile) {
                 empProfile.password = '';
                 res.status(200).send({empProfile, employeePosts});

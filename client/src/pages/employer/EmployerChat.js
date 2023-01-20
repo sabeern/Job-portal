@@ -1,12 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { MDBContainer, MDBRow, MDBCol, MDBCard, MDBCardBody, MDBIcon, MDBTypography, MDBInputGroup } from "mdb-react-ui-kit";
   import '../../stylesheet/chatStyle.css';
-import Header from '../../containers/common/Header';
 import { useSelector } from 'react-redux';
 import { userChats } from '../../apis/ChatRequests';
 import Converstations from '../../containers/common/Converstations';
 import Chatbox from '../../containers/common/Chatbox';
 import { io } from 'socket.io-client';
+import { instance } from '../../apis/JobSolutionApi';
 
 function EmployerChat() {
   const user = useSelector((store) => store.allUsers.user);
@@ -42,7 +42,6 @@ function EmployerChat() {
   },[sendMessage]);
   useEffect(() => {
     socket.current.on("recieve-message", (data) => {
-      console.log(data)
       setReceivedMessage(data);
     });
   }, []);
@@ -51,7 +50,10 @@ function EmployerChat() {
     const online = onlineUsers.find((user) => user.userId === chatMember);
     return online ? true : false;
   };
-
+  const [search, setSearch] = useState();
+const searchedUser = async () => {
+    const {data} = await instance.get('/jobs/getTagedUser')
+}
   return (
     <>
     <MDBContainer fluid style={{ backgroundColor: "#CDC4F9" }} >
@@ -65,8 +67,9 @@ function EmployerChat() {
                     <MDBInputGroup className="rounded mb-3">
                       <input
                         className="form-control rounded"
-                        placeholder="Search"
+                        placeholder="Search by job id"
                         type="search"
+                        onChange={searchedUser}
                       />
                       <span
                         className="input-group-text border-0"

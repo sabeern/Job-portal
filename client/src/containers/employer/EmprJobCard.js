@@ -4,13 +4,9 @@ import { BsFillCreditCardFill } from "react-icons/bs";
 import { Link } from 'react-router-dom';
 import { instance } from '../../apis/JobSolutionApi';
 import { returnNewDate } from '../../other/DateDisplay';
-import DeleteConfirmationModal from '../common/DeleteConfirmationModal';
 
 function EmprJobCard({jobDetails}) {
 const [appCount, setAppCount] = useState(0);
-const [show, setShow] = useState(false);
-  const handleShow = () => setShow(true);
-const handleClose = () => setShow(false);
   useEffect(() => {
       if(jobDetails) {
         const jobId = jobDetails._id;
@@ -34,10 +30,13 @@ const handleClose = () => setShow(false);
         <Card.Link style={{textDecoration:'none',paddingLeft:'60px'}}>
           <Link to={`/jobApplications/${jobDetails._id}`} target="_blank">Applied ({appCount} Candidates) </Link>
         </Card.Link><br/>
-        <p className='text-danger' style={{textDecoration:'underline',cursor:'pointer'}} onClick={handleShow}>remove</p>
+        <Link to={`/deleteJob/${jobDetails._id}`}>
+            <p className='text-danger' style={{textDecoration:'underline',cursor:'pointer'}}>
+               remove
+            </p>
+        </Link>
       </Card.Body>
     </Card>
-    <DeleteConfirmationModal data={{show, handleClose, type:'job', id:jobDetails._id}}/>
     </>
   )
 }
