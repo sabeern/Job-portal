@@ -191,6 +191,7 @@ const tagJob = async (req,res) => {
         newEmpId = mongoose.Types.ObjectId(empId);
         try {
                 await appliedJobModel.findOneAndUpdate({jobId,userId:newEmpId},{$push:{selectedApplicant:empId},tagStatus:1});
+                await jobModel.findByIdAndUpdate(jobId,{$push:{selectedApplicant:empId}});
                 res.status(200).send({msg:'Job tagged'});
         }catch(err) {
                 console.log('Already taged');
@@ -219,4 +220,15 @@ const deleteJob = async (req,res) => {
         res.status(200).send({msg:'Job deleted successfully'});
 }
 
-module.exports = { getEmployerJobs, getAllJobs, applyJob, checkJobStatus, findApplicantCount, searchJob, getJobApplications, getEmpProfileAndPost, getJobDetails, getJobStatus, updateJobAppStatus, tagJob, reportJob, deleteJob };
+const getTagedUser = async (req,res) => {
+        const jobId = req.params.jobId;
+        const tagedUsers = await jobModel.findOne({jobId});
+        if(tagedUsers) {
+                res.status(200).send({tagedUsers});
+        }else {
+                res.status(401).send({errMsg:'No details found'});
+        }
+        console.log(tagedUsers);
+}
+
+module.exports = { getEmployerJobs, getAllJobs, applyJob, checkJobStatus, findApplicantCount, searchJob, getJobApplications, getEmpProfileAndPost, getJobDetails, getJobStatus, updateJobAppStatus, tagJob, reportJob, deleteJob, getTagedUser };

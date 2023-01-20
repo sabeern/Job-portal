@@ -54,7 +54,6 @@ const handleChat = async() => {
             console.log(err);
         }
 }
-console.log(tagStatus);
   return (
     <>
     {loading && <Loader />}

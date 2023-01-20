@@ -21,8 +21,7 @@ const jobAppliedSchema = mongoose.Schema({
             default : 'Not Processed'
         },
         selectedApplicant : {
-            type : Array,
-            unique : true
+            type : Array
         },
         tagStatus : {
             type : Boolean,

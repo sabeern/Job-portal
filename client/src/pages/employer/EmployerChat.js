@@ -7,6 +7,7 @@ import Converstations from '../../containers/common/Converstations';
 import Chatbox from '../../containers/common/Chatbox';
 import { io } from 'socket.io-client';
 import { instance } from '../../apis/JobSolutionApi';
+import { forEach } from 'lodash';
 
 function EmployerChat() {
   const user = useSelector((store) => store.allUsers.user);
@@ -52,7 +53,27 @@ function EmployerChat() {
   };
   const [search, setSearch] = useState();
 const searchedUser = async () => {
-    const {data} = await instance.get('/jobs/getTagedUser')
+  try {
+    const {data} = await instance.get(`/jobs/getTagedUser/${search}`);
+    const usersList = data.tagedUsers.selectedApplicant;
+    console.log(usersList);
+    console.log(chats)
+    let temp = 0;
+    const newChat = chats.filter((val) => {
+      temp = 0;
+      usersList.forEach((user) => {
+        if(val.members[0] == user || val.members[1] == user) {
+          temp = 1;
+        }
+      })
+      if(temp == 1) {
+        return val;
+      }
+    })
+    setChats(newChat);
+  }catch(err) {
+
+  }
 }
   return (
     <>
@@ -69,7 +90,8 @@ const searchedUser = async () => {
                         className="form-control rounded"
                         placeholder="Search by job id"
                         type="search"
-                        onChange={searchedUser}
+                        onChange={(e)=>{setSearch(e.target.value);}}
+                        onKeyUp={searchedUser}
                       />
                       <span
                         className="input-group-text border-0"

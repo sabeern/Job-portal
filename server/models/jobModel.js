@@ -35,6 +35,10 @@ const jobSchema = mongoose.Schema({
         require : true,
         default : true
     },
+    selectedApplicant : {
+        type : Array,
+        unique : true
+    },
     delFlag : {
         type : Number,
         required : true,
