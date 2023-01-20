@@ -1,13 +1,13 @@
-const statusMail = (name,jobDetals,status) => {
-    let mailBody;
-if(status == 'Best Fit') {
+const statusMail = (name, jobDetals, status) => {
+  let mailBody;
+  if (status == 'Best Fit') {
     mailBody = `We saw your profile on Job Solutions and thought you would be a great match for the opportunity. 
     Please submit a quick application if you have any interest.`;
-}else {
+  } else {
     mailBody = `We saw your profile on Job Solutions and thought you would be a not match for the opportunity. 
     Thank you for your response.`
-}
-return (
+  }
+  return (
     `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -49,6 +49,6 @@ return (
     </table>
 </body>
 </html>`
-);
+  );
 }
-module.exports = {statusMail};
+module.exports = { statusMail };

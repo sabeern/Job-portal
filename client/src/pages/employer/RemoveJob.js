@@ -3,13 +3,12 @@ import { useParams } from 'react-router-dom';
 import DeleteConfirmationModal from '../../containers/common/DeleteConfirmationModal';
 
 function RemoveJob() {
-    const [show, setShow] = useState(true);
-  const handleShow = () => setShow(true);
-const handleClose = () => setShow(false);
-const jobId = useParams();
+  const [show, setShow] = useState(true);
+  const handleClose = () => setShow(false);
+  const jobId = useParams();
   return (
     <>
-    <DeleteConfirmationModal data={{show, handleClose, type:'job', id:jobId.id}}/>
+      <DeleteConfirmationModal data={{ show, handleClose, type: 'job', id: jobId.id }} />
     </>
   )
 }

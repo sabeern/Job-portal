@@ -3,10 +3,9 @@ const ChatModel = require("../models/chatModel");
 const userModel = require("../models/userModel");
 
 const createChat = async (req, res) => {
-  const test = await chatModel.findOne({members: [req.body.senderId, req.body.receiverId]});
-  if(test) {
-    console.log(test);
-    res.status(200).send({msg:'Already chat exist'});
+  const test = await chatModel.findOne({ members: [req.body.senderId, req.body.receiverId] });
+  if (test) {
+    res.status(200).send({ msg: 'Already chat exist' });
     return;
   }
   const newChat = new ChatModel({
@@ -42,14 +41,14 @@ const findChat = async (req, res) => {
   }
 }
 
-const getUser = async (req,res) => {
-    const userId = req.params.userId;
-    try {
-        const userDetails =await userModel.findById(userId);
-        res.status(200).send({userDetails});
-    }catch(err) {
-        console.log('User not found');
-    }
+const getUser = async (req, res) => {
+  const userId = req.params.userId;
+  try {
+    const userDetails = await userModel.findById(userId);
+    res.status(200).send({ userDetails });
+  } catch (err) {
+    console.log('User not found');
+  }
 }
 
-module.exports = { createChat, userChats, findChat, getUser  };
+module.exports = { createChat, userChats, findChat, getUser };

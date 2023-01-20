@@ -6,22 +6,22 @@ import Cards from '../../containers/admin/Cards';
 function AdminHome() {
   return (
     <>
-      <AdminNavbar/>
+      <AdminNavbar />
       <Container>
         <Row>
           <Col md={6}>
-            <Cards data={{bgColor:'secondary'}}/>
+            <Cards data={{ bgColor: 'secondary' }} />
           </Col>
           <Col md={6}>
-            <Cards data={{bgColor:'warning'}}/>
+            <Cards data={{ bgColor: 'warning' }} />
           </Col>
         </Row>
         <Row>
           <Col md={6}>
-            <Cards data={{bgColor:'warning'}}/>
+            <Cards data={{ bgColor: 'warning' }} />
           </Col>
           <Col md={6}>
-            <Cards data={{bgColor:'secondary'}}/>
+            <Cards data={{ bgColor: 'secondary' }} />
           </Col>
         </Row>
       </Container>

@@ -2,46 +2,46 @@ const postModel = require('../models/postModel');
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 
-const addPost = async (req,res) => {
-    let userId=false;
-        let token = req.headers['x-custom-header'];
-        const decode = jwt.verify(token, process.env.JWT_SECRET);
-        userId = decode.loginedUser.id;
-        if(userId) { 
-            const {postDescription, postImage} = req.body;
-            const newUserId = mongoose.Types.ObjectId(userId);
-            const newPost = new postModel({
-                postDescription, postImage, addedUser:newUserId
-            });
-            try {
-                await newPost.save();
-                res.status(200).send({msg: 'New post added'});
-            }catch(err) {
-                res.status(401).send({errMsg:'Post adding failed'});
-            }
-        }else {
-            res.status(401).send({errMsg:'Validation failed'});
+const addPost = async (req, res) => {
+    let userId = false;
+    let token = req.headers['x-custom-header'];
+    const decode = jwt.verify(token, process.env.JWT_SECRET);
+    userId = decode.loginedUser.id;
+    if (userId) {
+        const { postDescription, postImage } = req.body;
+        const newUserId = mongoose.Types.ObjectId(userId);
+        const newPost = new postModel({
+            postDescription, postImage, addedUser: newUserId
+        });
+        try {
+            await newPost.save();
+            res.status(200).send({ msg: 'New post added' });
+        } catch (err) {
+            res.status(401).send({ errMsg: 'Post adding failed' });
         }
+    } else {
+        res.status(401).send({ errMsg: 'Validation failed' });
+    }
 }
-const getEmployeePost = async (req,res) => {
-        let userId=false;
-        let token = req.headers['x-custom-header'];
-        const decode = jwt.verify(token, process.env.JWT_SECRET);
-        userId = decode.loginedUser.id;
-        if(userId) { 
-                userId = mongoose.Types.ObjectId(userId);
-                const employeePosts = await postModel.find({addedUser:userId,delFlag:0}).sort({addedDate:-1});
-                res.status(200).send({employeePosts});
-        }else {
-            res.status(401).send({errMsg:'Validation failed'});
-        }
+const getEmployeePost = async (req, res) => {
+    let userId = false;
+    let token = req.headers['x-custom-header'];
+    const decode = jwt.verify(token, process.env.JWT_SECRET);
+    userId = decode.loginedUser.id;
+    if (userId) {
+        userId = mongoose.Types.ObjectId(userId);
+        const employeePosts = await postModel.find({ addedUser: userId, delFlag: 0 }).sort({ addedDate: -1 });
+        res.status(200).send({ employeePosts });
+    } else {
+        res.status(401).send({ errMsg: 'Validation failed' });
+    }
 }
 
-const deletePost = async (req,res) => {
+const deletePost = async (req, res) => {
     let postId = req.params.postId;
     postId = mongoose.Types.ObjectId(postId);
-    await postModel.findByIdAndUpdate(postId,{delFlag:1});
-    res.status(200).send({msg:'Post deleted successfully'});
+    await postModel.findByIdAndUpdate(postId, { delFlag: 1 });
+    res.status(200).send({ msg: 'Post deleted successfully' });
 }
 
 module.exports = { addPost, getEmployeePost, deletePost };

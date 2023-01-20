@@ -1,22 +1,22 @@
 const mongoose = require('mongoose');
 
 const jobReportSchema = mongoose.Schema({
-    issue : {
-        type : String,
-        required : true
+    issue: {
+        type: String,
+        required: true
     },
-    jobId : {
-        type : Object,
-        required : true
+    jobId: {
+        type: Object,
+        required: true
     },
-    issuedUser : {
-        type : Object,
-        required : true
+    issuedUser: {
+        type: Object,
+        required: true
     },
-    issuedDate : {
-        type : Date,
-        required : true,
-        default : new Date()
+    issuedDate: {
+        type: Date,
+        required: true,
+        default: new Date()
     }
 });
 

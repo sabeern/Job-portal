@@ -6,18 +6,18 @@ import EmpProfileForm from '../../containers/employee/EmpProfileForm';
 function EmpProfileUpdate() {
   return (
     <>
-    <Header />
-    <Container >
+      <Header />
+      <Container >
         <Row >
-            <Col md={2}></Col>
-            <Col md={8}>
-                <EmpProfileForm />
-            </Col>
-            <Col md={2}></Col>
+          <Col md={2}></Col>
+          <Col md={8}>
+            <EmpProfileForm />
+          </Col>
+          <Col md={2}></Col>
         </Row>
-    </Container>
+      </Container>
     </>
-    
+
   )
 }
 

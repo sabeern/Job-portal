@@ -11,43 +11,43 @@ import Loader from '../../containers/common/Loader';
 function Login() {
   const dispatch = useDispatch();
   const [loginDetails, setLoginDetails] = useState({
-                          userName : '', password : ''
-                      });
+    userName: '', password: ''
+  });
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const handleChange = ({ currentTarget: input }) => {
-		                      setLoginDetails({ ...loginDetails, [input.name]: input.value });
-	                  }
-  const [loginErorr,setLoginErorr] = useState();
+    setLoginDetails({ ...loginDetails, [input.name]: input.value });
+  }
+  const [loginErorr, setLoginErorr] = useState();
   const handleLogin = async (e) => {
-		  e.preventDefault();
-      setLoading(true);
-		  try {
-			    const url = "http://localhost:8000/signin";
-			    const {data : res} = await instance.post(url, loginDetails);
-            localStorage.setItem("empToken", res.token);
-            dispatch(setUser());
-          if(res.user.userType === 'Job Provider') {
-                  dispatch(fetchJobs());
-            }else {
-                dispatch(fetchAllJobs());
-                dispatch(setEmployeePosts());
-            }
-          navigate('/empProfile');
-		        } catch (error) {
-                setLoading(false);
-                setLoginErorr(error.response.data.errMsg);
-		      }
-	  }
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const url = "http://localhost:8000/signin";
+      const { data: res } = await instance.post(url, loginDetails);
+      localStorage.setItem("empToken", res.token);
+      dispatch(setUser());
+      if (res.user.userType === 'Job Provider') {
+        dispatch(fetchJobs());
+      } else {
+        dispatch(fetchAllJobs());
+        dispatch(setEmployeePosts());
+      }
+      navigate('/empProfile');
+    } catch (error) {
+      setLoading(false);
+      setLoginErorr(error.response.data.errMsg);
+    }
+  }
   return (
     <>
-        { loading && <Loader /> }
-        { (!loading) &&(<MDBContainer fluid>
-           <MDBRow>
-              <LoginForm data={{handleChange, loginDetails, handleLogin, loginErorr}}/>
-              <LoginSignupImage img="true"/>
-           </MDBRow>
-        </MDBContainer>) }
+      {loading && <Loader />}
+      {(!loading) && (<MDBContainer fluid>
+        <MDBRow>
+          <LoginForm data={{ handleChange, loginDetails, handleLogin, loginErorr }} />
+          <LoginSignupImage img="true" />
+        </MDBRow>
+      </MDBContainer>)}
     </>
   )
 }

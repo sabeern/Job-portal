@@ -10,30 +10,30 @@ import { fetchAllJobs, removeJobs, removePosts, removeUser, setEmployeePosts, se
 
 function Header() {
   let allUsers = useSelector((store) => store.allUsers);
-  if(!allUsers.user) {
-    allUsers = {user:{userType:false}};
+  if (!allUsers.user) {
+    allUsers = { user: { userType: false } };
   }
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const handleLogout = () => {
-		  localStorage.removeItem("empToken");
-      dispatch(removeUser());
-      dispatch(removeJobs());
-      dispatch(removePosts());
-		  navigate('/signin');
-	};
-  useEffect(()=> {
+    localStorage.removeItem("empToken");
+    dispatch(removeUser());
+    dispatch(removeJobs());
+    dispatch(removePosts());
+    navigate('/signin');
+  };
+  useEffect(() => {
     const token = localStorage.getItem("empToken");
-    if(!token) {
+    if (!token) {
       navigate('/signin');
     }
     dispatch(fetchAllJobs());
     dispatch(setEmployeePosts())
-  },[]);
+  }, []);
   return (
     <Navbar bg="primary" variant="dark" expand="lg">
       <Container>
-        <Navbar.Brand href="#" style={{paddingRight:'80px'}}><b>Job Solutions</b></Navbar.Brand>
+        <Navbar.Brand href="#" style={{ paddingRight: '80px' }}><b>Job Solutions</b></Navbar.Brand>
         <Navbar.Toggle aria-controls="navbarScroll" />
         <Navbar.Collapse id="navbarScroll">
           <Nav
@@ -41,10 +41,17 @@ function Header() {
             style={{ maxHeight: '100px' }}
             navbarScroll
           >
-              { allUsers.user.userType === 'Job Seeker' ? <EmployeeMenu /> : <EmployerMenu /> }
+            {allUsers.user.userType === 'Job Seeker' ? <EmployeeMenu /> : <EmployerMenu />}
           </Nav>
-              <Link to="/empProfile" className='float-right' style={{color:'white',paddingRight:'10px'}}>{allUsers.user.userName}</Link>
-              <Link to="/signin" className='float-right' onClick={handleLogout} style={{color:'white'}}>Logout</Link>
+          {allUsers.user.userType === 'Job Seeker' ?
+            <Link to="/empProfile" className='float-right' style={{ color: 'white', paddingRight: '10px' }}>
+              {allUsers.user.firstName ? allUsers.user.firstName + " " + allUsers.user.lastName : allUsers.user.userType}
+            </Link> :
+            <Link to="/empProfile" className='float-right' style={{ color: 'white', paddingRight: '10px' }}>
+              {allUsers.user.companyName ? allUsers.user.companyName : allUsers.user.userType}
+            </Link>
+          }
+          <Link to="/signin" className='float-right' onClick={handleLogout} style={{ color: 'white' }}>Logout</Link>
         </Navbar.Collapse>
       </Container>
     </Navbar>

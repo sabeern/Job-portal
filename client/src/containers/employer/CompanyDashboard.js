@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 import EmprJobCard from './EmprJobCard';
@@ -6,26 +6,26 @@ import EmprJobCard from './EmprJobCard';
 function CompanyDashboard() {
   const jobs = useSelector((store) => store.allJobs.jobs);
   let jobStatus = false;
-      if(jobs) {
-        if(jobs.length > 0) {
-          jobStatus = true;
-        }
-      }
+  if (jobs) {
+    if (jobs.length > 0) {
+      jobStatus = true;
+    }
+  }
   return (
     <div className='mt-3'>
-        {jobStatus ?  
+      {jobStatus ?
         (
           <Container>
             <Row>
               <Col md={10}>
-              { jobs.map((job,index) => {
-                  return (<EmprJobCard key={index} jobDetails={job}/>);
-              }) }
+                {jobs.map((job, index) => {
+                  return (<EmprJobCard key={index} jobDetails={job} />);
+                })}
               </Col>
             </Row>
           </Container>
-        ) : <div style={{marginTop:'200px'}}><h1>You are currently not posted any jobs</h1></div>
-        }
+        ) : <div style={{ marginTop: '200px' }}><h1>You are currently not posted any jobs</h1></div>
+      }
     </div>
   )
 }

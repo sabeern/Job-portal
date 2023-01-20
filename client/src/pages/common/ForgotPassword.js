@@ -5,11 +5,11 @@ import ForgotPasswordForm from '../../containers/common/ForgotPasswordForm';
 function ForgotPassword() {
   return (
     <MDBContainer fluid>
-           <MDBRow>
-              <ForgotPasswordForm />
-              <LoginSignupImage img="true"/>
-           </MDBRow>
-        </MDBContainer>
+      <MDBRow>
+        <ForgotPasswordForm />
+        <LoginSignupImage img="true" />
+      </MDBRow>
+    </MDBContainer>
   )
 }
 

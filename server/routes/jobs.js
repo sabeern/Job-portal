@@ -13,7 +13,7 @@ router.get('/jobApplications/:jobId', jobController.getJobApplications);
 router.get('/empDetails/:empId', jobController.getEmpProfileAndPost);
 router.get('/getJobDetails/:jobId', jobController.getJobDetails);
 router.get('/getJobApplication/:jobData', tokenValidation.validateToken, jobController.getJobStatus);
-router.put('/updateStatus',tokenValidation.validateToken, jobController.updateJobAppStatus);
+router.put('/updateStatus', tokenValidation.validateToken, jobController.updateJobAppStatus);
 router.put('/tagJob', jobController.tagJob);
 router.post('/reportIssue', jobController.reportJob);
 router.delete('/deleteJob/:jobId', jobController.deleteJob);

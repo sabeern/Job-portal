@@ -2,26 +2,26 @@ const mongoose = require('mongoose');
 
 const postShema = mongoose.Schema({
     postDescription: {
-        type:String,
-        required:true
+        type: String,
+        required: true
     },
     postImage: {
-        type:String,
-        required:true
+        type: String,
+        required: true
     },
     addedUser: {
-        type : Object,
-        required : true
+        type: Object,
+        required: true
     },
     addedDate: {
-        type : Date,
-        required : true,
-        default : new Date()
+        type: Date,
+        required: true,
+        default: new Date()
     },
-    delFlag : {
-        type:Number,
-        required : true,
-        default : 0
+    delFlag: {
+        type: Number,
+        required: true,
+        default: 0
     }
 });
 
