@@ -3,6 +3,7 @@ const userModel = require('../../models/userModel');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
+//Login check function
 const login = async (req, res) => {
     const { userName, password } = req.body;
     const validateData = { userName, password };

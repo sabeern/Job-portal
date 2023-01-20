@@ -10,7 +10,6 @@ function Converstations({ data, currentUserId, online }) {
         const { data } = await getUser(otherUserId);
         setUserData(data.userDetails);
       } catch (err) {
-        //console.log(err);
       }
     }
     getUserData();
@@ -24,12 +23,13 @@ function Converstations({ data, currentUserId, online }) {
         >
           <div className="d-flex flex-row">
             <div>
-              <img
-                src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp"
-                alt="avatar"
-                className="d-flex align-self-center me-3"
-                width="60"
-              />
+              {userData && userData.userType === 'Job Seeker' ?
+                <img src={userData && userData.profileImage ? userData.profileImage : 'http://localhost:8000/images/default.webp'}
+                  className="rounded-circle d-flex align-self-center me-3" alt="Avatar" style={{ width: '60px', height: '60px' }} />
+                :
+                <img src={userData && userData.profileImage ? 'http://localhost:8000/images/' + userData.profileImage : 'http://localhost:8000/images/default.webp'}
+                  className="rounded-circle d-flex align-self-center me-3" alt="Avatar" style={{ width: '60px', height: '60px' }} />
+              }
               <span className="badge bg-success badge-dot"></span>
             </div>
             <div className="pt-1">

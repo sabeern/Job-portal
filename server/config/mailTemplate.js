@@ -1,3 +1,4 @@
+//Email template for application status change
 const statusMail = (name, jobDetals, status) => {
   let mailBody;
   if (status == 'Best Fit') {

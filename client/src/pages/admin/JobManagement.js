@@ -34,7 +34,6 @@ function JobManagement() {
             })
             setAllIssues(jobIssueDetails);
         } catch (err) {
-            console.log(err);
         }
     }
     useEffect(() => {

@@ -2,12 +2,14 @@ import React, { useEffect, useRef, useState } from 'react';
 import { addMessage, getMessages, getUser } from '../../apis/ChatRequests';
 import { format } from 'timeago.js';
 import { BsFillCursorFill } from 'react-icons/bs';
+import { useSelector } from 'react-redux';
 
 function Chatbox({ chat, currentUserId, setSendMessage, receivedMessage }) {
   const [userData, setUserData] = useState(null);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
-  const scroll = useRef()
+  const senderData = useSelector((store) => store.allUsers.user);
+  const scroll = useRef();
   useEffect(() => {
     const otherUserId = chat?.members?.find((id) => id != currentUserId);
     const getUserData = async () => {
@@ -15,7 +17,6 @@ function Chatbox({ chat, currentUserId, setSendMessage, receivedMessage }) {
         const { data } = await getUser(otherUserId);
         setUserData(data.userDetails);
       } catch (err) {
-        //console.log(err);
       }
     }
     if (chat) {
@@ -31,10 +32,8 @@ function Chatbox({ chat, currentUserId, setSendMessage, receivedMessage }) {
     const fetchMessages = async () => {
       try {
         const { data } = await getMessages(chat._id);
-        //console.log(data);
         setMessages(data);
       } catch (err) {
-        //console.log(err);
       }
     }
     if (chat) {
@@ -51,13 +50,11 @@ function Chatbox({ chat, currentUserId, setSendMessage, receivedMessage }) {
       text: newMessage,
       chatId: chat._id
     }
-    //console.log(message);
     try {
       const { data } = await addMessage(message);
       setMessages([...messages, data]);
       setNewMessage("");
     } catch (err) {
-      //console.log(err);
     }
     const receiverId = chat.members.find((id) => id !== currentUserId);
     setSendMessage({ ...message, receiverId });
@@ -77,11 +74,13 @@ function Chatbox({ chat, currentUserId, setSendMessage, receivedMessage }) {
               <div ref={scroll}>
                 {message.senderId !== currentUserId ?
                   (<div className="d-flex flex-row justify-content-start">
-                    <img
-                      src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava6-bg.webp"
-                      alt="avatar 1"
-                      style={{ width: "45px", height: "100%" }}
-                    />
+                    {userData && userData.userType === 'Job Seeker' ?
+                      <img src={userData && userData.profileImage ? userData.profileImage : 'http://localhost:8000/images/default.webp'}
+                        className="rounded-circle d-flex align-self-center me-3" alt="Avatar" style={{ width: '45px', height: '45px' }} />
+                      :
+                      <img src={userData && userData.profileImage ? 'http://localhost:8000/images/' + userData.profileImage : 'http://localhost:8000/images/default.webp'}
+                        className="rounded-circle d-flex align-self-center me-3" alt="Avatar" style={{ width: '45px', height: '45px' }} />
+                    }
                     <div>
                       <p
                         className="small p-2 ms-3 mb-1 rounded-3"
@@ -103,11 +102,13 @@ function Chatbox({ chat, currentUserId, setSendMessage, receivedMessage }) {
                         {format(message.createdAt)}
                       </p>
                     </div>
-                    <img
-                      src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp"
-                      alt="avatar 1"
-                      style={{ width: "45px", height: "100%" }}
-                    />
+                    {senderData.userType === 'Job Seeker' ?
+                      <img src={senderData && senderData.profileImage ? senderData.profileImage : 'http://localhost:8000/images/default.webp'}
+                        className="rounded-circle d-flex align-self-center me-3" alt="Avatar" style={{ width: '45px', height: '45px' }} />
+                      :
+                      <img src={senderData && senderData.profileImage ? 'http://localhost:8000/images/' + senderData.profileImage : 'http://localhost:8000/images/default.webp'}
+                        className="rounded-circle d-flex align-self-center me-3" alt="Avatar" style={{ width: '45px', height: '45px' }} />
+                    }
                   </div>)
 
                 }
@@ -120,11 +121,13 @@ function Chatbox({ chat, currentUserId, setSendMessage, receivedMessage }) {
       </div>
       {chat ?
         (<div className="text-muted d-flex justify-content-start align-items-center pe-3 pt-3 mt-2">
-          <img
-            src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava6-bg.webp"
-            alt="avatar 3"
-            style={{ width: "40px", height: "100%" }}
-          />
+          {senderData.userType === 'Job Seeker' ?
+            <img src={senderData && senderData.profileImage ? senderData.profileImage : 'http://localhost:8000/images/default.webp'}
+              className="rounded-circle d-flex align-self-center me-3" alt="Avatar" style={{ width: '45px', height: '45px' }} />
+            :
+            <img src={senderData && senderData.profileImage ? 'http://localhost:8000/images/' + senderData.profileImage : 'http://localhost:8000/images/default.webp'}
+              className="rounded-circle d-flex align-self-center me-3" alt="Avatar" style={{ width: '45px', height: '45px' }} />
+          }
           <input
             type="text"
             className="form-control form-control-lg"

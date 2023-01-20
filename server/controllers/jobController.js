@@ -7,7 +7,7 @@ const postModel = require("../models/postModel");
 const nodemailer = require('nodemailer');
 const mailTemplate = require('../config/mailTemplate');
 const reportJobModel = require('../models/reportJobModel');
-
+//Get the all posted jobs of selected employer
 const getEmployerJobs = async (req, res) => {
         let userId = false;
         let token = req.headers['x-custom-header'];
@@ -23,13 +23,14 @@ const getEmployerJobs = async (req, res) => {
                 res.status(401).send({ errMsg: 'Validation failed' });
         }
 }
+//Get all non deleted and unblocked jobs for employee
 const getAllJobs = async (req, res) => {
         const allJobs = await jobModel.aggregate([{ $match: { delFlag: 0, listingStatus: true } },
         { $lookup: { from: process.env.USER_COLLECTION, localField: 'postedUser', foreignField: '_id', as: 'user' } }, { $project: { 'user.password': 0 } }, { $unwind: '$user' }
                 , { $sort: { postedDate: -1 } }]);
         res.status(200).send({ allJobs });
 }
-
+//Inserting details of job applied person
 const applyJob = async (req, res) => {
         let userId = false;
         let token = req.headers['x-custom-header'];
@@ -52,7 +53,7 @@ const applyJob = async (req, res) => {
                 res.status(401).send({ errMsg: 'Validation failed' });
         }
 }
-
+//Checking the tag status of jobs
 const checkJobStatus = async (req, res) => {
         let userId = false;
         let token = req.headers['x-custom-header'];
@@ -72,6 +73,7 @@ const checkJobStatus = async (req, res) => {
                 res.status(401).send({ errMsg: 'Validation failed' });
         }
 }
+//Finding applied employees count for each job
 const findApplicantCount = async (req, res) => {
         let jobId = req.params.jobId;
         jobId = mongoose.Types.ObjectId(jobId);
@@ -85,6 +87,7 @@ const transporter = nodemailer.createTransport({
                 pass: process.env.SENDER_PASSWORD
         }
 });
+//Searching jobs with job title and company location
 const searchJob = async (req, res) => {
         const { jobTitle, jobLocation } = req.body;
         let searchResult;
@@ -112,7 +115,7 @@ const searchJob = async (req, res) => {
                 res.status(401).send({ msg: 'Already available' });
         }
 }
-
+//Get all applicat details for selected job
 const getJobApplications = async (req, res) => {
         let jobId = req.params.jobId;
         try {
@@ -129,6 +132,7 @@ const getJobApplications = async (req, res) => {
                 res.status(401).send({ errMsg: 'Job not found' });
         }
 }
+//Taking all profile datails and post of employee for checking to employer
 const getEmpProfileAndPost = async (req, res) => {
         let empId = req.params.empId;
         try {
@@ -145,12 +149,13 @@ const getEmpProfileAndPost = async (req, res) => {
                 res.status(401).send({ errMsg: 'Employee not found' });
         }
 }
+//Fetching all details of specific job
 const getJobDetails = async (req, res) => {
         const jobId = req.params.jobId;
         const jobDetails = await jobModel.findById(jobId);
         res.status(200).send({ jobDetails });
 }
-
+//Taking the current status and tag status of selected job
 const getJobStatus = async (req, res) => {
         let data = req.params.jobData;
         data = data.split('-');
@@ -159,11 +164,12 @@ const getJobStatus = async (req, res) => {
                 jobId = mongoose.Types.ObjectId(jobId);
                 empId = mongoose.Types.ObjectId(empId);
         } catch (err) {
-                console.log(err.message);
+                res.status(401).send(err.message);
         }
         const jobDetails = await appliedJobModel.findOne({ jobId, userId: empId }, { applicationStatus: 1, tagStatus: 1 });
         res.status(200).send({ jobDetails });
 }
+//Selecting employees and sending response mail to employees
 const updateJobAppStatus = async (req, res) => {
         let { status, applicationId, jobId, email, name } = req.body;
         applicationId = mongoose.Types.ObjectId(applicationId);
@@ -185,7 +191,7 @@ const updateJobAppStatus = async (req, res) => {
                 }
         });
 }
-
+//Tagging job with chat
 const tagJob = async (req, res) => {
         let { jobId, empId } = req.body;
         jobId = mongoose.Types.ObjectId(jobId);
@@ -195,10 +201,10 @@ const tagJob = async (req, res) => {
                 await jobModel.findByIdAndUpdate(jobId, { $push: { selectedApplicant: empId } });
                 res.status(200).send({ msg: 'Job tagged' });
         } catch (err) {
-                console.log('Already taged');
+                res.status(401).send('Already taged');
         }
 }
-
+//Employee reporting issues about selected job
 const reportJob = async (req, res) => {
         let { jobIssue, jobId, userId } = req.body;
         jobId = mongoose.Types.ObjectId(jobId);
@@ -213,14 +219,14 @@ const reportJob = async (req, res) => {
                 res.status(401).send({ errMsg: 'Failed posting issue' });
         }
 }
-
+//Deleting unwanted jobs
 const deleteJob = async (req, res) => {
         let jobId = req.params.jobId;
         jobId = mongoose.Types.ObjectId(jobId);
         await jobModel.findByIdAndUpdate(jobId, { delFlag: 1 });
         res.status(200).send({ msg: 'Job deleted successfully' });
 }
-
+//Searching all tagged users of specific jobs
 const getTagedUser = async (req, res) => {
         const jobId = req.params.jobId;
         const tagedUsers = await jobModel.findOne({ jobId });
@@ -229,7 +235,6 @@ const getTagedUser = async (req, res) => {
         } else {
                 res.status(401).send({ errMsg: 'No details found' });
         }
-        console.log(tagedUsers);
 }
 
 module.exports = {

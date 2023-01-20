@@ -1,4 +1,5 @@
 const Joi = require('joi');
+// Joi validator for login page validation
 const validateUser = (user) => {
         const JoiSchema = Joi.object({
                 password: Joi.string()

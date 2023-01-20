@@ -48,10 +48,8 @@ function EmployeeProfileDetails({ data, jobId, appStatus, tagStatus, setTagStatu
                 setTagStatus(true);
                 window.open('http://localhost:3000/chat', '_blank', 'noopener,noreferrer');
             } catch (err) {
-                console.log(err);
             }
         } catch (err) {
-            console.log(err);
         }
     }
     return (

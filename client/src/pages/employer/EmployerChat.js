@@ -22,13 +22,11 @@ function EmployerChat() {
         const { data } = await userChats(user._id);
         setChats(data);
       } catch (err) {
-        //console.log(err);
       }
     }
     getChat();
   }, [user._id])
   useEffect(() => {
-    console.log('user added');
     socket.current = io('http://localhost:8800');
     socket.current.emit("new-user-add", user._id);
     socket.current.on('get-users', (users) => {
@@ -55,10 +53,8 @@ function EmployerChat() {
     try {
       const { data } = await instance.get(`/jobs/getTagedUser/${search}`);
       const usersList = data.tagedUsers.selectedApplicant;
-      console.log(usersList);
-      console.log(chats)
       let temp = 0;
-      const newChat = chats.filter((val)=> {
+      const newChat = chats.filter((val) => {
         temp = 0;
         usersList.forEach((user) => {
           if (val.members[0] === user || val.members[1] === user) {
@@ -75,7 +71,6 @@ function EmployerChat() {
         const { data } = await userChats(user._id);
         setChats(data);
       } catch (err) {
-        //console.log(err);
       }
     }
   }

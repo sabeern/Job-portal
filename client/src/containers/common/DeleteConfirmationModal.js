@@ -6,12 +6,10 @@ import { instance } from '../../apis/JobSolutionApi';
 function DeleteConfirmationModal({ data }) {
     const navigate = useNavigate();
     const deleteData = async () => {
-        console.log(data.type);
         if (data.type === 'job') {
             await instance.delete(`/jobs/deleteJob/${data.id}`);
         }
         if (data.type === 'post') {
-            console.log('here')
             await instance.delete(`/post/deletePost/${data.id}`);
         }
         navigate('/empProfile');

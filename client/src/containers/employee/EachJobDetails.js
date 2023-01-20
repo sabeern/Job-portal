@@ -19,7 +19,6 @@ function EachJobDetails() {
       await instance.post('/jobs/applyJob', { jobId }, { headers: headers });
       setApplyStatus(true);
     } catch (err) {
-      //console.log(err);
     }
   }
   useEffect(() => {

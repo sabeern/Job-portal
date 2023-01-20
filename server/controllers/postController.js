@@ -1,7 +1,7 @@
 const postModel = require('../models/postModel');
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
-
+//Adding new posts employee
 const addPost = async (req, res) => {
     let userId = false;
     let token = req.headers['x-custom-header'];
@@ -23,6 +23,7 @@ const addPost = async (req, res) => {
         res.status(401).send({ errMsg: 'Validation failed' });
     }
 }
+//Fetching all posts of employee
 const getEmployeePost = async (req, res) => {
     let userId = false;
     let token = req.headers['x-custom-header'];
@@ -36,7 +37,7 @@ const getEmployeePost = async (req, res) => {
         res.status(401).send({ errMsg: 'Validation failed' });
     }
 }
-
+//Delete selected post of employee
 const deletePost = async (req, res) => {
     let postId = req.params.postId;
     postId = mongoose.Types.ObjectId(postId);

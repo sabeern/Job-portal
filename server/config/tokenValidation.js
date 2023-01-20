@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const userModel = require('../models/userModel');
+//Jwt validation middleware for loggined routes
 const validateToken = (req, res, next) => {
     if (req.headers['x-custom-header']) {
         try {

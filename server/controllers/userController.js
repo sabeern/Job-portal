@@ -4,7 +4,7 @@ const jobModel = require('../models/jobModel');
 const mongoose = require('mongoose');
 const jobValidator = require('../public/javascript/jobValidation');
 const multer = require('multer');
-
+//Taking all details of registered user
 const getUserDetails = async (req, res) => {
     let userId = false;
     let token = req.headers['x-custom-header'];
@@ -18,7 +18,7 @@ const getUserDetails = async (req, res) => {
         res.status(401).send({ errMsg: "Authentication failed" });
     }
 }
-
+//Posting new job
 const postJob = async (req, res) => {
     const response = jobValidator.validateJobDetails(req.body);
     if (response.error) {
@@ -46,6 +46,7 @@ const postJob = async (req, res) => {
         res.status(401).send({ errMsg: "Authentication failed" });
     }
 }
+//File upload option for company profile image
 const fileStorageEngine = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, './public/images');
@@ -65,6 +66,7 @@ const fileFilter = (req, file, cb) => {
 }
 const upload = multer({ storage: fileStorageEngine, fileFilter });
 const uploadSingleImage = upload.single('photo');
+//Inserting employer details and uploading profile image
 const updateCompanyDetails = (req, res) => {
     uploadSingleImage(req, res, async err => {
         if (err) {
@@ -93,6 +95,7 @@ const updateCompanyDetails = (req, res) => {
         }
     })
 }
+//Option for resume upload
 const resumeStorageEngine = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, './public/resume');
@@ -112,6 +115,7 @@ const resumeFilter = (req, file, cb) => {
 }
 const uploadResume = multer({ storage: resumeStorageEngine, fileFilter: resumeFilter });
 const uploadSingleResume = uploadResume.single('resume');
+//Updating employee details and resume
 const updateEmployeeDetails = (req, res) => {
     uploadSingleResume(req, res, async err => {
         if (err) {
@@ -138,7 +142,7 @@ const updateEmployeeDetails = (req, res) => {
         }
     })
 }
-
+//Uploading employee profile image and updating in db
 const employeeProfileImageUpdate = async (req, res) => {
     const { empId, postImage } = req.body;
     await userModel.findByIdAndUpdate(empId, { profileImage: postImage });

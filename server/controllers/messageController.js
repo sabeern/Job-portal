@@ -1,5 +1,5 @@
 const MessageModel = require("../models/messageModel");
-
+//Inserting new messages sended by users
 const addMessage = async (req, res) => {
   const { chatId, senderId, text } = req.body;
   const message = new MessageModel({
@@ -14,7 +14,7 @@ const addMessage = async (req, res) => {
     res.status(500).json(error);
   }
 };
-
+//Fetching all messages of selectd chat
 const getMessages = async (req, res) => {
   const { chatId } = req.params;
   try {

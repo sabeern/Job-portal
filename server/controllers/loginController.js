@@ -2,7 +2,7 @@ const formValidator = require('../config/loginValidation');
 const userModel = require('../models/userModel');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-
+//Login menu for employee and employer
 const login = async (req, res) => {
     const { userName, password } = req.body;
     const validateData = { userName, password };

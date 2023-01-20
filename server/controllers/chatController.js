@@ -1,7 +1,7 @@
 const chatModel = require("../models/chatModel");
 const ChatModel = require("../models/chatModel");
 const userModel = require("../models/userModel");
-
+//Creating new chat if sender and reciever new
 const createChat = async (req, res) => {
   const test = await chatModel.findOne({ members: [req.body.senderId, req.body.receiverId] });
   if (test) {
@@ -18,7 +18,7 @@ const createChat = async (req, res) => {
     res.status(200).json(error);
   }
 }
-
+//Find all chats of a specific user
 const userChats = async (req, res) => {
   try {
     const chat = await ChatModel.find({
@@ -29,7 +29,7 @@ const userChats = async (req, res) => {
     res.status(500).json(error);
   }
 };
-
+//Find specific chat of selected users
 const findChat = async (req, res) => {
   try {
     const chat = await ChatModel.findOne({
@@ -40,14 +40,14 @@ const findChat = async (req, res) => {
     res.status(500).json(error)
   }
 }
-
+//Get user details for chat
 const getUser = async (req, res) => {
   const userId = req.params.userId;
   try {
     const userDetails = await userModel.findById(userId);
     res.status(200).send({ userDetails });
   } catch (err) {
-    console.log('User not found');
+    res.status(401).send({errMsg:'User not found'});
   }
 }
 
