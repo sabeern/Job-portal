@@ -48,7 +48,7 @@ function ProfilePicModal({ data }) {
                     <Modal.Title>Please Select New Image</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    {!selectedImage && <img src={profile ? profile : 'http://localhost:8000/images/default.webp'}
+                    {!selectedImage && <img src={profile ? profile : 'https://job-solutions-server.onrender.com/images/default.webp'}
                         className="rounded-circle" alt="Avatar" style={{ width: '120px', height: '120px', marginLeft: '25vh' }} />}
                     {selectedImage && <img src={URL.createObjectURL(selectedImage)}
                         className="rounded-circle" alt="Avatar" style={{ width: '120px', height: '120px', marginLeft: '25vh' }} />}

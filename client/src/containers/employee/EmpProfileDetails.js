@@ -17,7 +17,7 @@ function EmpProfileDetails() {
                         <table style={{ borderRadius: '20px' }}>
                             <tr>
                                 <td>
-                                    <img src={userDetails.profileImage ? userDetails.profileImage : 'http://localhost:8000/images/default.webp'}
+                                    <img src={userDetails.profileImage ? userDetails.profileImage : 'https://job-solutions-server.onrender.com/images/default.webp'}
                                         className="rounded-circle" alt="Avatar" style={{ width: '80px', height: '80px' }} />
                                     &nbsp;<Link to={`/changeProfilImage/${userDetails._id}`}><BsPencilSquare style={{ width: '20px', height: 'auto' }} title="Change Profile" /></Link>
                                 </td>
@@ -46,7 +46,7 @@ function EmpProfileDetails() {
                             <tr>
                                 <td><b>Resume</b></td>
                                 <td>
-                                    <a href={`http://localhost:8000/resume/${userDetails.resume}`} target="_blank">View Resume</a>
+                                    <a href={`https://job-solutions-server.onrender.com/resume/${userDetails.resume}`} target="_blank">View Resume</a>
                                 </td>
                             </tr>
                         </table>

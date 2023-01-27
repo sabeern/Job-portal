@@ -75,10 +75,10 @@ function Chatbox({ chat, currentUserId, setSendMessage, receivedMessage }) {
                 {message.senderId !== currentUserId ?
                   (<div className="d-flex flex-row justify-content-start">
                     {userData && userData.userType === 'Job Seeker' ?
-                      <img src={userData && userData.profileImage ? userData.profileImage : 'http://localhost:8000/images/default.webp'}
+                      <img src={userData && userData.profileImage ? userData.profileImage : 'https://job-solutions-server.onrender.com/images/default.webp'}
                         className="rounded-circle d-flex align-self-center me-3" alt="Avatar" style={{ width: '45px', height: '45px' }} />
                       :
-                      <img src={userData && userData.profileImage ? 'http://localhost:8000/images/' + userData.profileImage : 'http://localhost:8000/images/default.webp'}
+                      <img src={userData && userData.profileImage ? 'https://job-solutions-server.onrender.com/images/' + userData.profileImage : 'https://job-solutions-server.onrender.com/images/default.webp'}
                         className="rounded-circle d-flex align-self-center me-3" alt="Avatar" style={{ width: '45px', height: '45px' }} />
                     }
                     <div>
@@ -103,10 +103,10 @@ function Chatbox({ chat, currentUserId, setSendMessage, receivedMessage }) {
                       </p>
                     </div>
                     {senderData.userType === 'Job Seeker' ?
-                      <img src={senderData && senderData.profileImage ? senderData.profileImage : 'http://localhost:8000/images/default.webp'}
+                      <img src={senderData && senderData.profileImage ? senderData.profileImage : 'https://job-solutions-server.onrender.com/images/default.webp'}
                         className="rounded-circle d-flex align-self-center me-3" alt="Avatar" style={{ width: '45px', height: '45px' }} />
                       :
-                      <img src={senderData && senderData.profileImage ? 'http://localhost:8000/images/' + senderData.profileImage : 'http://localhost:8000/images/default.webp'}
+                      <img src={senderData && senderData.profileImage ? 'https://job-solutions-server.onrender.com/images/' + senderData.profileImage : 'https://job-solutions-server.onrender.com/images/default.webp'}
                         className="rounded-circle d-flex align-self-center me-3" alt="Avatar" style={{ width: '45px', height: '45px' }} />
                     }
                   </div>)
@@ -122,10 +122,10 @@ function Chatbox({ chat, currentUserId, setSendMessage, receivedMessage }) {
       {chat ?
         (<div className="text-muted d-flex justify-content-start align-items-center pe-3 pt-3 mt-2">
           {senderData.userType === 'Job Seeker' ?
-            <img src={senderData && senderData.profileImage ? senderData.profileImage : 'http://localhost:8000/images/default.webp'}
+            <img src={senderData && senderData.profileImage ? senderData.profileImage : 'https://job-solutions-server.onrender.com/images/default.webp'}
               className="rounded-circle d-flex align-self-center me-3" alt="Avatar" style={{ width: '45px', height: '45px' }} />
             :
-            <img src={senderData && senderData.profileImage ? 'http://localhost:8000/images/' + senderData.profileImage : 'http://localhost:8000/images/default.webp'}
+            <img src={senderData && senderData.profileImage ? 'https://job-solutions-server.onrender.com/images/' + senderData.profileImage : 'https://job-solutions-server.onrender.com/images/default.webp'}
               className="rounded-circle d-flex align-self-center me-3" alt="Avatar" style={{ width: '45px', height: '45px' }} />
           }
           <input

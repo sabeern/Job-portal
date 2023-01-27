@@ -29,6 +29,11 @@ const userShema = mongoose.Schema({
         default: Date.now()
     },
     resume: String,
+    blockStatus:{
+        type: Boolean,
+        required: true,
+        default: 0
+    },
     delFlag: {
         type: Number,
         required: true,

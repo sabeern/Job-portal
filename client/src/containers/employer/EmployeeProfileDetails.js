@@ -3,7 +3,6 @@ import { Row, Col, Button } from 'react-bootstrap';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 import { createChat } from '../../apis/ChatRequests';
 import { instance } from '../../apis/JobSolutionApi';
 import Loader from '../common/Loader';
@@ -14,7 +13,6 @@ function EmployeeProfileDetails({ data, jobId, appStatus, tagStatus, setTagStatu
     const user = useSelector((store) => store.allUsers.user);
     const job = useSelector((store) => store.selectedJob.job);
     const [loading, setLoading] = useState();
-    const navigate = useNavigate();
     useEffect(() => {
         if (appStatus) {
             if (appStatus.applicationStatus !== 'Not Processed') {
@@ -42,11 +40,11 @@ function EmployeeProfileDetails({ data, jobId, appStatus, tagStatus, setTagStatu
     }
     const handleChat = async () => {
         try {
-            const res = await createChat(user._id, data._id);
+             await createChat(user._id, data._id);
             try {
                 await instance.put('jobs/tagJob', { jobId: job._id, empId: data._id });
                 setTagStatus(true);
-                window.open('http://localhost:3000/chat', '_blank', 'noopener,noreferrer');
+                window.open('https://job-portal-gwu4.onrender.com/chat', '_blank', 'noopener,noreferrer');
             } catch (err) {
             }
         } catch (err) {
@@ -86,7 +84,7 @@ function EmployeeProfileDetails({ data, jobId, appStatus, tagStatus, setTagStatu
                             <tr>
                                 <td><b>Resume</b></td>
                                 <td>
-                                    <a href={`http://localhost:8000/resume/${data.resume}`} target="_blank">View Resume</a>
+                                    <a href={`https://job-solutions-server.onrender.com/resume/${data.resume}`} target="_blank">View Resume</a>
                                 </td>
                             </tr>
                             <tr>

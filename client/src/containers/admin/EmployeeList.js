@@ -5,14 +5,17 @@ import Pagination from "rc-pagination";
 import "rc-pagination/assets/index.css";
 import "../../stylesheet/tableStyle.css";
 
-function ApplicationsList({ data }) {
+function EmployeeList({ data }) {
+  console.log(data);
   const [allData, setAllData] = useState(data);
   const tableHead = {
+    slNo: "Sl.No",
     name: "Applicant Name",
-    appliedData: "Applied Date",
-    qualification: "Qualification",
-    status: "Status",
-    viewDetails: " "
+    jobTitle: "Job Title",
+    contactNumber: "Contact Number",
+    registeredDate: "Registered Date",
+    blockStatus:"Block Status",
+    block: " "
   };
   const countPerPage = 10;
   const [value, setValue] = useState("");
@@ -66,12 +69,12 @@ function ApplicationsList({ data }) {
     return Object.values(tableHead).map((title, index) => (
       <td key={index}>{title}</td>
     ));
-  }
+  };
   return (
     <>
-      <div className="search">
+      <div className="search mt-4">
         <input
-          placeholder="Search Applicant"
+          placeholder="Search by name"
           value={value}
           onChange={e => setValue(e.target.value)}
         />
@@ -87,4 +90,4 @@ function ApplicationsList({ data }) {
   )
 }
 
-export default ApplicationsList;
+export default EmployeeList;

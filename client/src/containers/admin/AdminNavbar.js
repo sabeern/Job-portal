@@ -26,6 +26,9 @@ function AdminNavbar() {
             navbarScroll
           >
             <Link to="/admin/dashboard" className='nav-link'>Dashboard</Link>
+            <Link to="/admin/jobManagement" className='nav-link'>Job Issues</Link>
+            <Link to="/admin/empList" className='nav-link'>Job Seekers Details</Link>
+            <Link to="/admin/emprList" className='nav-link'>Job Providers Details</Link>
           </Nav>
           <Link to="/admin/dashboard" className='float-right' style={{ color: 'white', paddingRight: '10px' }}>Admin</Link>
           <Link to="/admin" className='float-right' onClick={handleLogout} style={{ color: 'white' }}>Logout</Link>

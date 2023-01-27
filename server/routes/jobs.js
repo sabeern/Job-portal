@@ -18,5 +18,7 @@ router.put('/tagJob', jobController.tagJob);
 router.post('/reportIssue', jobController.reportJob);
 router.delete('/deleteJob/:jobId', jobController.deleteJob);
 router.get('/getTagedUser/:jobId', jobController.getTagedUser);
+router.get('/notification/:id', jobController.getNotification);
+router.get('/notificationCount/:id', jobController.notificationCount);
 
 module.exports = router;

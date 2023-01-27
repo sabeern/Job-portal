@@ -21,7 +21,7 @@ function PostJob() {
     try {
       const token = localStorage.getItem('empToken');
       const instance = axios.create({
-        baseURL: 'http://localhost:8000',
+        baseURL: 'https://job-solutions-server.onrender.com/',
         headers: { 'X-Custom-Header': `${token}` }
       });
       await instance.post('/user/postJob', jobDetails);

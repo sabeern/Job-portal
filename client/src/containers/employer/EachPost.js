@@ -10,9 +10,9 @@ function EachPost({ data, empName, profileImage }) {
     return (
         <>
             <MDBContainer className="my-2 d-flex">
-                {!empName && <img src={user.profileImage ? user.profileImage : 'http://localhost:8000/images/default.webp'}
+                {!empName && <img src={user.profileImage ? user.profileImage : 'https://job-solutions-server.onrender.com/images/default.webp'}
                     className="rounded-circle" alt="Avatar" style={{ width: '70px', height: '70px' }} />}
-                {empName && <img src={profileImage ? profileImage : "http://localhost:8000/images/default.webp"}
+                {empName && <img src={profileImage ? profileImage : "https://job-solutions-server.onrender.com/images/default.webp"}
                     className="rounded-circle" alt="Avatar" style={{ width: '70px', height: '70px' }} />}
                 <p>
                     {!empName && <span style={{ paddingTop: '16px', paddingLeft: '30px', fontSize: '20px', fontWeight: 700 }}>{user ? user.firstName + ' ' + user.lastName : ''}</span>}

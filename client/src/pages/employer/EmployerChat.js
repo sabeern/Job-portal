@@ -27,7 +27,7 @@ function EmployerChat() {
     getChat();
   }, [user._id])
   useEffect(() => {
-    socket.current = io('http://localhost:8800');
+    socket.current = io('https://job-solutions-socket.onrender.com');
     socket.current.emit("new-user-add", user._id);
     socket.current.on('get-users', (users) => {
       setOnlineUsers(users);
@@ -96,7 +96,7 @@ function EmployerChat() {
                           className="input-group-text border-0"
                           id="search-addon"
                         >
-                          <MDBIcon fas icon="search" />
+                          <MDBIcon fas icon="search"/>
                         </span>
                       </MDBInputGroup>
                       <div className="overflow-auto pt-3 pe-3" style={{ height: '70vh' }}>

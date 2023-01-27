@@ -55,7 +55,7 @@ function Signup() {
     e.preventDefault();
     setLoading(true);
     try {
-      const url = "http://localhost:8000/signup";
+      const url = "https://job-solutions-server.onrender.com/signup";
       await axios.post(url, data);
       setErr('');
       setOtp(true);
@@ -72,7 +72,7 @@ function Signup() {
   const handleOtp = async (e) => {
     e.preventDefault();
     try {
-      const url = "http://localhost:8000/signup/validateOtp";
+      const url = "https://job-solutions-server.onrender.com/signup/validateOtp";
       await axios.post(url, data);
       navigate("/signin");
     } catch (error) {

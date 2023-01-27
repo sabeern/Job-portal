@@ -7,6 +7,7 @@ const postModel = require("../models/postModel");
 const nodemailer = require('nodemailer');
 const mailTemplate = require('../config/mailTemplate');
 const reportJobModel = require('../models/reportJobModel');
+const notificationModel = require('../models/notificationModel');
 //Get the all posted jobs of selected employer
 const getEmployerJobs = async (req, res) => {
         let userId = false;
@@ -45,6 +46,20 @@ const applyJob = async (req, res) => {
                 });
                 try {
                         await jobApplication.save();
+                        try {
+                                const jobDetails = await jobModel.findById(jobId);
+                                const employerDetails = await userModel.findById(jobDetails.postedUser);
+                                const employeeDetails = await userModel.findById(userId);
+                                const message = `${employeeDetails.firstName+' '+employeeDetails.lastName} applied for job(Job Id: #${jobDetails.jobId})`;
+                                const notification = new notificationModel({
+                                        message,userId:employerDetails._id
+                                });
+                                notification.save();
+                        }catch(err) {
+                                console.log(err.message);
+                                res.status(500).send({errMsg:'Internal server error'});
+                                return;
+                        }
                         res.status(200).send({ msg: 'Applied for job successfully' });
                 } catch (err) {
                         res.status(401).send({ errMsg: 'Failed operation, Try later' });
@@ -236,8 +251,27 @@ const getTagedUser = async (req, res) => {
                 res.status(401).send({ errMsg: 'No details found' });
         }
 }
+const getNotification = async (req,res) => {
+        const userId = req.params.id;
+        try {
+                await notificationModel.updateMany({readStatus:1});
+                const notifications = await notificationModel.find({userId}).sort({addedTime:-1});
+                res.status(200).send({notifications});
+        }catch(err) {
+                res.status(500).send({errMsg:'Internal server error'});
+        }
+}
+const notificationCount = async (req,res) => {
+        const userId = req.params.id;
+        try {
+                const notCount = await notificationModel.find({userId, readStatus:0}).count();
+                res.status(200).send({notCount});
+        }catch(err) {
+                res.status(200).send({errMsg:'Internal server error'});
+        }
+}
 
 module.exports = {
         getEmployerJobs, getAllJobs, applyJob, checkJobStatus, findApplicantCount,
-        searchJob, getJobApplications, getEmpProfileAndPost, getJobDetails, getJobStatus, updateJobAppStatus, tagJob, reportJob, deleteJob, getTagedUser
+        searchJob, getJobApplications, getEmpProfileAndPost, getJobDetails, getJobStatus, updateJobAppStatus, tagJob, reportJob, deleteJob, getTagedUser, getNotification, notificationCount
 };
