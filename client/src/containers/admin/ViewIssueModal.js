@@ -10,7 +10,9 @@ function ViewIssueModal({ data, jobId }) {
         setBlockStatus(data.jobDetails.listingStatus);
     }
     const blockJob = async () => {
-        await instance.put('/admin/management/blockJob', { jobId, blockStatus });
+        const token = localStorage.getItem('adminToken');
+        const headers = { 'X-Custom-Header': `${token}` };
+        await instance.put('/admin/management/blockJob', { jobId, blockStatus }, { headers });
         setReload(!reload);
         data.handleClose();
     }

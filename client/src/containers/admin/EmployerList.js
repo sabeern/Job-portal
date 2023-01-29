@@ -60,7 +60,6 @@ function EmployerList({ data }) {
     };
 
     const tableData = () => {
-        console.log('inside table data')
         return collection.map((key, index) => tableRows({ key, index }));
     };
 
@@ -69,7 +68,6 @@ function EmployerList({ data }) {
             <td key={index}>{title}</td>
         ));
     };
-    console.log('reached end')
     return (
         <>
             <div className="search mt-4">

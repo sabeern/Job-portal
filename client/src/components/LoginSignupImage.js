@@ -10,4 +10,4 @@ function LoginSignupImage() {
   )
 }
 
-export default LoginSignupImage
+export default LoginSignupImage;

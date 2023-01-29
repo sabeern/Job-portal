@@ -11,9 +11,14 @@ const getUserDetails = async (req, res) => {
     const decode = jwt.verify(token, process.env.JWT_SECRET);
     userId = decode.loginedUser.id;
     if (userId) {
-        const userDetails = await userModel.findById(userId);
-        userDetails.password = '';
-        res.status(200).send({ user: userDetails });
+        try {
+            const userDetails = await userModel.findById(userId);
+            userDetails.password = '';
+            res.status(200).send({ user: userDetails });
+        } catch (err) {
+            res.status(500).send({ errMsg: 'Internal server error' });
+            return;
+        }
     } else {
         res.status(401).send({ errMsg: "Authentication failed" });
     }
@@ -30,7 +35,12 @@ const postJob = async (req, res) => {
     const decode = jwt.verify(token, process.env.JWT_SECRET);
     userId = decode.loginedUser.id;
     if (userId) {
-        userId = mongoose.Types.ObjectId(userId);
+        try {
+            userId = mongoose.Types.ObjectId(userId);
+        } catch (err) {
+            res.status(401).send({ errMsg: 'Data not found' });
+            return;
+        }
         const { jobTitle, salaryRange, requiredSkills, moreDetails } = req.body;
         const jobId = Math.ceil(Math.random() * 99999) + 10000;
         const newJob = new jobModel({
@@ -47,42 +57,22 @@ const postJob = async (req, res) => {
     }
 }
 //File upload option for company profile image
-const fileStorageEngine = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, './public/images');
-    },
-    filename: (req, file, cb) => {
-        let fileName = file.originalname;
-        fileName = fileName.replaceAll(' ', '_');
-        cb(null, Date.now() + fileName);
-    }
-});
-const fileFilter = (req, file, cb) => {
-    if (file.mimetype == "image/png" || file.mimetype == "image/jpg" || file.mimetype == "image/jpeg") {
-        cb(null, true);
-    } else {
-        return cb(new Error('Only .png, .jpg and .jpeg format allowed!'));
-    }
-}
-const upload = multer({ storage: fileStorageEngine, fileFilter });
-const uploadSingleImage = upload.single('photo');
-//Inserting employer details and uploading profile image
-const updateCompanyDetails = (req, res) => {
-    uploadSingleImage(req, res, async err => {
-        if (err) {
-            res.status(401).send({ errMsg: err.message });
-            return;
-        }
-        let userId = false;
-        let token = req.headers['x-custom-header'];
-        const decode = jwt.verify(token, process.env.JWT_SECRET);
-        userId = decode.loginedUser.id;
-        if (userId) {
-            const companyDetails = JSON.parse(req.body.companyDetails);
-            const { companyName, companyLocation } = companyDetails;
-            mongoose.Types.ObjectId(userId);
-            if (req.file) {
-                const companyLogo = req.file.filename;
+const updateCompanyDetails = async (req, res) => {
+    let userId = false;
+    let token = req.headers['x-custom-header'];
+    const decode = jwt.verify(token, process.env.JWT_SECRET);
+    userId = decode.loginedUser.id;
+    if (userId) {
+        try {
+            const { companyName, companyLocation, postImage } = req.body;
+            try {
+                userId = mongoose.Types.ObjectId(userId);
+            } catch (err) {
+                res.status(401).send({ errMsg: 'Data not found' });
+                return;
+            }
+            if (postImage) {
+                const companyLogo = postImage;
                 await userModel.findByIdAndUpdate(userId, { companyName, companyLocation, profileImage: companyLogo });
             } else {
                 await userModel.findByIdAndUpdate(userId, { companyName, companyLocation });
@@ -90,63 +80,48 @@ const updateCompanyDetails = (req, res) => {
             const userData = await userModel.findById(userId);
             userData.password = '';
             res.status(200).send(userData);
-        } else {
-            res.status(401).send({ errMsg: 'Authentication failed' });
-        }
-    })
-}
-//Option for resume upload
-const resumeStorageEngine = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, './public/resume');
-    },
-    filename: (req, file, cb) => {
-        let fileName = file.originalname;
-        fileName = fileName.replaceAll(' ', '_');
-        cb(null, Date.now() + fileName);
-    }
-});
-const resumeFilter = (req, file, cb) => {
-    if (file.mimetype == "application/pdf") {
-        cb(null, true);
-    } else {
-        return cb(new Error('Only .pdf format allowed!'));
-    }
-}
-const uploadResume = multer({ storage: resumeStorageEngine, fileFilter: resumeFilter });
-const uploadSingleResume = uploadResume.single('resume');
-//Updating employee details and resume
-const updateEmployeeDetails = (req, res) => {
-    uploadSingleResume(req, res, async err => {
-        if (err) {
-            res.status(401).send({ errMsg: err.message });
+        } catch (err) {
+            res.status(500).send({ errMsg: 'Internal server error' });
             return;
         }
-        let userId = false;
-        let token = req.headers['x-custom-header'];
-        const decode = jwt.verify(token, process.env.JWT_SECRET);
-        userId = decode.loginedUser.id;
-        if (userId) {
-            const employeeDetails = JSON.parse(req.body.employeeDetails);
-            const { firstName, lastName, jobTitle, qualification, experience, moreDetails, contactNumber } = employeeDetails;
-            mongoose.Types.ObjectId(userId);
-            if (req.file) {
-                const employeeResume = req.file.filename;
+    }
+}
+//Updating employee details and resume
+const updateEmployeeDetails = async (req, res) => {
+    let userId = false;
+    let token = req.headers['x-custom-header'];
+    const decode = jwt.verify(token, process.env.JWT_SECRET);
+    userId = decode.loginedUser.id;
+    if (userId) {
+        try {
+            const { firstName, lastName, jobTitle, qualification, experience, moreDetails, contactNumber, resume } = req.body;
+            try {
+                userId = mongoose.Types.ObjectId(userId);
+            } catch (err) {
+                res.status(401).send({ errMsg: 'Data not found' });
+                return;
+            }
+            if (resume) {
+                const employeeResume = resume;
                 await userModel.findByIdAndUpdate(userId, { firstName, lastName, jobTitle, qualification, experience, details: moreDetails, contactNumber, resume: employeeResume });
             } else {
                 await userModel.findByIdAndUpdate(userId, { firstName, lastName, jobTitle, qualification, experience, details: moreDetails, contactNumber });
             }
             res.status(200).send({ msg: 'Updated successfully' });
-        } else {
-            res.status(401).send({ errMsg: 'Authentication failed' });
+        } catch (err) {
+            res.status(500).send({ errMsg: 'Internla server error' });
         }
-    })
+    }
 }
 //Uploading employee profile image and updating in db
 const employeeProfileImageUpdate = async (req, res) => {
-    const { empId, postImage } = req.body;
-    await userModel.findByIdAndUpdate(empId, { profileImage: postImage });
-    res.status(200).send({ msg: 'Profile image changed' });
+    try {
+        const { empId, postImage } = req.body;
+        await userModel.findByIdAndUpdate(empId, { profileImage: postImage });
+        res.status(200).send({ msg: 'Profile image changed' });
+    } catch (err) {
+        res.status(500).send({ errMsg: 'Internla server error' });
+    }
 }
 
 module.exports = { getUserDetails, postJob, updateCompanyDetails, updateEmployeeDetails, employeeProfileImageUpdate };

@@ -7,6 +7,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import LoginSignupImage from '../../components/LoginSignupImage';
 import SignupForm from '../../containers/common/SignupForm';
+import { instance } from '../../apis/JobSolutionApi';
 
 function Signup() {
   const navigate = useNavigate();
@@ -55,8 +56,8 @@ function Signup() {
     e.preventDefault();
     setLoading(true);
     try {
-      const url = "https://job-solutions-server.onrender.com/signup";
-      await axios.post(url, data);
+      const url = "/signup";
+      await instance.post(url, data);
       setErr('');
       setOtp(true);
       clearTimer(getDeadTime());
@@ -72,8 +73,8 @@ function Signup() {
   const handleOtp = async (e) => {
     e.preventDefault();
     try {
-      const url = "https://job-solutions-server.onrender.com/signup/validateOtp";
-      await axios.post(url, data);
+      const url = "/signup/validateOtp";
+      await instance.post(url, data);
       navigate("/signin");
     } catch (error) {
       setErr(error.response.data.errMsg);

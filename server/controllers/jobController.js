@@ -15,21 +15,36 @@ const getEmployerJobs = async (req, res) => {
         const decode = jwt.verify(token, process.env.JWT_SECRET);
         userId = decode.loginedUser.id;
         if (userId) {
-                userId = mongoose.Types.ObjectId(userId);
-                const employerJobs = await jobModel.aggregate([{ $match: { postedUser: userId, delFlag: 0 } },
-                { $lookup: { from: process.env.USER_COLLECTION, localField: 'postedUser', foreignField: '_id', as: 'user' } }, { $project: { 'user.password': 0 } }, { $unwind: '$user' },
-                { $sort: { postedDate: -1 } }]);
-                res.status(200).send({ employerJobs });
+                try {
+                        userId = mongoose.Types.ObjectId(userId);
+                } catch (err) {
+                        res.status(401).send({ errMsg: 'Data not found' });
+                        return;
+                }
+                try {
+                        const employerJobs = await jobModel.aggregate([{ $match: { postedUser: userId, delFlag: 0 } },
+                        { $lookup: { from: process.env.USER_COLLECTION, localField: 'postedUser', foreignField: '_id', as: 'user' } }, { $project: { 'user.password': 0 } }, { $unwind: '$user' },
+                        { $sort: { postedDate: -1 } }]);
+                        res.status(200).send({ employerJobs });
+                } catch (err) {
+                        res.status(500).send({ errMsg: 'Internal server error' });
+                        return;
+                }
         } else {
                 res.status(401).send({ errMsg: 'Validation failed' });
         }
 }
 //Get all non deleted and unblocked jobs for employee
 const getAllJobs = async (req, res) => {
-        const allJobs = await jobModel.aggregate([{ $match: { delFlag: 0, listingStatus: true } },
-        { $lookup: { from: process.env.USER_COLLECTION, localField: 'postedUser', foreignField: '_id', as: 'user' } }, { $project: { 'user.password': 0 } }, { $unwind: '$user' }
-                , { $sort: { postedDate: -1 } }]);
-        res.status(200).send({ allJobs });
+        try {
+                const allJobs = await jobModel.aggregate([{ $match: { delFlag: 0, listingStatus: true } },
+                { $lookup: { from: process.env.USER_COLLECTION, localField: 'postedUser', foreignField: '_id', as: 'user' } }, { $project: { 'user.password': 0 } }, { $unwind: '$user' }
+                        , { $sort: { postedDate: -1 } }]);
+                res.status(200).send({ allJobs });
+        } catch (err) {
+                res.status(500).send({ errMsg: 'Internal server error' });
+        }
+
 }
 //Inserting details of job applied person
 const applyJob = async (req, res) => {
@@ -38,9 +53,16 @@ const applyJob = async (req, res) => {
         const decode = jwt.verify(token, process.env.JWT_SECRET);
         userId = decode.loginedUser.id;
         if (userId) {
-                userId = mongoose.Types.ObjectId(userId);
                 let { jobId } = req.body;
-                jobId = mongoose.Types.ObjectId(jobId);
+                let notificationJobId = jobId;
+                try {
+                        userId = mongoose.Types.ObjectId(userId);
+                        jobId = mongoose.Types.ObjectId(jobId);
+                } catch (err) {
+                        res.status(401).send({ errMsg: 'Data not found' });
+                        return;
+                }
+
                 const jobApplication = new appliedJobModel({
                         jobId, userId
                 });
@@ -50,19 +72,19 @@ const applyJob = async (req, res) => {
                                 const jobDetails = await jobModel.findById(jobId);
                                 const employerDetails = await userModel.findById(jobDetails.postedUser);
                                 const employeeDetails = await userModel.findById(userId);
-                                const message = `${employeeDetails.firstName+' '+employeeDetails.lastName} applied for job(Job Id: #${jobDetails.jobId})`;
+                                const message = `${employeeDetails.firstName + ' ' + employeeDetails.lastName} applied for job(Job Id: #${jobDetails.jobId})`;
                                 const notification = new notificationModel({
-                                        message,userId:employerDetails._id
+                                        message, userId: employerDetails._id, jobId:notificationJobId
                                 });
                                 notification.save();
-                        }catch(err) {
-                                console.log(err.message);
-                                res.status(500).send({errMsg:'Internal server error'});
+                        } catch (err) {
+                                res.status(500).send({ errMsg: 'Internal server error' });
                                 return;
                         }
                         res.status(200).send({ msg: 'Applied for job successfully' });
                 } catch (err) {
                         res.status(401).send({ errMsg: 'Failed operation, Try later' });
+                        return;
                 }
         } else {
                 res.status(401).send({ errMsg: 'Validation failed' });
@@ -75,14 +97,24 @@ const checkJobStatus = async (req, res) => {
         const decode = jwt.verify(token, process.env.JWT_SECRET);
         userId = decode.loginedUser.id;
         if (userId) {
-                userId = mongoose.Types.ObjectId(userId);
                 let { jobId } = req.body;
-                jobId = mongoose.Types.ObjectId(jobId);
-                let test = await appliedJobModel.findOne({ $and: [{ userId }, { jobId }] });
-                if (test) {
-                        res.status(200).send({ msg: 'Applied for this job' });
-                } else {
-                        res.status(401).send({ errMsg: 'Not applied yet' });
+                try {
+                        userId = mongoose.Types.ObjectId(userId);
+                        jobId = mongoose.Types.ObjectId(jobId);
+                } catch (err) {
+                        res.status(401).send({ errMsg: 'Data not found' });
+                        return;
+                }
+                try {
+                        let appStatus = await appliedJobModel.findOne({ $and: [{ userId }, { jobId }] });
+                        if (appStatus) {
+                                res.status(200).send({ msg: 'Applied for this job' });
+                        } else {
+                                res.status(401).send({ errMsg: 'Not applied yet' });
+                        }
+                } catch (err) {
+                        res.status(500).send({ errMsg: 'Internal server error' });
+                        return;
                 }
         } else {
                 res.status(401).send({ errMsg: 'Validation failed' });
@@ -91,9 +123,18 @@ const checkJobStatus = async (req, res) => {
 //Finding applied employees count for each job
 const findApplicantCount = async (req, res) => {
         let jobId = req.params.jobId;
-        jobId = mongoose.Types.ObjectId(jobId);
-        const appCount = await appliedJobModel.find({ jobId }).count();
-        res.status(200).send({ appCount });
+        try {
+                jobId = mongoose.Types.ObjectId(jobId);
+        } catch (err) {
+                res.status(400).send({ errMsg: 'Data not found' });
+                return;
+        }
+        try {
+                const appCount = await appliedJobModel.find({ jobId }).count();
+                res.status(200).send({ appCount });
+        } catch (err) {
+                res.status(500).send({ errMsg: 'Internal server error' });
+        }
 }
 const transporter = nodemailer.createTransport({
         service: 'gmail',
@@ -107,22 +148,42 @@ const searchJob = async (req, res) => {
         const { jobTitle, jobLocation } = req.body;
         let searchResult;
         if (jobTitle && jobLocation) {
-                searchResult = await jobModel.aggregate([{ $match: { jobTitle: { $regex: new RegExp('.*' + jobTitle + '.*', 'i') }, delFlag: 0, listingStatus: true } },
-                { $lookup: { from: process.env.USER_COLLECTION, localField: 'postedUser', foreignField: '_id', as: 'user' } },
-                { $match: { 'user.companyLocation': { $regex: new RegExp('.*' + jobLocation + '.*', 'i') } } }, { $project: { 'user.password': 0 } }, { $unwind: '$user' }
-                        , { $sort: { postedDate: -1 } }]);
+                try {
+                        searchResult = await jobModel.aggregate([{ $match: { jobTitle: { $regex: new RegExp('.*' + jobTitle + '.*', 'i') }, delFlag: 0, listingStatus: true } },
+                        { $lookup: { from: process.env.USER_COLLECTION, localField: 'postedUser', foreignField: '_id', as: 'user' } },
+                        { $match: { 'user.companyLocation': { $regex: new RegExp('.*' + jobLocation + '.*', 'i') } } }, { $project: { 'user.password': 0 } }, { $unwind: '$user' }
+                                , { $sort: { postedDate: -1 } }]);
+                } catch (err) {
+                        res.status(500).send({ errMsg: 'Internal server error' });
+                        return;
+                }
         } else if (jobTitle) {
-                searchResult = await jobModel.aggregate([{ $match: { jobTitle: { $regex: new RegExp('.*' + jobTitle + '.*', 'i') }, delFlag: 0, listingStatus: true } },
-                { $lookup: { from: process.env.USER_COLLECTION, localField: 'postedUser', foreignField: '_id', as: 'user' } },
-                { $project: { 'user.password': 0 } }, { $unwind: '$user' }, { $sort: { postedDate: -1 } }]);
+                try {
+                        searchResult = await jobModel.aggregate([{ $match: { jobTitle: { $regex: new RegExp('.*' + jobTitle + '.*', 'i') }, delFlag: 0, listingStatus: true } },
+                        { $lookup: { from: process.env.USER_COLLECTION, localField: 'postedUser', foreignField: '_id', as: 'user' } },
+                        { $project: { 'user.password': 0 } }, { $unwind: '$user' }, { $sort: { postedDate: -1 } }]);
+                } catch (err) {
+                        res.status(500).send({ errMsg: 'internal server error' });
+                        return;
+                }
         } else if (jobLocation) {
-                searchResult = await jobModel.aggregate([{ $match: { delFlag: 0, listingStatus: true } }, { $lookup: { from: process.env.USER_COLLECTION, localField: 'postedUser', foreignField: '_id', as: 'user' } },
-                { $match: { 'user.companyLocation': { $regex: new RegExp('.*' + jobLocation + '.*', 'i') } } }, { $project: { 'user.password': 0 } }, { $unwind: '$user' },
-                { $sort: { postedDate: -1 } }]);
+                try {
+                        searchResult = await jobModel.aggregate([{ $match: { delFlag: 0, listingStatus: true } }, { $lookup: { from: process.env.USER_COLLECTION, localField: 'postedUser', foreignField: '_id', as: 'user' } },
+                        { $match: { 'user.companyLocation': { $regex: new RegExp('.*' + jobLocation + '.*', 'i') } } }, { $project: { 'user.password': 0 } }, { $unwind: '$user' },
+                        { $sort: { postedDate: -1 } }]);
+                } catch (err) {
+                        res.status(500).send({ errMsg: 'Internal server error' });
+                        return;
+                }
         } else {
-                searchResult = await jobModel.aggregate([{ $match: { delFlag: 0, listingStatus: true } },
-                { $lookup: { from: process.env.USER_COLLECTION, localField: 'postedUser', foreignField: '_id', as: 'user' } }, { $project: { 'user.password': 0 } }, { $unwind: '$user' },
-                { $sort: { postedDate: -1 } }]);
+                try {
+                        searchResult = await jobModel.aggregate([{ $match: { delFlag: 0, listingStatus: true } },
+                        { $lookup: { from: process.env.USER_COLLECTION, localField: 'postedUser', foreignField: '_id', as: 'user' } }, { $project: { 'user.password': 0 } }, { $unwind: '$user' },
+                        { $sort: { postedDate: -1 } }]);
+                } catch (err) {
+                        res.status(500).send({ errMsg: 'Internal server error' });
+                        return;
+                }
         }
         if (searchResult) {
                 res.status(200).send({ searchResult });
@@ -137,14 +198,20 @@ const getJobApplications = async (req, res) => {
                 jobId = mongoose.Types.ObjectId(jobId);
         } catch (err) {
                 res.status(401).send({ errMsg: 'Job not found' });
+                return;
         }
-        const applicant = await appliedJobModel.aggregate([{ $match: { jobId } }, { $lookup: { from: process.env.JOB_COLLECTION, localField: 'jobId', foreignField: '_id', as: 'job' } },
-        { $unwind: '$job' }, { $lookup: { from: process.env.USER_COLLECTION, localField: 'userId', foreignField: '_id', as: 'user' } }, { $unwind: '$user' },
-        { $project: { 'user.password': 0 } }]);
-        if (applicant) {
-                res.status(200).send({ applicant });
-        } else {
-                res.status(401).send({ errMsg: 'Job not found' });
+        try {
+                const applicant = await appliedJobModel.aggregate([{ $match: { jobId } }, { $lookup: { from: process.env.JOB_COLLECTION, localField: 'jobId', foreignField: '_id', as: 'job' } },
+                { $unwind: '$job' }, { $lookup: { from: process.env.USER_COLLECTION, localField: 'userId', foreignField: '_id', as: 'user' } }, { $unwind: '$user' },
+                { $project: { 'user.password': 0 } }, { $sort: { appliedDate: -1 } }]);
+                if (applicant) {
+                        res.status(200).send({ applicant });
+                } else {
+                        res.status(401).send({ errMsg: 'Job not found' });
+                }
+        } catch (err) {
+                res.status(500).send({ errMsg: 'Internal server error' });
+                return;
         }
 }
 //Taking all profile datails and post of employee for checking to employer
@@ -154,21 +221,30 @@ const getEmpProfileAndPost = async (req, res) => {
                 empId = mongoose.Types.ObjectId(empId);
         } catch (err) {
                 res.status(401).send({ errMsg: 'Employee not found' });
+                return;
         }
-        const empProfile = await userModel.findById(empId);
-        const employeePosts = await postModel.find({ addedUser: empId, delFlag: 0 }).sort({ addedDate: -1 });
-        if (empProfile) {
-                empProfile.password = '';
-                res.status(200).send({ empProfile, employeePosts });
-        } else {
-                res.status(401).send({ errMsg: 'Employee not found' });
+        try {
+                const empProfile = await userModel.findById(empId);
+                const employeePosts = await postModel.find({ addedUser: empId, delFlag: 0 }).sort({ addedDate: -1 });
+                if (empProfile) {
+                        empProfile.password = '';
+                        res.status(200).send({ empProfile, employeePosts });
+                } else {
+                        res.status(401).send({ errMsg: 'Employee not found' });
+                }
+        } catch (err) {
+                res.status(500).send({ errMsg: 'Internal server error' });
         }
 }
 //Fetching all details of specific job
 const getJobDetails = async (req, res) => {
-        const jobId = req.params.jobId;
-        const jobDetails = await jobModel.findById(jobId);
-        res.status(200).send({ jobDetails });
+        try {
+                const jobId = req.params.jobId;
+                const jobDetails = await jobModel.findById(jobId);
+                res.status(200).send({ jobDetails });
+        } catch (err) {
+                res.status(500).send({ errMsg: 'Internal server error' });
+        }
 }
 //Taking the current status and tag status of selected job
 const getJobStatus = async (req, res) => {
@@ -180,16 +256,32 @@ const getJobStatus = async (req, res) => {
                 empId = mongoose.Types.ObjectId(empId);
         } catch (err) {
                 res.status(401).send(err.message);
+                return;
         }
-        const jobDetails = await appliedJobModel.findOne({ jobId, userId: empId }, { applicationStatus: 1, tagStatus: 1 });
-        res.status(200).send({ jobDetails });
+        try {
+                const jobDetails = await appliedJobModel.findOne({ jobId, userId: empId }, { applicationStatus: 1, tagStatus: 1 });
+                res.status(200).send({ jobDetails });
+        } catch (err) {
+                res.status(500).send({ errMsg: 'Interanl server error' });
+        }
 }
 //Selecting employees and sending response mail to employees
 const updateJobAppStatus = async (req, res) => {
         let { status, applicationId, jobId, email, name } = req.body;
-        applicationId = mongoose.Types.ObjectId(applicationId);
+        try {
+                applicationId = mongoose.Types.ObjectId(applicationId);
+        } catch (err) {
+                res.status(401).send({ errMsg: 'Data not found' });
+                return;
+        }
         const userEmail = 'nsabeer007@gmail.com';
-        const jobDetails = await jobModel.aggregate([{ $match: { jobId } }, { $lookup: { from: process.env.USER_COLLECTION, localField: 'postedUser', foreignField: '_id', as: 'user' } }, { $unwind: '$user' }]);
+        let jobDetails;
+        try {
+                jobDetails = await jobModel.aggregate([{ $match: { jobId } }, { $lookup: { from: process.env.USER_COLLECTION, localField: 'postedUser', foreignField: '_id', as: 'user' } }, { $unwind: '$user' }]);
+        } catch (err) {
+                res.status(500).send({ errMsg: 'Internal server error' });
+                return;
+        }
         const mailData = mailTemplate.statusMail(name, jobDetails[0], status);
         const mailOptions = {
                 from: process.env.SENDER_MAIL,
@@ -209,8 +301,13 @@ const updateJobAppStatus = async (req, res) => {
 //Tagging job with chat
 const tagJob = async (req, res) => {
         let { jobId, empId } = req.body;
-        jobId = mongoose.Types.ObjectId(jobId);
-        newEmpId = mongoose.Types.ObjectId(empId);
+        try {
+                jobId = mongoose.Types.ObjectId(jobId);
+                newEmpId = mongoose.Types.ObjectId(empId);
+        } catch (err) {
+                res.status(401).send({ errMsg: 'Data not found' });
+                return;
+        }
         try {
                 await appliedJobModel.findOneAndUpdate({ jobId, userId: newEmpId }, { $push: { selectedApplicant: empId }, tagStatus: 1 });
                 await jobModel.findByIdAndUpdate(jobId, { $push: { selectedApplicant: empId } });
@@ -222,8 +319,13 @@ const tagJob = async (req, res) => {
 //Employee reporting issues about selected job
 const reportJob = async (req, res) => {
         let { jobIssue, jobId, userId } = req.body;
-        jobId = mongoose.Types.ObjectId(jobId);
-        userId = mongoose.Types.ObjectId(userId);
+        try {
+                jobId = mongoose.Types.ObjectId(jobId);
+                userId = mongoose.Types.ObjectId(userId);
+        } catch (err) {
+                res.status(401).send({ errMsg: 'Data not found' });
+                return;
+        }
         const jobReport = new reportJobModel({
                 issue: jobIssue, jobId, issuedUser: userId
         });
@@ -236,38 +338,52 @@ const reportJob = async (req, res) => {
 }
 //Deleting unwanted jobs
 const deleteJob = async (req, res) => {
-        let jobId = req.params.jobId;
-        jobId = mongoose.Types.ObjectId(jobId);
-        await jobModel.findByIdAndUpdate(jobId, { delFlag: 1 });
-        res.status(200).send({ msg: 'Job deleted successfully' });
+        try {
+                let jobId = req.params.jobId;
+                try {
+                        jobId = mongoose.Types.ObjectId(jobId);
+                } catch (err) {
+                        res.status(401).send({ errMsg: 'Data not found' });
+                        return;
+                }
+                await jobModel.findByIdAndUpdate(jobId, { delFlag: 1 });
+                res.status(200).send({ msg: 'Job deleted successfully' });
+        } catch (err) {
+                res.status(500).send({ errMsg: 'Internal server error' });
+        }
 }
 //Searching all tagged users of specific jobs
 const getTagedUser = async (req, res) => {
-        const jobId = req.params.jobId;
-        const tagedUsers = await jobModel.findOne({ jobId });
-        if (tagedUsers) {
-                res.status(200).send({ tagedUsers });
-        } else {
-                res.status(401).send({ errMsg: 'No details found' });
+        let tagedUsers;
+        try {
+                const jobId = req.params.jobId;
+                tagedUsers = await jobModel.findOne({ jobId });
+                if (tagedUsers) {
+                        res.status(200).send({ tagedUsers });
+                } else {
+                        res.status(401).send({ errMsg: 'No details found' });
+                }
+        } catch (err) {
+                res.status(500).send({ errMsg: 'Internal server error' });
         }
 }
-const getNotification = async (req,res) => {
+const getNotification = async (req, res) => {
         const userId = req.params.id;
         try {
-                await notificationModel.updateMany({readStatus:1});
-                const notifications = await notificationModel.find({userId}).sort({addedTime:-1});
-                res.status(200).send({notifications});
-        }catch(err) {
-                res.status(500).send({errMsg:'Internal server error'});
+                await notificationModel.updateMany({ readStatus: 1 });
+                const notifications = await notificationModel.find({ userId }).sort({ createdAt: -1 });
+                res.status(200).send({ notifications });
+        } catch (err) {
+                res.status(500).send({ errMsg: 'Internal server error' });
         }
 }
-const notificationCount = async (req,res) => {
+const notificationCount = async (req, res) => {
         const userId = req.params.id;
         try {
-                const notCount = await notificationModel.find({userId, readStatus:0}).count();
-                res.status(200).send({notCount});
-        }catch(err) {
-                res.status(200).send({errMsg:'Internal server error'});
+                const notCount = await notificationModel.find({ userId, readStatus: 0 }).count();
+                res.status(200).send({ notCount });
+        } catch (err) {
+                res.status(200).send({ errMsg: 'Internal server error' });
         }
 }
 

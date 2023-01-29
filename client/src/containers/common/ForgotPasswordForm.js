@@ -32,7 +32,7 @@ function ForgotPasswordForm() {
     const validateOtp = async () => {
         setLoading(true);
         try {
-             await instance.post('/signup/validateResetOtp', { userName: email, userOtp: otp });
+            await instance.post('/signup/validateResetOtp', { userName: email, userOtp: otp });
             setMsg(false);
             setErr(false);
             setVerifiedStatus(true);

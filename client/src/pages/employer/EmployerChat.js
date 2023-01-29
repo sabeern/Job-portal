@@ -6,7 +6,7 @@ import { userChats } from '../../apis/ChatRequests';
 import Converstations from '../../containers/common/Converstations';
 import Chatbox from '../../containers/common/Chatbox';
 import { io } from 'socket.io-client';
-import { instance } from '../../apis/JobSolutionApi';
+import { instance, socketUrl } from '../../apis/JobSolutionApi';
 
 function EmployerChat() {
   const user = useSelector((store) => store.allUsers.user);
@@ -27,7 +27,7 @@ function EmployerChat() {
     getChat();
   }, [user._id])
   useEffect(() => {
-    socket.current = io('https://job-solutions-socket.onrender.com');
+    socket.current = io(socketUrl);
     socket.current.emit("new-user-add", user._id);
     socket.current.on('get-users', (users) => {
       setOnlineUsers(users);
@@ -40,6 +40,9 @@ function EmployerChat() {
   }, [sendMessage]);
   useEffect(() => {
     socket.current.on("recieve-message", (data) => {
+      userChats(user._id).then((res) => {
+        setChats(res.data);
+      }).catch((err) => { })
       setReceivedMessage(data);
     });
   }, []);
@@ -51,7 +54,9 @@ function EmployerChat() {
   const [search, setSearch] = useState();
   const searchedUser = async () => {
     try {
-      const { data } = await instance.get(`/jobs/getTagedUser/${search}`);
+      const token = localStorage.getItem('empToken');
+      const headers = { 'X-Custom-Header': `${token}` }
+      const { data } = await instance.get(`/jobs/getTagedUser/${search}`, { headers });
       const usersList = data.tagedUsers.selectedApplicant;
       let temp = 0;
       const newChat = chats.filter((val) => {
@@ -96,7 +101,7 @@ function EmployerChat() {
                           className="input-group-text border-0"
                           id="search-addon"
                         >
-                          <MDBIcon fas icon="search"/>
+                          <MDBIcon fas icon="search" />
                         </span>
                       </MDBInputGroup>
                       <div className="overflow-auto pt-3 pe-3" style={{ height: '70vh' }}>
@@ -115,8 +120,8 @@ function EmployerChat() {
                     </div>
                   </MDBCol>
                   <MDBCol md="6" lg="7" xl="8">
-                    <Chatbox chat={currentChat} currentUserId={user._id} setSendMessage={setSendMessage}
-                      receivedMessage={receivedMessage} />
+                    {currentChat && <Chatbox chat={currentChat} currentUserId={user._id} setSendMessage={setSendMessage}
+                      receivedMessage={receivedMessage} />}
                   </MDBCol>
                 </MDBRow>
               </MDBCardBody>

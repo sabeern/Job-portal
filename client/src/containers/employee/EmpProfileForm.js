@@ -6,6 +6,7 @@ import FormInputbox from '../../components/FormInputbox';
 import { instance } from '../../apis/JobSolutionApi';
 import { setUser } from '../../redux/actions/UserAction';
 import Loader from '../common/Loader';
+import axios from 'axios';
 
 function EmpProfileForm() {
     const userDetails = useSelector((store) => store.allUsers.user);
@@ -40,19 +41,83 @@ function EmpProfileForm() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
-        const formData = new FormData();
-        formData.append('resume', resume);
-        formData.append('employeeDetails', JSON.stringify(employeeDetails));
-        try {
-            const token = localStorage.getItem('empToken');
-            const headers = { 'X-Custom-Header': `${token}` };
-            await instance.post('/user/addEmployeeDetails', formData, { headers: headers });
-            dispatch(setUser());
-            navigate('/empProfile');
-        } catch (err) {
+        let firstName = employeeDetails.firstName;
+        if (!firstName) {
+            setErr('Firstname required');
             setLoading(false);
-            setErr(err.response.data.errMsg);
+            return;
         }
+        let jobTitle = employeeDetails.jobTitle;
+        if (!jobTitle) {
+            setErr('Job title required');
+            setLoading(false);
+            return;
+        }
+        let qualification = employeeDetails.qualification;
+        if (!qualification) {
+            setErr('Qualification required');
+            setLoading(false);
+            return;
+        }
+        let experience = employeeDetails.experience;
+        if (!experience) {
+            setErr('Experience required');
+            setLoading(false);
+            return;
+        }
+        let contactNumber = employeeDetails.contactNumber;
+        if (contactNumber) {
+            var checkString = /^\d{10}$/;
+            if (!contactNumber.match(checkString)) {
+                setErr('Enter valid contact number');
+                setLoading(false);
+                return;
+            }
+        } else {
+            setErr('Contact number required');
+            setLoading(false);
+            return;
+        }
+        if (!resume) {
+            try {
+                const token = localStorage.getItem('empToken');
+                const headers = { 'X-Custom-Header': `${token}` };
+                await instance.post('/user/addEmployeeDetails', { ...employeeDetails, resume: false }, { headers: headers });
+                dispatch(setUser());
+                navigate('/empProfile');
+            } catch (err) {
+                setErr(err.response.data.errMsg);
+            }
+            setLoading(false);
+            return
+        }
+        const resumeCheck = resume.name.split('.');
+        const resumeExtention = resumeCheck[resumeCheck.length - 1];
+        if (resumeExtention !== 'pdf') {
+            setErr('Only pdf allowed');
+            setLoading(false);
+            return;
+        }
+        const formData = new FormData();
+        formData.append("file", resume);
+        formData.append("upload_preset", "Jobsolutions");
+        formData.append("cloud_name", "dyff453oq");
+        try {
+            const res = await axios.post("https://api.cloudinary.com/v1_1/dyff453oq/image/upload", formData);
+            const resumeLink = res.data.secure_url;
+            try {
+                const token = localStorage.getItem('empToken');
+                const headers = { 'X-Custom-Header': `${token}` };
+                await instance.post('/user/addEmployeeDetails', { ...employeeDetails, resume: resumeLink }, { headers: headers });
+                dispatch(setUser());
+                navigate('/empProfile');
+            } catch (err) {
+                setErr(err.response.data.errMsg);
+            }
+        } catch (err) {
+            setErr('Resume upload failed');
+        }
+        setLoading(false);
     }
     const handleFile = (e) => {
         setResume(e.target.files[0]);

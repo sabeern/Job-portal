@@ -7,16 +7,17 @@ import EmployerList from '../../containers/admin/EmployerList';
 import { returnNewDate } from '../../other/DateDisplay';
 
 function EmployerDetails() {
-    const [employerDetails, setEmployerDetails] = useState();
+  const [employerDetails, setEmployerDetails] = useState();
   useEffect(() => {
-    instance.get('/admin/management/getEmployerDetails').then((res) => {
+    const token = localStorage.getItem('adminToken');
+    const headers = { 'X-Custom-Header': `${token}` }
+    instance.get('/admin/management/getEmployerDetails', { headers }).then((res) => {
       const emprDetails = res.data.emprDetails;
       let details = emprDetails.map((val, index) => {
         let blockStatus;
-        console.log(val.blockStatus);
-        if(val.blockStatus) {
+        if (val.blockStatus) {
           blockStatus = 'Blocked';
-        }else {
+        } else {
           blockStatus = 'None';
         }
         let data = {
@@ -24,8 +25,8 @@ function EmployerDetails() {
           name: val.companyName,
           jobTitle: val.companyLocation,
           registeredDate: returnNewDate(val.registeredDate),
-          blockStatus:blockStatus,
-          block:<Link to={`/admin/blockConfirmation/${val._id}/${val.blockStatus}`}><button style={{borderRadius:'10px'}}>Block/Unblock</button></Link>
+          blockStatus: blockStatus,
+          block: <Link to={`/admin/blockConfirmation/${val._id}/${val.blockStatus}`}><button style={{ borderRadius: '10px' }}>Block/Unblock</button></Link>
         }
         return data;
       });
@@ -36,15 +37,15 @@ function EmployerDetails() {
   }, []);
   return (
     <>
-    <AdminNavbar />
-    <Container>
-      <Row>
-        <Col md={12}>
-          {employerDetails && <EmployerList data={employerDetails} />}
-        </Col>
-      </Row>
-    </Container>
-  </>
+      <AdminNavbar />
+      <Container>
+        <Row>
+          <Col md={12}>
+            {employerDetails && <EmployerList data={employerDetails} />}
+          </Col>
+        </Row>
+      </Container>
+    </>
   )
 }
 

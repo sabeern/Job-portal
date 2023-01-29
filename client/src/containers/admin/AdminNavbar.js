@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
@@ -14,6 +14,13 @@ function AdminNavbar() {
     dispatch(removeAdmin());
     navigate('/admin');
   };
+  useEffect(()=> {
+    const token = localStorage.getItem("adminToken");
+    if (!token) {
+      handleLogout();
+      navigate('/admin');
+    }
+  },[])
   return (
     <Navbar bg="primary" variant="dark" expand="lg">
       <Container>

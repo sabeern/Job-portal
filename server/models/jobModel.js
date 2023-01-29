@@ -36,8 +36,7 @@ const jobSchema = mongoose.Schema({
         default: true
     },
     selectedApplicant: {
-        type: Array,
-        unique: true
+        type: Array
     },
     delFlag: {
         type: Number,

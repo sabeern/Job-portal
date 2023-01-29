@@ -27,13 +27,13 @@ import EmprNotification from '../../pages/employer/EmprNotification';
 function AllRoutes() {
   const user = useSelector((store) => store.allUsers.user);
   const admin = useSelector((store) => store.admin.user);
+  const userToken = localStorage.getItem('empToken');
   return (
     <Routes>
-      <Route path="/signin" element={<Login />}></Route>
-      <Route path="/signup" element={<Signup />}></Route>
-      <Route path="/forgotPassword" element={<ForgotPassword />}></Route>
       <Route path="/admin" element={<AdminLogin />}></Route>
-
+      {!userToken && <><Route path="/signin" element={<Login />}></Route>
+        <Route path="/signup" element={<Signup />}></Route>
+        <Route path="/forgotPassword" element={<ForgotPassword />}></Route></>}
       {user && user.userType === 'Job Seeker' &&
         <>
           (<Route path="/posts" element={<Posts />}></Route>
@@ -50,7 +50,7 @@ function AllRoutes() {
           <Route path="/jobApplications/:jobId" element={<ApplicationDetails />}></Route>
           <Route path="/appliedEmployeeProfile/:empId" element={<AppEmployeeProfile />}></Route>
           <Route path="/deleteJob/:id" element={<RemoveJob />}></Route>
-          <Route path="/notification" element={<EmprNotification/>}></Route>
+          <Route path="/notification" element={<EmprNotification />}></Route>
         </>}
 
       {user && user.userType !== 'admin' &&
@@ -62,11 +62,13 @@ function AllRoutes() {
         <>
           <Route path="/admin/dashboard" element={<AdminHome />}></Route>
           <Route path="/admin/jobManagement" element={<JobManagement />}></Route>
-          <Route path="/admin/empList" element={<EmployeeDetails/>}></Route>
-          <Route path="/admin/emprList" element={<EmployerDetails/>}></Route>
-          <Route path="/admin/blockConfirmation/:userId/:status" element={<BlockConfirmation/>}></Route>
+          <Route path="/admin/empList" element={<EmployeeDetails />}></Route>
+          <Route path="/admin/emprList" element={<EmployerDetails />}></Route>
+          <Route path="/admin/blockConfirmation/:userId/:status" element={<BlockConfirmation />}></Route>
         </>}
-      <Route path="*" element={<Login />}></Route>
+      {userToken ? <Route path="*" element={<EmpProfile />}></Route> :
+        <Route path="*" element={<Login />}></Route>
+      }
     </Routes>
   )
 }

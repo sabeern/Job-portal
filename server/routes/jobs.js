@@ -14,11 +14,11 @@ router.get('/empDetails/:empId', jobController.getEmpProfileAndPost);
 router.get('/getJobDetails/:jobId', jobController.getJobDetails);
 router.get('/getJobApplication/:jobData', tokenValidation.validateToken, jobController.getJobStatus);
 router.put('/updateStatus', tokenValidation.validateToken, jobController.updateJobAppStatus);
-router.put('/tagJob', jobController.tagJob);
-router.post('/reportIssue', jobController.reportJob);
-router.delete('/deleteJob/:jobId', jobController.deleteJob);
-router.get('/getTagedUser/:jobId', jobController.getTagedUser);
-router.get('/notification/:id', jobController.getNotification);
-router.get('/notificationCount/:id', jobController.notificationCount);
+router.put('/tagJob', tokenValidation.validateToken, jobController.tagJob);
+router.post('/reportIssue', tokenValidation.validateToken, jobController.reportJob);
+router.delete('/deleteJob/:jobId', tokenValidation.validateToken, jobController.deleteJob);
+router.get('/getTagedUser/:jobId', tokenValidation.validateToken, jobController.getTagedUser);
+router.get('/notification/:id', tokenValidation.validateToken, jobController.getNotification);
+router.get('/notificationCount/:id', tokenValidation.validateToken, jobController.notificationCount);
 
 module.exports = router;

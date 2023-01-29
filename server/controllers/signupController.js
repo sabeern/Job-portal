@@ -7,11 +7,15 @@ const { db } = require('../models/userModel');
 //Checking the user exist or not for curresponding email
 const userExistCheck = async (req, res, next) => {
   const { userName } = req.body;
-  const userExist = await userModel.findOne({ userName });
-  if (userExist) {
-    res.status(401).send({ errMsg: 'User already exist' });
-  } else {
-    next();
+  try {
+    const userExist = await userModel.findOne({ userName });
+    if (userExist) {
+      res.status(401).send({ errMsg: 'User already exist' });
+    } else {
+      next();
+    }
+  } catch (err) {
+    res.status(500).send({ errMsg: 'Internal server error' });
   }
 }
 const transporter = nodemailer.createTransport({
@@ -60,21 +64,40 @@ const signup = async (req, res) => {
 //Validate Otp and after success inserting user details
 const validateOtp = async (req, res) => {
   const { userName, userType, password, userOtp } = req.body;
-  await otpModel.deleteMany({ otpExpiry: { $lt: new Date() } });
-  const otpVerification = await otpModel.findOne({ userEmail: userName, userOtp });
-  if (otpVerification) {
-    const hashPassword = await bcrypt.hash(password, Number(process.env.SALT));
-    const user = new userModel({ userName, userType, password: hashPassword });
-    await user.save();
-    res.status(200).send({ msg: 'Signup successfull' });
-  } else {
-    res.status(401).send({ errMsg: 'OTP verification failed' });
+  try {
+    await otpModel.deleteMany({ otpExpiry: { $lt: new Date() } });
+  } catch (err) {
+    res.status(500).send({ errMsg: 'Internal server error' });
+    return;
+  }
+  try {
+    const otpVerification = await otpModel.findOne({ userEmail: userName, userOtp });
+    if (otpVerification) {
+      try {
+        const hashPassword = await bcrypt.hash(password, Number(process.env.SALT));
+        const user = new userModel({ userName, userType, password: hashPassword });
+        await user.save();
+        res.status(200).send({ msg: 'Signup successfull' });
+      } catch (err) {
+        res.status(401).send({ errMsg: 'Signup failed' });
+      }
+    } else {
+      res.status(401).send({ errMsg: 'OTP verification failed' });
+    }
+  } catch (err) {
+    res.status(500).send({ errMsg: 'Internal server error' });
   }
 }
 //Sending otp for reseting password
 const forgotSendOtp = async (req, res) => {
   const { userName } = req.body;
-  const user = await userModel.findOne({ userName });
+  let user;
+  try {
+    user = await userModel.findOne({ userName });
+  } catch (err) {
+    res.status(500).send({ errMsg: 'Inernal server error' });
+    return;
+  }
   if (!user) {
     res.status(401).send({ errMsg: 'User not exist' });
     return;
@@ -108,7 +131,12 @@ const forgotSendOtp = async (req, res) => {
 //Checking reset password otp and after success giving option to password change
 const resetOtpValidate = async (req, res) => {
   const { userName, userOtp } = req.body;
-  await otpModel.deleteMany({ otpExpiry: { $lt: new Date() } });
+  try {
+    await otpModel.deleteMany({ otpExpiry: { $lt: new Date() } });
+  } catch (err) {
+    res.status(500).send({ errMsg: 'Internal server error' });
+    return;
+  }
   const otpVerification = await otpModel.findOne({ userEmail: userName, userOtp });
   if (otpVerification) {
     res.status(200).send({ msg: 'Otp verified' });
@@ -118,10 +146,14 @@ const resetOtpValidate = async (req, res) => {
 }
 //Updating new password of user
 const updatePassword = async (req, res) => {
-  const { userId, password } = req.body;
-  const encryptPassword = await bcrypt.hash(password, Number(process.env.SALT));
-  await userModel.findByIdAndUpdate(userId, { password: encryptPassword });
-  res.status(200).send({ msg: 'Updated successfully' });
+  try {
+    const { userId, password } = req.body;
+    const encryptPassword = await bcrypt.hash(password, Number(process.env.SALT));
+    await userModel.findByIdAndUpdate(userId, { password: encryptPassword });
+    res.status(200).send({ msg: 'Updated successfully' });
+  } catch (err) {
+    res.status(500).send({ errMsg: 'Internal server error' });
+  }
 }
 
 module.exports = { signup, userExistCheck, validateOtp, forgotSendOtp, resetOtpValidate, updatePassword };

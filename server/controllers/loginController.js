@@ -11,8 +11,18 @@ const login = async (req, res) => {
         res.status(401).send({ errMsg: 'Entered data not valid' });
         return;
     }
-    const user = await userModel.findOne({ userName });
+    let user;
+    try {
+        user = await userModel.findOne({ userName });
+    } catch (err) {
+        res.status(500).send({ errMsg: 'Internal server error' });
+        return;
+    }
     if (user) {
+        if (user.blockStatus) {
+            res.status(401).send({ errMsg: 'Your account blocked, Please contact Job Solutions' });
+            return;
+        }
         const passwordCheck = await bcrypt.compare(password, user.password);
         if (passwordCheck) {
             const payload = {

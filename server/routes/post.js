@@ -5,6 +5,6 @@ const tokenValidation = require('../config/tokenValidation');
 
 router.post('/addPost', tokenValidation.validateToken, postController.addPost);
 router.get('/employeePosts', tokenValidation.validateToken, postController.getEmployeePost);
-router.delete('/deletePost/:postId', postController.deletePost);
+router.delete('/deletePost/:postId', tokenValidation.validateToken, postController.deletePost);
 
 module.exports = router;

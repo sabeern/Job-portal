@@ -1,9 +1,9 @@
 const io = require("socket.io")(8800, {
   cors: {
-    origin: "https://job-portal-gwu4.onrender.com",
+    origin: "http://localhost:3000",
   },
 });
-
+//https://job-portal-gwu4.onrender.com
 let activeUsers = [];
 
 io.on("connection", (socket) => {

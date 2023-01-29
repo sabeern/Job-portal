@@ -20,7 +20,9 @@ function JobManagement() {
     }
     const jobIssues = async () => {
         try {
-            const { data } = await instance.get('/admin/management/jobs');
+            const token = localStorage.getItem('adminToken');
+            const headers = { 'X-Custom-Header': `${token}` };
+            const { data } = await instance.get('/admin/management/jobs', { headers });
             const jobIssueDetails = data.allJobIssues.map((val) => {
                 const viewDetailsMenu = <span style={{ color: 'blue', cursor: 'pointer' }} onClick={() => viewIssues(val.issue, val.job._id)}>View Details</span>;
                 const details = {

@@ -11,10 +11,19 @@ const getJobIssues = async (req, res) => {
 }
 //Block or unblock job if needed
 const blockJob = async (req, res) => {
-    let { jobId, blockStatus } = req.body;
-    jobId = mongoose.Types.ObjectId(jobId);
-    await jobModel.findByIdAndUpdate(jobId, { listingStatus: !blockStatus });
-    res.status(200).send({ msg: 'Job blocked' });
+    try {
+        let { jobId, blockStatus } = req.body;
+        try {
+            jobId = mongoose.Types.ObjectId(jobId);
+        } catch (err) {
+            res.status(401).send({ errMsg: 'Data not found' });
+            return;
+        }
+        await jobModel.findByIdAndUpdate(jobId, { listingStatus: !blockStatus });
+        res.status(200).send({ msg: 'Job blocked' });
+    } catch (err) {
+        res.status(500).send({ errMsg: 'Internal server error' });
+    }
 }
 const getDetails = async (req, res) => {
     const currentYear = new Date().getFullYear();
@@ -51,13 +60,13 @@ const employerDetails = async (req, res) => {
 const blockUnblockUser = async (req, res) => {
     let { userId, status } = req.body;
     let update;
-    if(status == 'true') {
+    if (status == 'true') {
         update = false;
-    }else {
+    } else {
         update = true;
     }
     try {
-        const test = await userModel.findByIdAndUpdate(userId, { blockStatus:update });
+        const test = await userModel.findByIdAndUpdate(userId, { blockStatus: update });
         res.status(200).send({ msg: 'Updated successfully' });
     } catch (err) {
         res.status(500).send({ errMsg: 'internal server error' })

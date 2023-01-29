@@ -6,16 +6,6 @@ import "rc-pagination/assets/index.css";
 import "../../stylesheet/tableStyle.css";
 
 function JobIssuesList({ data }) {
-  //  const allData = [
-  //     {
-  //       name: "Sale",
-  //       parentId: "12",
-  //       campaignType: "Push",
-  //       status: "Failed",
-  //       channel: "android",
-  //       action: ":"
-  //     }
-  //   ];
   const [allData, setAllData] = useState(data);
   const tableHead = {
     jobId: "Job Id",

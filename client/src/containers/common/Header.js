@@ -4,6 +4,7 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
+import { instance } from '../../apis/JobSolutionApi';
 import EmployeeMenu from '../../components/EmployeeMenu';
 import EmployerMenu from '../../components/EmployerMenu';
 import { fetchAllJobs, removeJobs, removePosts, removeUser, setEmployeePosts, setUser } from '../../redux/actions/UserAction';
@@ -25,10 +26,17 @@ function Header() {
   useEffect(() => {
     const token = localStorage.getItem("empToken");
     if (!token) {
+      handleLogout();
       navigate('/signin');
     }
+    const headers = { 'X-Custom-Header': `${token}` }
+    instance.get('/user', { headers: headers }).then((res)=> {
+        if(res.data.user.blockStatus) {
+          handleLogout();
+        }
+    }).catch((err)=>{navigate('/signin');})
     dispatch(fetchAllJobs());
-    dispatch(setEmployeePosts())
+    dispatch(setEmployeePosts());
   }, []);
   return (
     <Navbar bg="primary" variant="dark" expand="lg">

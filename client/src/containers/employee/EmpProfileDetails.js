@@ -46,7 +46,7 @@ function EmpProfileDetails() {
                             <tr>
                                 <td><b>Resume</b></td>
                                 <td>
-                                    <a href={`https://job-solutions-server.onrender.com/resume/${userDetails.resume}`} target="_blank">View Resume</a>
+                                    <a href={userDetails.resume} target="_blank">View Resume</a>
                                 </td>
                             </tr>
                         </table>

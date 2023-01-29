@@ -4,7 +4,7 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import { useSelector } from 'react-redux';
 import { createChat } from '../../apis/ChatRequests';
-import { instance } from '../../apis/JobSolutionApi';
+import { instance, url } from '../../apis/JobSolutionApi';
 import Loader from '../common/Loader';
 
 function EmployeeProfileDetails({ data, jobId, appStatus, tagStatus, setTagStatus }) {
@@ -40,11 +40,13 @@ function EmployeeProfileDetails({ data, jobId, appStatus, tagStatus, setTagStatu
     }
     const handleChat = async () => {
         try {
-             await createChat(user._id, data._id);
+            await createChat(user._id, data._id);
             try {
-                await instance.put('jobs/tagJob', { jobId: job._id, empId: data._id });
+                const token = localStorage.getItem('empToken');
+                const headers = { 'X-Custom-Header': `${token}` }
+                await instance.put('jobs/tagJob', { jobId: job._id, empId: data._id }, { headers });
                 setTagStatus(true);
-                window.open('https://job-portal-gwu4.onrender.com/chat', '_blank', 'noopener,noreferrer');
+                window.open(`${url}/chat`, '_blank', 'noopener,noreferrer');
             } catch (err) {
             }
         } catch (err) {
@@ -84,7 +86,7 @@ function EmployeeProfileDetails({ data, jobId, appStatus, tagStatus, setTagStatu
                             <tr>
                                 <td><b>Resume</b></td>
                                 <td>
-                                    <a href={`https://job-solutions-server.onrender.com/resume/${data.resume}`} target="_blank">View Resume</a>
+                                    <a href={data.resume} target="_blank">View Resume</a>
                                 </td>
                             </tr>
                             <tr>

@@ -7,10 +7,14 @@ function DeleteConfirmationModal({ data }) {
     const navigate = useNavigate();
     const deleteData = async () => {
         if (data.type === 'job') {
-            await instance.delete(`/jobs/deleteJob/${data.id}`);
+            const token = localStorage.getItem('empToken');
+            const headers = { 'X-Custom-Header': `${token}` };
+            await instance.delete(`/jobs/deleteJob/${data.id}`, { headers });
         }
         if (data.type === 'post') {
-            await instance.delete(`/post/deletePost/${data.id}`);
+            const token = localStorage.getItem('empToken');
+            const headers = { 'X-Custom-Header': `${token}` };
+            await instance.delete(`/post/deletePost/${data.id}`, { headers });
         }
         navigate('/empProfile');
     }

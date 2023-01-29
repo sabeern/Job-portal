@@ -6,7 +6,6 @@ import "rc-pagination/assets/index.css";
 import "../../stylesheet/tableStyle.css";
 
 function EmployeeList({ data }) {
-  console.log(data);
   const [allData, setAllData] = useState(data);
   const tableHead = {
     slNo: "Sl.No",
@@ -14,7 +13,7 @@ function EmployeeList({ data }) {
     jobTitle: "Job Title",
     contactNumber: "Contact Number",
     registeredDate: "Registered Date",
-    blockStatus:"Block Status",
+    blockStatus: "Block Status",
     block: " "
   };
   const countPerPage = 10;

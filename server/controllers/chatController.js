@@ -3,27 +3,34 @@ const ChatModel = require("../models/chatModel");
 const userModel = require("../models/userModel");
 //Creating new chat if sender and reciever new
 const createChat = async (req, res) => {
-  const test = await chatModel.findOne({ members: [req.body.senderId, req.body.receiverId] });
-  if (test) {
-    res.status(200).send({ msg: 'Already chat exist' });
-    return;
-  }
-  const newChat = new ChatModel({
-    members: [req.body.senderId, req.body.receiverId],
-  });
   try {
-    const result = await newChat.save();
-    res.status(200).json(result);
-  } catch (error) {
-    res.status(200).json(error);
+    const chatAvailable = await chatModel.findOne({ members: [req.body.senderId, req.body.receiverId] });
+    if (chatAvailable) {
+      res.status(200).send({ msg: 'Already chat exist' });
+      return;
+    }
+    const newChat = new ChatModel({
+      members: [req.body.senderId, req.body.receiverId],
+    });
+    try {
+      const result = await newChat.save();
+      res.status(200).json(result);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  } catch (err) {
+    res.status(500).send({ errMsg: 'Internal server error' });
+    return;
   }
 }
 //Find all chats of a specific user
 const userChats = async (req, res) => {
   try {
-    const chat = await ChatModel.find({
-      members: { $in: [req.params.userId] },
-    });
+    const chat = await ChatModel.aggregate([{
+      $match: {
+        members: { $in: [req.params.userId] },
+      }
+    }, { $sort: { updatedAt: -1 } }]);
     res.status(200).json(chat);
   } catch (error) {
     res.status(500).json(error);
@@ -47,7 +54,7 @@ const getUser = async (req, res) => {
     const userDetails = await userModel.findById(userId);
     res.status(200).send({ userDetails });
   } catch (err) {
-    res.status(401).send({errMsg:'User not found'});
+    res.status(401).send({ errMsg: 'User not found' });
   }
 }
 

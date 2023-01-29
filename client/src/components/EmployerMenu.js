@@ -5,20 +5,22 @@ import { instance } from '../apis/JobSolutionApi';
 
 function EmployerMenu() {
   const [notficationCount, setNotificationCount] = useState();
-  const user = useSelector((store)=>store.allUsers.user);
+  const user = useSelector((store) => store.allUsers.user);
   useEffect(() => {
-    instance.get('jobs/notificationCount/'+user._id).then((res)=> {
+    const token = localStorage.getItem('empToken');
+    const headers = { 'X-Custom-Header': `${token}` }
+    instance.get('jobs/notificationCount/' + user._id, { headers }).then((res) => {
       setNotificationCount(res.data.notCount);
     }).catch((err) => {
 
     });
-  },[]);
+  }, []);
   return (
     <>
       <Link to="/empProfile" className='nav-link'>Dashboard</Link>
       <Link to="/postJob" className='nav-link'>Post Job</Link>
       <Link to="/notification" className='nav-link'>Notifications
-          <span style={{background:'red',borderRadius:'50%',padding:'2px 5px'}}>{notficationCount}</span>
+        <span className="badge bg-danger rounded-pill float-end">{notficationCount}</span>
       </Link>
       <Link to="/chat" target="_blank" className='nav-link'>Chats</Link>
     </>

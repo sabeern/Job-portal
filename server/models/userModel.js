@@ -29,7 +29,7 @@ const userShema = mongoose.Schema({
         default: Date.now()
     },
     resume: String,
-    blockStatus:{
+    blockStatus: {
         type: Boolean,
         required: true,
         default: 0

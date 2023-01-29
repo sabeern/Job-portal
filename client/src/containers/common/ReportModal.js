@@ -17,7 +17,9 @@ function ReportModal({ data }) {
         setLoading(true);
         const postData = { jobIssue, jobId: data.jobId, userId };
         try {
-            await instance.post('/jobs/reportIssue', postData);
+            const token = localStorage.getItem('empToken');
+            const headers = { 'X-Custom-Header': `${token}` };
+            await instance.post('/jobs/reportIssue', postData, { headers });
             setJobIssue('');
             data.handleClose();
         } catch (err) {

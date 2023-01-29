@@ -11,7 +11,9 @@ function AdminHome() {
   const [applicationCount, setApplicationCount] = useState();
   async function getDetails() {
     try {
-      const { data } = await instance.get('/admin/management/getDetails');
+      const token = localStorage.getItem('adminToken');
+      const headers = { 'X-Custom-Header': `${token}` };
+      const { data } = await instance.get('/admin/management/getDetails', { headers });
       const monthlyEmployeeCount = data.monthlyEmployeeCount;
       let empCount = {
         '2023-01': 0, '2023-02': 0, '2023-03': 0, '2023-04': 0, '2023-05': 0, '2023-06': 0, '2023-07': 0, '2023-08': 0, '2023-09': 0
@@ -76,15 +78,15 @@ function AdminHome() {
       <Container>
         <Row>
           <Col md={12}>
-            <Cards data={{ bgColor: 'warning', graphData: empGraphData, title: 'Monthly registration count of job seeker', title2:'Job Seeker Count' }} />
+            <Cards data={{ bgColor: 'warning', graphData: empGraphData, title: 'Monthly registration count of job seeker', title2: 'Job Seeker Count' }} />
           </Col>
           <Col md={12}>
-            <Cards data={{ bgColor: 'warning', graphData: emprGraphData, title: 'Monthly registration count of job provider', title2:'Job Provider Count'}} />
+            <Cards data={{ bgColor: 'warning', graphData: emprGraphData, title: 'Monthly registration count of job provider', title2: 'Job Provider Count' }} />
           </Col>
         </Row>
         <Row>
           <Col md={12}>
-            <Cards data={{ bgColor: 'warning', graphData: applicationCount, title: 'Monthly job application count', title2:'Job Application Count' }} />
+            <Cards data={{ bgColor: 'warning', graphData: applicationCount, title: 'Monthly job application count', title2: 'Job Application Count' }} />
           </Col>
         </Row>
       </Container>

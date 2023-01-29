@@ -1,8 +1,5 @@
 import React from 'react';
-import {
-  MDBInput
-}
-  from 'mdb-react-ui-kit';
+import { MDBInput } from 'mdb-react-ui-kit';
 
 function MdbInputbox({ data }) {
   return (
